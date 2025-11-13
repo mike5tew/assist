@@ -1,0 +1,53 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+bin/
+dist/
+*.test
+*.out
+
+# Dependencies
+vendor/
+
+# Go workspace
+go.work.sum
+
+# Environment
+.env
+.env.local
+.env.*.local
+*.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Temporary
+tmp/
+temp/
+
+# AWS & Secrets (CRITICAL - NEVER COMMIT)
+*credentials*
+*.pem
+*.key
+*.crt
+config/aws/
+
+# Databases
+data/
+*.db
+*.sqlite
+
+# Weaviate
+weaviate-data/

@@ -1,0 +1,12 @@
+# Adobe Document Cloud share links for immunology case studies
+
+# Case 1: X-Linked Agammaglobulinemia
+https://acrobat.adobe.com/link/review?uri=urn:aaid:scds:US:your-link-1
+
+# Case 2: SCID
+https://acrobat.adobe.com/link/review?uri=urn:aaid:scds:US:your-link-2
+
+# Case 3: DiGeorge Syndrome
+https://acrobat.adobe.com/link/review?uri=urn:aaid:scds:US:your-link-3
+
+# ... add all 55 case study links

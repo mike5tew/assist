@@ -1,0 +1,37 @@
+[
+  {
+    "thread_id": "THREAD_ANTIBODY_PRODUCTION",
+    "thread_title": "Antibody Production: Scale and Cellular Requirements",
+    "domain": "immunology",
+    "semantic_link_chain": ["SL_HUMAN_001", "SL_HUMAN_002"],
+    "narrative_summary": "Human antibody production is remarkable in scale: over one million different antibody specificities can be generated from a daily production of 2.5 billion pro-B cells, which mature into functional B cells.",
+    "root_concept": "Production of different antibodies in humans",
+    "terminal_concepts": ["over one million different specific antibodies", "2.5 billion pro-B-cells per day"],
+    "thread_type": "quantitative_description",
+    "confidence": 0.98,
+    "source_metadata": {
+      "document_id": "68e2ed2ffcc06550ef8703f8",
+      "chapter_number": "1",
+      "chapter_title": "X-Linked Agammaglobulinemia",
+      "book_title": "Case Studies in Immunology"
+    }
+  },
+  {
+    "thread_id": "THREAD_BCELL_DEVELOPMENT_PROGENITOR",
+    "thread_title": "B Cell Development: Progenitor Stage Progression",
+    "domain": "immunology",
+    "semantic_link_chain": ["SL_HUMAN_008", "SL_HUMAN_009", "SL_HUMAN_010", "SL_HUMAN_011", "SL_HUMAN_012", "SL_HUMAN_013"],
+    "narrative_summary": "B cell development proceeds through ordered stages: bone marrow stem cells differentiate into early pro-B cells, which undergo D-J rearrangement to become late pro-B cells. Subsequent V-DJ rearrangement produces large pre-B cells, followed by light chain rearrangement in small pre-B cells, culminating in immature B cells expressing surface IgM. Final maturation results in circulating B cells co-expressing IgM and IgD.",
+    "root_concept": "Bone marrow stem cell",
+    "terminal_concepts": ["Mature B cell"],
+    "thread_type": "developmental_pathway",
+    "confidence": 1.00,
+    "source_metadata": {
+      "document_id": "68e2ed2ffcc06550ef8703f8",
+      "chapter_number": "1",
+      "chapter_title": "X-Linked Agammaglobulinemia",
+      "book_title": "Case Studies in Immunology",
+      "page_reference": "Figure 1.1"
+    }
+  }
+]

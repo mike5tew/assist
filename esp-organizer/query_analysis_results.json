@@ -1,0 +1,1583 @@
+{
+  "communication": {
+    "expectation": "Should find Speaking, Non-verbal communication, Active Listening",
+    "full_response": {
+      "query": "communication",
+      "mongo_results": [
+        {
+          "id": "66580f8e0000000000000009",
+          "name": "Non-verbal communication",
+          "type": "Skill",
+          "description": "This skill involves the ability to use a wide range of non-verbal communication. It also involves the ability to use non-verbal communication in the correct context.",
+          "developmentAge": 3,
+          "hidden": false,
+          "criteria": [
+            {
+              "level": 1,
+              "description": "Uses a limited range of non-verbal communication"
+            },
+            {
+              "level": 2,
+              "description": "Uses a range of non-verbal communication"
+            },
+            {
+              "level": 3,
+              "description": "Uses a wide range of non-verbal communication"
+            },
+            {
+              "level": 4,
+              "description": "Uses sophisticated non-verbal communication effectively"
+            },
+            {
+              "level": 5,
+              "description": "Masters complex non-verbal communication including subtle gestures and body language"
+            }
+          ],
+          "lastUpdated": "2025-06-07T22:54:58.189Z"
+        },
+        {
+          "id": "66580f8e0000000000000054",
+          "name": "Social Confidence",
+          "type": "Skill",
+          "description": "The ability to interact comfortably and effectively with others in various social situations. This includes initiating conversations, expressing ideas clearly, and adapting behavior to social contexts.",
+          "developmentAge": 0,
+          "hidden": false,
+          "criteria": [
+            {
+              "level": 1,
+              "description": "Can interact with familiar people in comfortable settings"
+            },
+            {
+              "level": 2,
+              "description": "Can participate in group activities and conversations"
+            },
+            {
+              "level": 3,
+              "description": "Can interact confidently in most social situations"
+            },
+            {
+              "level": 4,
+              "description": "Can adapt communication style to different social contexts"
+            },
+            {
+              "level": 5,
+              "description": "Can lead social interactions and help others feel comfortable"
+            }
+          ],
+          "lastUpdated": "2025-06-07T22:54:58.189Z"
+        }
+      ],
+      "weaviate_results": [
+        {
+          "id": "1a9974b1-fdb3-4df5-85cc-6bbd5a7fcf62",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "1a9974b1-fdb3-4df5-85cc-6bbd5a7fcf62"
+            },
+            "criteria_text": "Expresses a basic opinion about the text. | Identifies simple bias or author's purpose when prompted. | Evaluates explicit claims based on presented evidence or external knowledge. | Critically analyzes text for underlying assumptions, logical fallacies, or persuasive techniques, and assesses the credibility of sources.",
+            "description": "The ability to assess the credibility, bias, relevance, and overall quality of information presented in a text, forming reasoned judgments.",
+            "development_age": 13,
+            "mongo_id": "66581a000000000000000207",
+            "name": "Critical Analysis \u0026 Evaluation",
+            "parent_mongo_ids": [
+              "66581a000000000000000201",
+              "66581a000000000000000202",
+              "66581a000000000000000203",
+              "66581a000000000000000204",
+              "66581a000000000000000205",
+              "66581a000000000000000206"
+            ],
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "9dd7bf18-6dde-423c-9e68-dcc3b285247a",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "9dd7bf18-6dde-423c-9e68-dcc3b285247a"
+            },
+            "criteria_text": "Connects two explicitly stated ideas from a single text. | Combines related information from different sections of a text to form a coherent understanding. | Integrates information from multiple texts or sources to build a new concept or argument. | Synthesizes complex information from disparate sources, identifying connections and discrepancies, to form novel insights.",
+            "description": "The ability to combine information from different parts of a single text, or across multiple texts/sources, to form a new, coherent understanding or conclusion.",
+            "development_age": 11,
+            "mongo_id": "66581a000000000000000206",
+            "name": "Synthesis",
+            "parent_mongo_ids": [
+              "66581a000000000000000201",
+              "66581a000000000000000202",
+              "66581a000000000000000203",
+              "66581a000000000000000205"
+            ],
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "bbaa480c-e304-4792-af27-b3f41369d0ce",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "bbaa480c-e304-4792-af27-b3f41369d0ce"
+            },
+            "criteria_text": "Connects two explicitly stated ideas from a single text. | Combines related information from different sections of a text to form a coherent understanding. | Integrates information from multiple texts or sources to build a new concept or argument. | Synthesizes complex information from disparate sources, identifying connections and discrepancies, to form novel insights.",
+            "description": "The ability to combine information from different parts of a single text, or across multiple texts/sources, to form a new, coherent understanding or conclusion.",
+            "development_age": 11,
+            "mongo_id": "66581a000000000000000206",
+            "name": "Synthesis",
+            "parent_mongo_ids": [
+              "66581a000000000000000201",
+              "66581a000000000000000202",
+              "66581a000000000000000203",
+              "66581a000000000000000205"
+            ],
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "f887782d-f014-4361-b6e8-7b7794bea929",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "f887782d-f014-4361-b6e8-7b7794bea929"
+            },
+            "criteria_text": "Speaks in short sentences | Speaks in sentences | Speaks in sentences and can answer questions about what has been said | Speaks fluently with complex sentence structures | Demonstrates eloquent speaking with sophisticated language use",
+            "description": "This skill involves the ability to speak in sentences. It also involves the ability to answer questions about what has been said.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000012",
+            "name": "Speaking",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "a8f963ea-30f0-4eaf-9351-cb4aecb1c420",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "a8f963ea-30f0-4eaf-9351-cb4aecb1c420"
+            },
+            "criteria_text": "Uses a limited range of non-verbal communication | Uses a range of non-verbal communication | Uses a wide range of non-verbal communication | Uses sophisticated non-verbal communication effectively | Masters complex non-verbal communication including subtle gestures and body language",
+            "description": "This skill involves the ability to use a wide range of non-verbal communication. It also involves the ability to use non-verbal communication in the correct context.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000009",
+            "name": "Non-verbal communication",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "fee96330-10b9-4add-b82c-e6f7d79112bd",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "fee96330-10b9-4add-b82c-e6f7d79112bd"
+            },
+            "criteria_text": "Uses a limited range of words | Uses a range of words | Uses a wide range of words | Uses a wide range of words and specialist vocabulary | Uses sophisticated vocabulary and specialist terminology accurately in context",
+            "description": "This skill involves the ability to use a wide range of words and specialist vocabulary. It also involves the ability to use words in the correct context.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000008",
+            "name": "Vocabulary",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "c2c8e98a-afd7-4cce-b756-a04ee50b9a74",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "c2c8e98a-afd7-4cce-b756-a04ee50b9a74"
+            },
+            "criteria_text": "The child is able to make simple decisions and take responsibility for the consequences of those decisions | The child is able to organise simple tasks with others | The child is able to make decisions and take responsibility for the consequences while organizing others | The child is able to motivate others and organize complex tasks to achieve goals | The child demonstrates strong leadership by making difficult decisions, taking full responsibility, and successfully motivating teams",
+            "description": "This skill involves the ability to make decisions and to take responsibility for the consequences of those decisions. It also involves the ability to organise and motivate others to achieve a common goal.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000007",
+            "name": "Leadership",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "9e64b002-a741-46dd-8cae-63e5a796777c",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "9e64b002-a741-46dd-8cae-63e5a796777c"
+            },
+            "criteria_text": "Can solve a problem with one step | Can solve a problem with two steps | Can solve a problem with three steps | Can solve a problem with four steps | Can solve a problem with five or more steps",
+            "description": "Problem solving is the ability to solve a problem with multiple steps.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000005",
+            "name": "Problem Solving",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "96f71515-52f0-417d-af75-d33394257b6f",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "96f71515-52f0-417d-af75-d33394257b6f"
+            },
+            "criteria_text": "Can understand the context of a situation | Can understand the context of a situation and the chain of events that lead to the situation | Can understand the context of a situation and the chain of events that lead to the situation and the possible outcomes of the situation | Can understand the context of a situation and the chain of events that lead to the situation and the possible outcomes of the situation and the consequences of the situation | Can understand complex situations with multiple variables and predict long-term consequences accurately",
+            "description": "Critical thinking is the ability to understand the context of a situation and the chain of events that lead to the situation and the possible outcomes of the situation and the consequences of the situation.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000004",
+            "name": "Critical Thinking",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "efba5fc2-f1d2-47f0-903f-87c3d73994d5",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "efba5fc2-f1d2-47f0-903f-87c3d73994d5"
+            },
+            "criteria_text": "Can hear speech in a quiet room | Can hear speech in a room with some background noise | Can hear speech in a room with a lot of background noise | Can hear speech in a room with a lot of background noise and other people talking | Can hear speech in a room with a lot of background noise and other people talking and music playing",
+            "description": "Audio processing is the ability to hear and understand speech. It is used when we are thinking about something in the present moment.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000003",
+            "name": "Audio Processing",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        }
+      ],
+      "synthesis": "Generated response based on prompt: Based on the following information about educational skills, please provide a comprehensive answer t"
+    },
+    "mongo_results": 2,
+    "related_skills": 0,
+    "weaviate_results": 10
+  },
+  "emotional intelligence": {
+    "expectation": "Should find Self-awareness, Empathy, Self-regulation",
+    "full_response": {
+      "query": "emotional intelligence",
+      "mongo_results": null,
+      "weaviate_results": [
+        {
+          "id": "1a9974b1-fdb3-4df5-85cc-6bbd5a7fcf62",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "1a9974b1-fdb3-4df5-85cc-6bbd5a7fcf62"
+            },
+            "criteria_text": "Expresses a basic opinion about the text. | Identifies simple bias or author's purpose when prompted. | Evaluates explicit claims based on presented evidence or external knowledge. | Critically analyzes text for underlying assumptions, logical fallacies, or persuasive techniques, and assesses the credibility of sources.",
+            "description": "The ability to assess the credibility, bias, relevance, and overall quality of information presented in a text, forming reasoned judgments.",
+            "development_age": 13,
+            "mongo_id": "66581a000000000000000207",
+            "name": "Critical Analysis \u0026 Evaluation",
+            "parent_mongo_ids": [
+              "66581a000000000000000201",
+              "66581a000000000000000202",
+              "66581a000000000000000203",
+              "66581a000000000000000204",
+              "66581a000000000000000205",
+              "66581a000000000000000206"
+            ],
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "9dd7bf18-6dde-423c-9e68-dcc3b285247a",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "9dd7bf18-6dde-423c-9e68-dcc3b285247a"
+            },
+            "criteria_text": "Connects two explicitly stated ideas from a single text. | Combines related information from different sections of a text to form a coherent understanding. | Integrates information from multiple texts or sources to build a new concept or argument. | Synthesizes complex information from disparate sources, identifying connections and discrepancies, to form novel insights.",
+            "description": "The ability to combine information from different parts of a single text, or across multiple texts/sources, to form a new, coherent understanding or conclusion.",
+            "development_age": 11,
+            "mongo_id": "66581a000000000000000206",
+            "name": "Synthesis",
+            "parent_mongo_ids": [
+              "66581a000000000000000201",
+              "66581a000000000000000202",
+              "66581a000000000000000203",
+              "66581a000000000000000205"
+            ],
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "bbaa480c-e304-4792-af27-b3f41369d0ce",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "bbaa480c-e304-4792-af27-b3f41369d0ce"
+            },
+            "criteria_text": "Connects two explicitly stated ideas from a single text. | Combines related information from different sections of a text to form a coherent understanding. | Integrates information from multiple texts or sources to build a new concept or argument. | Synthesizes complex information from disparate sources, identifying connections and discrepancies, to form novel insights.",
+            "description": "The ability to combine information from different parts of a single text, or across multiple texts/sources, to form a new, coherent understanding or conclusion.",
+            "development_age": 11,
+            "mongo_id": "66581a000000000000000206",
+            "name": "Synthesis",
+            "parent_mongo_ids": [
+              "66581a000000000000000201",
+              "66581a000000000000000202",
+              "66581a000000000000000203",
+              "66581a000000000000000205"
+            ],
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "f887782d-f014-4361-b6e8-7b7794bea929",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "f887782d-f014-4361-b6e8-7b7794bea929"
+            },
+            "criteria_text": "Speaks in short sentences | Speaks in sentences | Speaks in sentences and can answer questions about what has been said | Speaks fluently with complex sentence structures | Demonstrates eloquent speaking with sophisticated language use",
+            "description": "This skill involves the ability to speak in sentences. It also involves the ability to answer questions about what has been said.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000012",
+            "name": "Speaking",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "a8f963ea-30f0-4eaf-9351-cb4aecb1c420",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "a8f963ea-30f0-4eaf-9351-cb4aecb1c420"
+            },
+            "criteria_text": "Uses a limited range of non-verbal communication | Uses a range of non-verbal communication | Uses a wide range of non-verbal communication | Uses sophisticated non-verbal communication effectively | Masters complex non-verbal communication including subtle gestures and body language",
+            "description": "This skill involves the ability to use a wide range of non-verbal communication. It also involves the ability to use non-verbal communication in the correct context.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000009",
+            "name": "Non-verbal communication",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "fee96330-10b9-4add-b82c-e6f7d79112bd",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "fee96330-10b9-4add-b82c-e6f7d79112bd"
+            },
+            "criteria_text": "Uses a limited range of words | Uses a range of words | Uses a wide range of words | Uses a wide range of words and specialist vocabulary | Uses sophisticated vocabulary and specialist terminology accurately in context",
+            "description": "This skill involves the ability to use a wide range of words and specialist vocabulary. It also involves the ability to use words in the correct context.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000008",
+            "name": "Vocabulary",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "c2c8e98a-afd7-4cce-b756-a04ee50b9a74",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "c2c8e98a-afd7-4cce-b756-a04ee50b9a74"
+            },
+            "criteria_text": "The child is able to make simple decisions and take responsibility for the consequences of those decisions | The child is able to organise simple tasks with others | The child is able to make decisions and take responsibility for the consequences while organizing others | The child is able to motivate others and organize complex tasks to achieve goals | The child demonstrates strong leadership by making difficult decisions, taking full responsibility, and successfully motivating teams",
+            "description": "This skill involves the ability to make decisions and to take responsibility for the consequences of those decisions. It also involves the ability to organise and motivate others to achieve a common goal.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000007",
+            "name": "Leadership",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "9e64b002-a741-46dd-8cae-63e5a796777c",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "9e64b002-a741-46dd-8cae-63e5a796777c"
+            },
+            "criteria_text": "Can solve a problem with one step | Can solve a problem with two steps | Can solve a problem with three steps | Can solve a problem with four steps | Can solve a problem with five or more steps",
+            "description": "Problem solving is the ability to solve a problem with multiple steps.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000005",
+            "name": "Problem Solving",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "96f71515-52f0-417d-af75-d33394257b6f",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "96f71515-52f0-417d-af75-d33394257b6f"
+            },
+            "criteria_text": "Can understand the context of a situation | Can understand the context of a situation and the chain of events that lead to the situation | Can understand the context of a situation and the chain of events that lead to the situation and the possible outcomes of the situation | Can understand the context of a situation and the chain of events that lead to the situation and the possible outcomes of the situation and the consequences of the situation | Can understand complex situations with multiple variables and predict long-term consequences accurately",
+            "description": "Critical thinking is the ability to understand the context of a situation and the chain of events that lead to the situation and the possible outcomes of the situation and the consequences of the situation.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000004",
+            "name": "Critical Thinking",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "efba5fc2-f1d2-47f0-903f-87c3d73994d5",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "efba5fc2-f1d2-47f0-903f-87c3d73994d5"
+            },
+            "criteria_text": "Can hear speech in a quiet room | Can hear speech in a room with some background noise | Can hear speech in a room with a lot of background noise | Can hear speech in a room with a lot of background noise and other people talking | Can hear speech in a room with a lot of background noise and other people talking and music playing",
+            "description": "Audio processing is the ability to hear and understand speech. It is used when we are thinking about something in the present moment.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000003",
+            "name": "Audio Processing",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        }
+      ],
+      "synthesis": "Generated response based on prompt: Based on the following information about educational skills, please provide a comprehensive answer t"
+    },
+    "mongo_results": 0,
+    "related_skills": 0,
+    "weaviate_results": 10
+  },
+  "memory": {
+    "expectation": "Should find Working Memory and related cognitive skills",
+    "full_response": {
+      "query": "memory",
+      "mongo_results": [
+        {
+          "id": "66580f8e0000000000000001",
+          "name": "Working Memory",
+          "type": "Skill",
+          "description": "Working memory is the ability to remember information for a short time. It is used when we are thinking about something in the present moment.",
+          "developmentAge": 3,
+          "hidden": false,
+          "criteria": [
+            {
+              "level": 1,
+              "description": "Can remember 1 item"
+            },
+            {
+              "level": 2,
+              "description": "Can remember 2 items"
+            },
+            {
+              "level": 3,
+              "description": "Can remember 3 items"
+            },
+            {
+              "level": 4,
+              "description": "Can remember 4 items"
+            },
+            {
+              "level": 5,
+              "description": "Can remember 5 items"
+            }
+          ],
+          "lastUpdated": "2025-06-07T22:54:58.189Z"
+        }
+      ],
+      "weaviate_results": [
+        {
+          "id": "1a9974b1-fdb3-4df5-85cc-6bbd5a7fcf62",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "1a9974b1-fdb3-4df5-85cc-6bbd5a7fcf62"
+            },
+            "criteria_text": "Expresses a basic opinion about the text. | Identifies simple bias or author's purpose when prompted. | Evaluates explicit claims based on presented evidence or external knowledge. | Critically analyzes text for underlying assumptions, logical fallacies, or persuasive techniques, and assesses the credibility of sources.",
+            "description": "The ability to assess the credibility, bias, relevance, and overall quality of information presented in a text, forming reasoned judgments.",
+            "development_age": 13,
+            "mongo_id": "66581a000000000000000207",
+            "name": "Critical Analysis \u0026 Evaluation",
+            "parent_mongo_ids": [
+              "66581a000000000000000201",
+              "66581a000000000000000202",
+              "66581a000000000000000203",
+              "66581a000000000000000204",
+              "66581a000000000000000205",
+              "66581a000000000000000206"
+            ],
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "9dd7bf18-6dde-423c-9e68-dcc3b285247a",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "9dd7bf18-6dde-423c-9e68-dcc3b285247a"
+            },
+            "criteria_text": "Connects two explicitly stated ideas from a single text. | Combines related information from different sections of a text to form a coherent understanding. | Integrates information from multiple texts or sources to build a new concept or argument. | Synthesizes complex information from disparate sources, identifying connections and discrepancies, to form novel insights.",
+            "description": "The ability to combine information from different parts of a single text, or across multiple texts/sources, to form a new, coherent understanding or conclusion.",
+            "development_age": 11,
+            "mongo_id": "66581a000000000000000206",
+            "name": "Synthesis",
+            "parent_mongo_ids": [
+              "66581a000000000000000201",
+              "66581a000000000000000202",
+              "66581a000000000000000203",
+              "66581a000000000000000205"
+            ],
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "bbaa480c-e304-4792-af27-b3f41369d0ce",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "bbaa480c-e304-4792-af27-b3f41369d0ce"
+            },
+            "criteria_text": "Connects two explicitly stated ideas from a single text. | Combines related information from different sections of a text to form a coherent understanding. | Integrates information from multiple texts or sources to build a new concept or argument. | Synthesizes complex information from disparate sources, identifying connections and discrepancies, to form novel insights.",
+            "description": "The ability to combine information from different parts of a single text, or across multiple texts/sources, to form a new, coherent understanding or conclusion.",
+            "development_age": 11,
+            "mongo_id": "66581a000000000000000206",
+            "name": "Synthesis",
+            "parent_mongo_ids": [
+              "66581a000000000000000201",
+              "66581a000000000000000202",
+              "66581a000000000000000203",
+              "66581a000000000000000205"
+            ],
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "f887782d-f014-4361-b6e8-7b7794bea929",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "f887782d-f014-4361-b6e8-7b7794bea929"
+            },
+            "criteria_text": "Speaks in short sentences | Speaks in sentences | Speaks in sentences and can answer questions about what has been said | Speaks fluently with complex sentence structures | Demonstrates eloquent speaking with sophisticated language use",
+            "description": "This skill involves the ability to speak in sentences. It also involves the ability to answer questions about what has been said.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000012",
+            "name": "Speaking",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "a8f963ea-30f0-4eaf-9351-cb4aecb1c420",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "a8f963ea-30f0-4eaf-9351-cb4aecb1c420"
+            },
+            "criteria_text": "Uses a limited range of non-verbal communication | Uses a range of non-verbal communication | Uses a wide range of non-verbal communication | Uses sophisticated non-verbal communication effectively | Masters complex non-verbal communication including subtle gestures and body language",
+            "description": "This skill involves the ability to use a wide range of non-verbal communication. It also involves the ability to use non-verbal communication in the correct context.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000009",
+            "name": "Non-verbal communication",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "fee96330-10b9-4add-b82c-e6f7d79112bd",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "fee96330-10b9-4add-b82c-e6f7d79112bd"
+            },
+            "criteria_text": "Uses a limited range of words | Uses a range of words | Uses a wide range of words | Uses a wide range of words and specialist vocabulary | Uses sophisticated vocabulary and specialist terminology accurately in context",
+            "description": "This skill involves the ability to use a wide range of words and specialist vocabulary. It also involves the ability to use words in the correct context.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000008",
+            "name": "Vocabulary",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "c2c8e98a-afd7-4cce-b756-a04ee50b9a74",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "c2c8e98a-afd7-4cce-b756-a04ee50b9a74"
+            },
+            "criteria_text": "The child is able to make simple decisions and take responsibility for the consequences of those decisions | The child is able to organise simple tasks with others | The child is able to make decisions and take responsibility for the consequences while organizing others | The child is able to motivate others and organize complex tasks to achieve goals | The child demonstrates strong leadership by making difficult decisions, taking full responsibility, and successfully motivating teams",
+            "description": "This skill involves the ability to make decisions and to take responsibility for the consequences of those decisions. It also involves the ability to organise and motivate others to achieve a common goal.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000007",
+            "name": "Leadership",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "9e64b002-a741-46dd-8cae-63e5a796777c",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "9e64b002-a741-46dd-8cae-63e5a796777c"
+            },
+            "criteria_text": "Can solve a problem with one step | Can solve a problem with two steps | Can solve a problem with three steps | Can solve a problem with four steps | Can solve a problem with five or more steps",
+            "description": "Problem solving is the ability to solve a problem with multiple steps.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000005",
+            "name": "Problem Solving",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "96f71515-52f0-417d-af75-d33394257b6f",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "96f71515-52f0-417d-af75-d33394257b6f"
+            },
+            "criteria_text": "Can understand the context of a situation | Can understand the context of a situation and the chain of events that lead to the situation | Can understand the context of a situation and the chain of events that lead to the situation and the possible outcomes of the situation | Can understand the context of a situation and the chain of events that lead to the situation and the possible outcomes of the situation and the consequences of the situation | Can understand complex situations with multiple variables and predict long-term consequences accurately",
+            "description": "Critical thinking is the ability to understand the context of a situation and the chain of events that lead to the situation and the possible outcomes of the situation and the consequences of the situation.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000004",
+            "name": "Critical Thinking",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "efba5fc2-f1d2-47f0-903f-87c3d73994d5",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "efba5fc2-f1d2-47f0-903f-87c3d73994d5"
+            },
+            "criteria_text": "Can hear speech in a quiet room | Can hear speech in a room with some background noise | Can hear speech in a room with a lot of background noise | Can hear speech in a room with a lot of background noise and other people talking | Can hear speech in a room with a lot of background noise and other people talking and music playing",
+            "description": "Audio processing is the ability to hear and understand speech. It is used when we are thinking about something in the present moment.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000003",
+            "name": "Audio Processing",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        }
+      ],
+      "synthesis": "Generated response based on prompt: Based on the following information about educational skills, please provide a comprehensive answer t"
+    },
+    "mongo_results": 1,
+    "related_skills": 0,
+    "weaviate_results": 10
+  },
+  "motor skills": {
+    "expectation": "Should find Fine Motor Skills and related physical abilities",
+    "full_response": {
+      "query": "motor skills",
+      "mongo_results": [
+        {
+          "id": "66580f8e0000000000000046",
+          "name": "Fine Motor Skills",
+          "type": "Skill",
+          "description": "The ability to make precise movements using small muscle groups, particularly in hands and fingers. This includes coordination for detailed tasks requiring accuracy and control.",
+          "developmentAge": 0,
+          "hidden": false,
+          "criteria": [
+            {
+              "level": 1,
+              "description": "Can perform simple hand movements with assistance"
+            },
+            {
+              "level": 2,
+              "description": "Can complete basic tasks requiring hand coordination"
+            },
+            {
+              "level": 3,
+              "description": "Can perform detailed tasks with good control"
+            },
+            {
+              "level": 4,
+              "description": "Can execute precise movements accurately"
+            },
+            {
+              "level": 5,
+              "description": "Can perform highly detailed work with exceptional precision"
+            }
+          ],
+          "lastUpdated": "2025-06-07T22:54:58.189Z"
+        }
+      ],
+      "weaviate_results": [
+        {
+          "id": "1a9974b1-fdb3-4df5-85cc-6bbd5a7fcf62",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "1a9974b1-fdb3-4df5-85cc-6bbd5a7fcf62"
+            },
+            "criteria_text": "Expresses a basic opinion about the text. | Identifies simple bias or author's purpose when prompted. | Evaluates explicit claims based on presented evidence or external knowledge. | Critically analyzes text for underlying assumptions, logical fallacies, or persuasive techniques, and assesses the credibility of sources.",
+            "description": "The ability to assess the credibility, bias, relevance, and overall quality of information presented in a text, forming reasoned judgments.",
+            "development_age": 13,
+            "mongo_id": "66581a000000000000000207",
+            "name": "Critical Analysis \u0026 Evaluation",
+            "parent_mongo_ids": [
+              "66581a000000000000000201",
+              "66581a000000000000000202",
+              "66581a000000000000000203",
+              "66581a000000000000000204",
+              "66581a000000000000000205",
+              "66581a000000000000000206"
+            ],
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "9dd7bf18-6dde-423c-9e68-dcc3b285247a",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "9dd7bf18-6dde-423c-9e68-dcc3b285247a"
+            },
+            "criteria_text": "Connects two explicitly stated ideas from a single text. | Combines related information from different sections of a text to form a coherent understanding. | Integrates information from multiple texts or sources to build a new concept or argument. | Synthesizes complex information from disparate sources, identifying connections and discrepancies, to form novel insights.",
+            "description": "The ability to combine information from different parts of a single text, or across multiple texts/sources, to form a new, coherent understanding or conclusion.",
+            "development_age": 11,
+            "mongo_id": "66581a000000000000000206",
+            "name": "Synthesis",
+            "parent_mongo_ids": [
+              "66581a000000000000000201",
+              "66581a000000000000000202",
+              "66581a000000000000000203",
+              "66581a000000000000000205"
+            ],
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "bbaa480c-e304-4792-af27-b3f41369d0ce",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "bbaa480c-e304-4792-af27-b3f41369d0ce"
+            },
+            "criteria_text": "Connects two explicitly stated ideas from a single text. | Combines related information from different sections of a text to form a coherent understanding. | Integrates information from multiple texts or sources to build a new concept or argument. | Synthesizes complex information from disparate sources, identifying connections and discrepancies, to form novel insights.",
+            "description": "The ability to combine information from different parts of a single text, or across multiple texts/sources, to form a new, coherent understanding or conclusion.",
+            "development_age": 11,
+            "mongo_id": "66581a000000000000000206",
+            "name": "Synthesis",
+            "parent_mongo_ids": [
+              "66581a000000000000000201",
+              "66581a000000000000000202",
+              "66581a000000000000000203",
+              "66581a000000000000000205"
+            ],
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "f887782d-f014-4361-b6e8-7b7794bea929",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "f887782d-f014-4361-b6e8-7b7794bea929"
+            },
+            "criteria_text": "Speaks in short sentences | Speaks in sentences | Speaks in sentences and can answer questions about what has been said | Speaks fluently with complex sentence structures | Demonstrates eloquent speaking with sophisticated language use",
+            "description": "This skill involves the ability to speak in sentences. It also involves the ability to answer questions about what has been said.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000012",
+            "name": "Speaking",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "a8f963ea-30f0-4eaf-9351-cb4aecb1c420",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "a8f963ea-30f0-4eaf-9351-cb4aecb1c420"
+            },
+            "criteria_text": "Uses a limited range of non-verbal communication | Uses a range of non-verbal communication | Uses a wide range of non-verbal communication | Uses sophisticated non-verbal communication effectively | Masters complex non-verbal communication including subtle gestures and body language",
+            "description": "This skill involves the ability to use a wide range of non-verbal communication. It also involves the ability to use non-verbal communication in the correct context.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000009",
+            "name": "Non-verbal communication",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "fee96330-10b9-4add-b82c-e6f7d79112bd",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "fee96330-10b9-4add-b82c-e6f7d79112bd"
+            },
+            "criteria_text": "Uses a limited range of words | Uses a range of words | Uses a wide range of words | Uses a wide range of words and specialist vocabulary | Uses sophisticated vocabulary and specialist terminology accurately in context",
+            "description": "This skill involves the ability to use a wide range of words and specialist vocabulary. It also involves the ability to use words in the correct context.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000008",
+            "name": "Vocabulary",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "c2c8e98a-afd7-4cce-b756-a04ee50b9a74",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "c2c8e98a-afd7-4cce-b756-a04ee50b9a74"
+            },
+            "criteria_text": "The child is able to make simple decisions and take responsibility for the consequences of those decisions | The child is able to organise simple tasks with others | The child is able to make decisions and take responsibility for the consequences while organizing others | The child is able to motivate others and organize complex tasks to achieve goals | The child demonstrates strong leadership by making difficult decisions, taking full responsibility, and successfully motivating teams",
+            "description": "This skill involves the ability to make decisions and to take responsibility for the consequences of those decisions. It also involves the ability to organise and motivate others to achieve a common goal.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000007",
+            "name": "Leadership",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "9e64b002-a741-46dd-8cae-63e5a796777c",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "9e64b002-a741-46dd-8cae-63e5a796777c"
+            },
+            "criteria_text": "Can solve a problem with one step | Can solve a problem with two steps | Can solve a problem with three steps | Can solve a problem with four steps | Can solve a problem with five or more steps",
+            "description": "Problem solving is the ability to solve a problem with multiple steps.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000005",
+            "name": "Problem Solving",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "96f71515-52f0-417d-af75-d33394257b6f",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "96f71515-52f0-417d-af75-d33394257b6f"
+            },
+            "criteria_text": "Can understand the context of a situation | Can understand the context of a situation and the chain of events that lead to the situation | Can understand the context of a situation and the chain of events that lead to the situation and the possible outcomes of the situation | Can understand the context of a situation and the chain of events that lead to the situation and the possible outcomes of the situation and the consequences of the situation | Can understand complex situations with multiple variables and predict long-term consequences accurately",
+            "description": "Critical thinking is the ability to understand the context of a situation and the chain of events that lead to the situation and the possible outcomes of the situation and the consequences of the situation.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000004",
+            "name": "Critical Thinking",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "efba5fc2-f1d2-47f0-903f-87c3d73994d5",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "efba5fc2-f1d2-47f0-903f-87c3d73994d5"
+            },
+            "criteria_text": "Can hear speech in a quiet room | Can hear speech in a room with some background noise | Can hear speech in a room with a lot of background noise | Can hear speech in a room with a lot of background noise and other people talking | Can hear speech in a room with a lot of background noise and other people talking and music playing",
+            "description": "Audio processing is the ability to hear and understand speech. It is used when we are thinking about something in the present moment.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000003",
+            "name": "Audio Processing",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        }
+      ],
+      "synthesis": "Generated response based on prompt: Based on the following information about educational skills, please provide a comprehensive answer t"
+    },
+    "mongo_results": 1,
+    "related_skills": 0,
+    "weaviate_results": 10
+  },
+  "problem solving": {
+    "expectation": "Should find Problem Solving, Critical Thinking",
+    "full_response": {
+      "query": "problem solving",
+      "mongo_results": [
+        {
+          "id": "66580f8e0000000000000005",
+          "name": "Problem Solving",
+          "type": "Skill",
+          "description": "Problem solving is the ability to solve a problem with multiple steps.",
+          "developmentAge": 3,
+          "hidden": false,
+          "criteria": [
+            {
+              "level": 1,
+              "description": "Can solve a problem with one step"
+            },
+            {
+              "level": 2,
+              "description": "Can solve a problem with two steps"
+            },
+            {
+              "level": 3,
+              "description": "Can solve a problem with three steps"
+            },
+            {
+              "level": 4,
+              "description": "Can solve a problem with four steps"
+            },
+            {
+              "level": 5,
+              "description": "Can solve a problem with five or more steps"
+            }
+          ],
+          "lastUpdated": "2025-06-07T22:54:58.189Z"
+        }
+      ],
+      "weaviate_results": [
+        {
+          "id": "1a9974b1-fdb3-4df5-85cc-6bbd5a7fcf62",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "1a9974b1-fdb3-4df5-85cc-6bbd5a7fcf62"
+            },
+            "criteria_text": "Expresses a basic opinion about the text. | Identifies simple bias or author's purpose when prompted. | Evaluates explicit claims based on presented evidence or external knowledge. | Critically analyzes text for underlying assumptions, logical fallacies, or persuasive techniques, and assesses the credibility of sources.",
+            "description": "The ability to assess the credibility, bias, relevance, and overall quality of information presented in a text, forming reasoned judgments.",
+            "development_age": 13,
+            "mongo_id": "66581a000000000000000207",
+            "name": "Critical Analysis \u0026 Evaluation",
+            "parent_mongo_ids": [
+              "66581a000000000000000201",
+              "66581a000000000000000202",
+              "66581a000000000000000203",
+              "66581a000000000000000204",
+              "66581a000000000000000205",
+              "66581a000000000000000206"
+            ],
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "9dd7bf18-6dde-423c-9e68-dcc3b285247a",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "9dd7bf18-6dde-423c-9e68-dcc3b285247a"
+            },
+            "criteria_text": "Connects two explicitly stated ideas from a single text. | Combines related information from different sections of a text to form a coherent understanding. | Integrates information from multiple texts or sources to build a new concept or argument. | Synthesizes complex information from disparate sources, identifying connections and discrepancies, to form novel insights.",
+            "description": "The ability to combine information from different parts of a single text, or across multiple texts/sources, to form a new, coherent understanding or conclusion.",
+            "development_age": 11,
+            "mongo_id": "66581a000000000000000206",
+            "name": "Synthesis",
+            "parent_mongo_ids": [
+              "66581a000000000000000201",
+              "66581a000000000000000202",
+              "66581a000000000000000203",
+              "66581a000000000000000205"
+            ],
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "bbaa480c-e304-4792-af27-b3f41369d0ce",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "bbaa480c-e304-4792-af27-b3f41369d0ce"
+            },
+            "criteria_text": "Connects two explicitly stated ideas from a single text. | Combines related information from different sections of a text to form a coherent understanding. | Integrates information from multiple texts or sources to build a new concept or argument. | Synthesizes complex information from disparate sources, identifying connections and discrepancies, to form novel insights.",
+            "description": "The ability to combine information from different parts of a single text, or across multiple texts/sources, to form a new, coherent understanding or conclusion.",
+            "development_age": 11,
+            "mongo_id": "66581a000000000000000206",
+            "name": "Synthesis",
+            "parent_mongo_ids": [
+              "66581a000000000000000201",
+              "66581a000000000000000202",
+              "66581a000000000000000203",
+              "66581a000000000000000205"
+            ],
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "f887782d-f014-4361-b6e8-7b7794bea929",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "f887782d-f014-4361-b6e8-7b7794bea929"
+            },
+            "criteria_text": "Speaks in short sentences | Speaks in sentences | Speaks in sentences and can answer questions about what has been said | Speaks fluently with complex sentence structures | Demonstrates eloquent speaking with sophisticated language use",
+            "description": "This skill involves the ability to speak in sentences. It also involves the ability to answer questions about what has been said.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000012",
+            "name": "Speaking",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "a8f963ea-30f0-4eaf-9351-cb4aecb1c420",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "a8f963ea-30f0-4eaf-9351-cb4aecb1c420"
+            },
+            "criteria_text": "Uses a limited range of non-verbal communication | Uses a range of non-verbal communication | Uses a wide range of non-verbal communication | Uses sophisticated non-verbal communication effectively | Masters complex non-verbal communication including subtle gestures and body language",
+            "description": "This skill involves the ability to use a wide range of non-verbal communication. It also involves the ability to use non-verbal communication in the correct context.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000009",
+            "name": "Non-verbal communication",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "fee96330-10b9-4add-b82c-e6f7d79112bd",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "fee96330-10b9-4add-b82c-e6f7d79112bd"
+            },
+            "criteria_text": "Uses a limited range of words | Uses a range of words | Uses a wide range of words | Uses a wide range of words and specialist vocabulary | Uses sophisticated vocabulary and specialist terminology accurately in context",
+            "description": "This skill involves the ability to use a wide range of words and specialist vocabulary. It also involves the ability to use words in the correct context.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000008",
+            "name": "Vocabulary",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "c2c8e98a-afd7-4cce-b756-a04ee50b9a74",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "c2c8e98a-afd7-4cce-b756-a04ee50b9a74"
+            },
+            "criteria_text": "The child is able to make simple decisions and take responsibility for the consequences of those decisions | The child is able to organise simple tasks with others | The child is able to make decisions and take responsibility for the consequences while organizing others | The child is able to motivate others and organize complex tasks to achieve goals | The child demonstrates strong leadership by making difficult decisions, taking full responsibility, and successfully motivating teams",
+            "description": "This skill involves the ability to make decisions and to take responsibility for the consequences of those decisions. It also involves the ability to organise and motivate others to achieve a common goal.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000007",
+            "name": "Leadership",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "9e64b002-a741-46dd-8cae-63e5a796777c",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "9e64b002-a741-46dd-8cae-63e5a796777c"
+            },
+            "criteria_text": "Can solve a problem with one step | Can solve a problem with two steps | Can solve a problem with three steps | Can solve a problem with four steps | Can solve a problem with five or more steps",
+            "description": "Problem solving is the ability to solve a problem with multiple steps.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000005",
+            "name": "Problem Solving",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "96f71515-52f0-417d-af75-d33394257b6f",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "96f71515-52f0-417d-af75-d33394257b6f"
+            },
+            "criteria_text": "Can understand the context of a situation | Can understand the context of a situation and the chain of events that lead to the situation | Can understand the context of a situation and the chain of events that lead to the situation and the possible outcomes of the situation | Can understand the context of a situation and the chain of events that lead to the situation and the possible outcomes of the situation and the consequences of the situation | Can understand complex situations with multiple variables and predict long-term consequences accurately",
+            "description": "Critical thinking is the ability to understand the context of a situation and the chain of events that lead to the situation and the possible outcomes of the situation and the consequences of the situation.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000004",
+            "name": "Critical Thinking",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "efba5fc2-f1d2-47f0-903f-87c3d73994d5",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "efba5fc2-f1d2-47f0-903f-87c3d73994d5"
+            },
+            "criteria_text": "Can hear speech in a quiet room | Can hear speech in a room with some background noise | Can hear speech in a room with a lot of background noise | Can hear speech in a room with a lot of background noise and other people talking | Can hear speech in a room with a lot of background noise and other people talking and music playing",
+            "description": "Audio processing is the ability to hear and understand speech. It is used when we are thinking about something in the present moment.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000003",
+            "name": "Audio Processing",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        }
+      ],
+      "synthesis": "Generated response based on prompt: Based on the following information about educational skills, please provide a comprehensive answer t"
+    },
+    "mongo_results": 1,
+    "related_skills": 0,
+    "weaviate_results": 10
+  },
+  "reading": {
+    "expectation": "Should find Reading, Comprehension, and related literacy skills",
+    "full_response": {
+      "query": "reading",
+      "mongo_results": [
+        {
+          "id": "66580f8e0000000000000013",
+          "name": "Reading",
+          "type": "Skill",
+          "description": "This skill involves the ability to read.",
+          "developmentAge": 3,
+          "hidden": false,
+          "criteria": [
+            {
+              "level": 1,
+              "description": "25% behind reading age"
+            },
+            {
+              "level": 2,
+              "description": "10% behind reading age"
+            },
+            {
+              "level": 3,
+              "description": "At reading age"
+            },
+            {
+              "level": 4,
+              "description": "10% ahead of reading age"
+            },
+            {
+              "level": 5,
+              "description": "25% ahead of reading age"
+            }
+          ],
+          "lastUpdated": "2025-06-07T22:54:58.189Z"
+        },
+        {
+          "id": "66580f8e0000000000000035",
+          "name": "Graph - Reading",
+          "type": "Skill",
+          "description": "The ability to interpret and extract information from visual data representations including graphs, charts, and diagrams. This includes understanding scales, trends, and relationships shown in graphical format.",
+          "developmentAge": 0,
+          "hidden": false,
+          "criteria": [
+            {
+              "level": 1,
+              "description": "Can read simple values from basic graphs"
+            },
+            {
+              "level": 2,
+              "description": "Can identify trends in simple graphs"
+            },
+            {
+              "level": 3,
+              "description": "Can extract specific data points and compare values"
+            },
+            {
+              "level": 4,
+              "description": "Can interpret complex graphs and identify relationships"
+            },
+            {
+              "level": 5,
+              "description": "Can analyze sophisticated graphical data and draw conclusions"
+            }
+          ],
+          "parentSkillIDs": [
+            "66580f8e0000000000000049",
+            "66580f8e0000000000000055"
+          ],
+          "lastUpdated": "2025-06-07T22:54:58.189Z"
+        },
+        {
+          "id": "66580f8e0000000000000036",
+          "name": "Data Tables - Reading",
+          "type": "Skill",
+          "description": "The ability to extract and interpret information from tabular data formats. This includes understanding rows, columns, headers, and finding specific data points within organized tables.",
+          "developmentAge": 0,
+          "hidden": false,
+          "criteria": [
+            {
+              "level": 1,
+              "description": "Can locate simple data in basic tables"
+            },
+            {
+              "level": 2,
+              "description": "Can extract specific values from organized tables"
+            },
+            {
+              "level": 3,
+              "description": "Can compare and contrast data from different rows/columns"
+            },
+            {
+              "level": 4,
+              "description": "Can identify patterns and trends in tabular data"
+            },
+            {
+              "level": 5,
+              "description": "Can analyze complex tables and synthesize information"
+            }
+          ],
+          "parentSkillIDs": [
+            "66580f8e0000000000000055"
+          ],
+          "lastUpdated": "2025-06-07T22:54:58.189Z"
+        },
+        {
+          "id": "66581a000000000000000202",
+          "name": "Inference",
+          "type": "Skill",
+          "description": "The ability to deduce conclusions or understand implied information that is not explicitly stated, by 'reading between the lines' and using context clues.",
+          "developmentAge": 8,
+          "hidden": false,
+          "criteria": [
+            {
+              "level": 1,
+              "description": "Makes obvious inferences given direct clues."
+            },
+            {
+              "level": 2,
+              "description": "Draws simple inferences based on textual evidence."
+            },
+            {
+              "level": 3,
+              "description": "Infers implied meanings, motives, or relationships using multiple textual cues."
+            },
+            {
+              "level": 4,
+              "description": "Accurately draws complex inferences and justifies them with subtle textual evidence."
+            }
+          ],
+          "parentSkillIDs": [
+            "66581a000000000000000201"
+          ],
+          "lastUpdated": "2025-06-07T22:54:58.189Z"
+        }
+      ],
+      "weaviate_results": [
+        {
+          "id": "1a9974b1-fdb3-4df5-85cc-6bbd5a7fcf62",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "1a9974b1-fdb3-4df5-85cc-6bbd5a7fcf62"
+            },
+            "criteria_text": "Expresses a basic opinion about the text. | Identifies simple bias or author's purpose when prompted. | Evaluates explicit claims based on presented evidence or external knowledge. | Critically analyzes text for underlying assumptions, logical fallacies, or persuasive techniques, and assesses the credibility of sources.",
+            "description": "The ability to assess the credibility, bias, relevance, and overall quality of information presented in a text, forming reasoned judgments.",
+            "development_age": 13,
+            "mongo_id": "66581a000000000000000207",
+            "name": "Critical Analysis \u0026 Evaluation",
+            "parent_mongo_ids": [
+              "66581a000000000000000201",
+              "66581a000000000000000202",
+              "66581a000000000000000203",
+              "66581a000000000000000204",
+              "66581a000000000000000205",
+              "66581a000000000000000206"
+            ],
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "9dd7bf18-6dde-423c-9e68-dcc3b285247a",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "9dd7bf18-6dde-423c-9e68-dcc3b285247a"
+            },
+            "criteria_text": "Connects two explicitly stated ideas from a single text. | Combines related information from different sections of a text to form a coherent understanding. | Integrates information from multiple texts or sources to build a new concept or argument. | Synthesizes complex information from disparate sources, identifying connections and discrepancies, to form novel insights.",
+            "description": "The ability to combine information from different parts of a single text, or across multiple texts/sources, to form a new, coherent understanding or conclusion.",
+            "development_age": 11,
+            "mongo_id": "66581a000000000000000206",
+            "name": "Synthesis",
+            "parent_mongo_ids": [
+              "66581a000000000000000201",
+              "66581a000000000000000202",
+              "66581a000000000000000203",
+              "66581a000000000000000205"
+            ],
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "bbaa480c-e304-4792-af27-b3f41369d0ce",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "bbaa480c-e304-4792-af27-b3f41369d0ce"
+            },
+            "criteria_text": "Connects two explicitly stated ideas from a single text. | Combines related information from different sections of a text to form a coherent understanding. | Integrates information from multiple texts or sources to build a new concept or argument. | Synthesizes complex information from disparate sources, identifying connections and discrepancies, to form novel insights.",
+            "description": "The ability to combine information from different parts of a single text, or across multiple texts/sources, to form a new, coherent understanding or conclusion.",
+            "development_age": 11,
+            "mongo_id": "66581a000000000000000206",
+            "name": "Synthesis",
+            "parent_mongo_ids": [
+              "66581a000000000000000201",
+              "66581a000000000000000202",
+              "66581a000000000000000203",
+              "66581a000000000000000205"
+            ],
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "f887782d-f014-4361-b6e8-7b7794bea929",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "f887782d-f014-4361-b6e8-7b7794bea929"
+            },
+            "criteria_text": "Speaks in short sentences | Speaks in sentences | Speaks in sentences and can answer questions about what has been said | Speaks fluently with complex sentence structures | Demonstrates eloquent speaking with sophisticated language use",
+            "description": "This skill involves the ability to speak in sentences. It also involves the ability to answer questions about what has been said.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000012",
+            "name": "Speaking",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "a8f963ea-30f0-4eaf-9351-cb4aecb1c420",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "a8f963ea-30f0-4eaf-9351-cb4aecb1c420"
+            },
+            "criteria_text": "Uses a limited range of non-verbal communication | Uses a range of non-verbal communication | Uses a wide range of non-verbal communication | Uses sophisticated non-verbal communication effectively | Masters complex non-verbal communication including subtle gestures and body language",
+            "description": "This skill involves the ability to use a wide range of non-verbal communication. It also involves the ability to use non-verbal communication in the correct context.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000009",
+            "name": "Non-verbal communication",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "fee96330-10b9-4add-b82c-e6f7d79112bd",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "fee96330-10b9-4add-b82c-e6f7d79112bd"
+            },
+            "criteria_text": "Uses a limited range of words | Uses a range of words | Uses a wide range of words | Uses a wide range of words and specialist vocabulary | Uses sophisticated vocabulary and specialist terminology accurately in context",
+            "description": "This skill involves the ability to use a wide range of words and specialist vocabulary. It also involves the ability to use words in the correct context.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000008",
+            "name": "Vocabulary",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "c2c8e98a-afd7-4cce-b756-a04ee50b9a74",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "c2c8e98a-afd7-4cce-b756-a04ee50b9a74"
+            },
+            "criteria_text": "The child is able to make simple decisions and take responsibility for the consequences of those decisions | The child is able to organise simple tasks with others | The child is able to make decisions and take responsibility for the consequences while organizing others | The child is able to motivate others and organize complex tasks to achieve goals | The child demonstrates strong leadership by making difficult decisions, taking full responsibility, and successfully motivating teams",
+            "description": "This skill involves the ability to make decisions and to take responsibility for the consequences of those decisions. It also involves the ability to organise and motivate others to achieve a common goal.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000007",
+            "name": "Leadership",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "9e64b002-a741-46dd-8cae-63e5a796777c",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "9e64b002-a741-46dd-8cae-63e5a796777c"
+            },
+            "criteria_text": "Can solve a problem with one step | Can solve a problem with two steps | Can solve a problem with three steps | Can solve a problem with four steps | Can solve a problem with five or more steps",
+            "description": "Problem solving is the ability to solve a problem with multiple steps.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000005",
+            "name": "Problem Solving",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "96f71515-52f0-417d-af75-d33394257b6f",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "96f71515-52f0-417d-af75-d33394257b6f"
+            },
+            "criteria_text": "Can understand the context of a situation | Can understand the context of a situation and the chain of events that lead to the situation | Can understand the context of a situation and the chain of events that lead to the situation and the possible outcomes of the situation | Can understand the context of a situation and the chain of events that lead to the situation and the possible outcomes of the situation and the consequences of the situation | Can understand complex situations with multiple variables and predict long-term consequences accurately",
+            "description": "Critical thinking is the ability to understand the context of a situation and the chain of events that lead to the situation and the possible outcomes of the situation and the consequences of the situation.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000004",
+            "name": "Critical Thinking",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        },
+        {
+          "id": "efba5fc2-f1d2-47f0-903f-87c3d73994d5",
+          "properties": {
+            "_additional": {
+              "certainty": 0.9999999701976776,
+              "id": "efba5fc2-f1d2-47f0-903f-87c3d73994d5"
+            },
+            "criteria_text": "Can hear speech in a quiet room | Can hear speech in a room with some background noise | Can hear speech in a room with a lot of background noise | Can hear speech in a room with a lot of background noise and other people talking | Can hear speech in a room with a lot of background noise and other people talking and music playing",
+            "description": "Audio processing is the ability to hear and understand speech. It is used when we are thinking about something in the present moment.",
+            "development_age": 3,
+            "mongo_id": "66580f8e0000000000000003",
+            "name": "Audio Processing",
+            "parent_mongo_ids": "",
+            "skill_type": "Skill",
+            "source_mongo_ids": ""
+          }
+        }
+      ],
+      "synthesis": "Generated response based on prompt: Based on the following information about educational skills, please provide a comprehensive answer t",
+      "related_skills": [
+        {
+          "id": "66580f8e0000000000000049",
+          "name": "Internet Searching",
+          "type": "Skill",
+          "description": "The ability to effectively find, evaluate, and use information from digital sources. This includes using search strategies, assessing credibility, and organizing found information.",
+          "developmentAge": 0,
+          "hidden": false,
+          "criteria": [
+            {
+              "level": 1,
+              "description": "Can perform basic keyword searches"
+            },
+            {
+              "level": 2,
+              "description": "Can use different search strategies and sources"
+            },
+            {
+              "level": 3,
+              "description": "Can evaluate source credibility and relevance"
+            },
+            {
+              "level": 4,
+              "description": "Can conduct advanced searches and synthesize information"
+            },
+            {
+              "level": 5,
+              "description": "Can perform comprehensive research using multiple digital tools"
+            }
+          ],
+          "lastUpdated": "2025-06-07T22:54:58.189Z"
+        },
+        {
+          "id": "66580f8e0000000000000055",
+          "name": "Understanding Variables",
+          "type": "Skill",
+          "description": "The ability to identify, control, and manipulate different types of variables in investigations and analyses. This includes distinguishing between independent, dependent, and controlled variables.",
+          "developmentAge": 0,
+          "hidden": false,
+          "criteria": [
+            {
+              "level": 1,
+              "description": "Can identify obvious variables in simple situations"
+            },
+            {
+              "level": 2,
+              "description": "Can distinguish between different types of variables"
+            },
+            {
+              "level": 3,
+              "description": "Can control variables in investigations"
+            },
+            {
+              "level": 4,
+              "description": "Can manipulate multiple variables systematically"
+            },
+            {
+              "level": 5,
+              "description": "Can design complex investigations with sophisticated variable control"
+            }
+          ],
+          "lastUpdated": "2025-06-07T22:54:58.189Z"
+        },
+        {
+          "id": "66581a000000000000000201",
+          "name": "Literal Comprehension",
+          "type": "Skill",
+          "description": "The ability to understand information directly stated in a text, including explicit facts, definitions, and stated sequences.",
+          "developmentAge": 6,
+          "hidden": false,
+          "criteria": [
+            {
+              "level": 1,
+              "description": "Identifies explicitly stated facts in simple sentences."
+            },
+            {
+              "level": 2,
+              "description": "Locates multiple explicit facts across short paragraphs."
+            },
+            {
+              "level": 3,
+              "description": "Understands explicit sequential information in multi-paragraph texts."
+            },
+            {
+              "level": 4,
+              "description": "Accurately identifies and rephrases explicit information from complex or lengthy texts."
+            }
+          ],
+          "lastUpdated": "2025-06-07T22:54:58.189Z"
+        }
+      ]
+    },
+    "mongo_results": 4,
+    "related_skills": 3,
+    "weaviate_results": 10
+  }
+}

@@ -1,0 +1,108 @@
+<!-- filepath: /Users/michaelstewart/Coding/assist/Organisation/espassist.txt -->
+"I am developing a project called 'ESP Organizer'. Please use the following system architecture as context for my queries:
+
+I. Core Application Stack (esp-organizer):
+
+This stack is managed by a Docker Compose setup (compose.yaml located at /Users/michaelstewart/Coding/assist/esp-organizer/compose.yaml). It consists of:
+
+mongodb Service:
+Image: mongo:6.0
+Role: Primary document database for storing educational skills, sources, and relationships.
+Network: esp_organizer_network
+Data Persistence: Uses a Docker volume mongodb_data.
+Credentials: Managed via environment variables (MONGO_INITDB_ROOT_USERNAME, MONGO_INITDB_ROOT_PASSWORD) loaded from a .env file.
+
+weaviate Service:
+Image: weaviate/weaviate:latest
+Role: Vector database for semantic search and skill matching using embeddings.
+Network: esp_organizer_network
+Data Persistence: Uses a Docker volume weaviate_data.
+
+api Service (Go Backend):
+Image: m1ke57ew/esp-assist-api:latest (pulled from Docker Hub).
+Dockerfile (for building image): /Users/michaelstewart/Coding/assist/esp-organizer/docker/Dockerfile (Go 1.23, multi-stage Alpine build).
+Role: Backend API for managing educational skills data, interacting with MongoDB and Weaviate. Handles skill ingestion, semantic search, and LLM-ready query responses.
+Internal Port: Exposes port 8080 within the Docker network.
+Dependencies: MongoDB, Weaviate, future LLM integration (currently uses dummy embeddings).
+Network: esp_organizer_network.
+Environment Variables: MONGODB_URI, MONGODB_URI, MONGO_INITDB_ROOT_USERNAME, MONGO_INITDB_ROOT_PASSWORD.
+
+frontend Service (React Frontend):
+Image: m1ke57ew/esp-assist-frontend:latest (pulled from Docker Hub).
+Dockerfile (for building image): /Users/michaelstewart/Coding/assist/esp-organizer/frontend/Dockerfile (Node.js 18 build stage, served by Nginx in serve stage).
+Role: User interface for educational content management. Built with React, TypeScript, and Material UI.
+Internal Port: Exposes port 80 (Nginx serving static files) within the Docker network.
+API Communication: Calls the api service. The REACT_APP_API_URL is configured to /esp-organizer-api, expecting a reverse proxy to handle this path.
+Network: esp_organizer_network.
+
+II. Global Reverse Proxy (ESP-NGINX):
+This is a separate Docker container, managed by its own Docker Compose file (/Users/michaelstewart/Coding/ESP-NGINX/docker-compose.nginx.yaml).
+
+global_nginx_proxy Service:
+Role: Acts as the single entry point for all HTTP/S traffic to the Vultr server. Routes requests to the appropriate backend services.
+Host Ports: Listens on host ports 80 (and potentially 443 for SSL later).
+Routing for esp-organizer:
+Requests to http://<server_ip_or_domain>/esp-organizer/ are routed to the frontend service.
+Requests to http://<server_ip_or_domain>/esp-organizer-api/ are routed to the api service.
+
+Key Technologies:
+Backend: Go (Go 1.23)
+Frontend: React, TypeScript, Material UI
+Databases: MongoDB (document store), Weaviate (vector database)
+Containerization: Docker, Docker Compose
+Reverse Proxy: Nginx
+Deployment Target: Vultr server (Alpine Linux)
+Image Registry: Docker Hub
+
+Current Project Structure (Relevant Paths):
+ESP Organizer Root: /Users/michaelstewart/Coding/assist/esp-organizer/
+Go API Dockerfile: docker/Dockerfile
+Frontend Dockerfile: frontend/Dockerfile
+ESP Organizer Compose: compose.yaml
+Main Server: cmd/server/main.go
+Skills Data: internal/api/temp/skills.json (62 educational skills)
+
+Please keep this architecture in mind when responding to my questions about Docker, Nginx, Go, React, deployment, or specific service configurations."
+
+# VS Code Copilot System Prompt for ESP Organizer Project
+
+## Project Context: ESP Organizer - Educational Skills Semantic Database
+
+**Core Mission:** To develop a semantic search system for educational skills that enables AI-assisted understanding of skill relationships and dependencies. Our focus is on creating a robust foundation for educational technology that can support adaptive learning and skill development tracking.
+
+**Current Development Status:**
+* **Working MVP:** Functional Go API with MongoDB and Weaviate integration
+* **Semantic Search:** Deterministic embedding generation for skill matching (ready for LLM upgrade)  
+* **Skills Database:** 62 educational skills with hierarchical relationships and assessment criteria
+* **Vector Storage:** Weaviate integration with working semantic queries
+* **Testing Framework:** Comprehensive CLI tools for debugging and quality analysis
+
+---
+
+## Data Strategy for Educational Skills
+
+**Core Principle:** Leverage MongoDB for comprehensive skill data management and Weaviate for efficient semantic search and relationship discovery.
+
+### A. MongoDB: The Source of Truth
+* **Content:** Complete skill definitions (name, description, 5-level criteria), source references, and explicit parent-child relationships.
+* **Role:** CRUD operations, structured queries, data integrity, and relationship management.
+
+### B. Weaviate: The Semantic Understanding Layer  
+* **Content:** Vector embeddings of skill descriptions and criteria for semantic similarity matching.
+* **Metadata:** Each vector includes MongoDB `_id` for retrieval and skill metadata for filtering.
+* **Role:** Fast semantic search ("find skills like X"), relationship discovery, and LLM query preparation.
+
+### C. LLM Integration (Future)
+* **Current:** Deterministic embedding generation for consistent testing
+* **Planned:** Integration with actual LLM APIs for production embedding generation
+* **Architecture:** Ready for drop-in replacement of dummy embeddings with real LLM calls
+
+---
+
+## Technical Architecture Patterns:
+
+* **Microservices:** Clean separation between API, database layers, and vector search
+* **Service Pattern:** Skills service handles MongoDB operations, query handler coordinates semantic search
+* **Error Handling:** Comprehensive error handling across all service boundaries  
+* **Testing:** CLI utilities for system verification and quality analysis
+* **Docker Ready:** Full containerization with development and production configurations

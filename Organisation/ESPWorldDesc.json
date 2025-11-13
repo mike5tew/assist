@@ -1,0 +1,154 @@
+{
+    "projectName": "esp-organizer",
+    "description": "Go-based API with React frontend for ESP educational skills organization, using Weaviate for vector storage, semantic search, and AWS Textract for medical textbook processing.",
+    "rootDirectory": "/Users/michaelstewart/Coding/assist/esp-organizer",
+    "applicationType": "Dockerized Web Application with AWS Integration",
+    "currentStatus": "Working MVP with semantic search and medical content processing capabilities",
+    "components": [
+      {
+        "name": "Go API Backend",
+        "location": "/Users/michaelstewart/Coding/assist/esp-organizer",
+        "sourceCodeRoot": "/Users/michaelstewart/Coding/assist/esp-organizer/internal",
+        "technology": "Go 1.23",
+        "description": "Go-based API for educational skills management with semantic search and LLM-ready query responses",
+        "mainFiles": [
+          "/Users/michaelstewart/Coding/assist/esp-organizer/cmd/server/main.go",
+          "/Users/michaelstewart/Coding/assist/esp-organizer/internal/handlers.go",
+          "/Users/michaelstewart/Coding/assist/esp-organizer/internal/structures/structs.go",
+          "/Users/michaelstewart/Coding/assist/esp-organizer/internal/InfoFlow/InfoStore/db/weaviate.go",
+          "/Users/michaelstewart/Coding/assist/esp-organizer/internal/InfoFlow/InfoStore/db/mongodb.go"
+        ],
+        "database": {
+          "primary": "MongoDB",
+          "description": "Document storage for skills, sources, and educational content with hierarchical relationships",
+          "collections": ["skills", "sources"],
+          "currentData": "62 educational skills with 5-level assessment criteria"
+        },
+        "vectorDatabase": {
+          "provider": "Weaviate",
+          "description": "Vector storage and semantic search for educational skills with relationship discovery",
+          "classes": ["Skills"],
+          "integrationFile": "/Users/michaelstewart/Coding/assist/esp-organizer/internal/InfoFlow/InfoStore/db/weaviate.go",
+          "currentStatus": "Fully functional with working semantic queries"
+        },
+        "llm": {
+          "currentImplementation": "Deterministic dummy embeddings for development",
+          "futureIntegration": "Ready for LLM API integration (OpenAI/Llama)",
+          "description": "Embedding generation for semantic skill matching",
+          "integrationLocation": "/Users/michaelstewart/Coding/assist/esp-organizer/internal/llm",
+          "sourceCodeFiles": [
+            "/Users/michaelstewart/Coding/assist/esp-organizer/internal/llm/llama.go",
+            "/Users/michaelstewart/Coding/assist/esp-organizer/internal/llm/client.go"
+          ]
+        }
+      },
+      {
+        "name": "React Frontend",
+        "location": "/Users/michaelstewart/Coding/assist/esp-organizer/frontend",
+        "sourceCodeRoot": "/Users/michaelstewart/Coding/assist/esp-organizer/frontend/src",
+        "technology": "React + TypeScript + Material-UI",
+        "description": "Web interface for educational content management with semantic query testing",
+        "mainFiles": [
+          "/Users/michaelstewart/Coding/assist/esp-organizer/frontend/src/components/Drawer.tsx",
+          "/Users/michaelstewart/Coding/assist/esp-organizer/frontend/src/components/contentLoader.tsx"
+        ],
+        "authentication": {
+          "currentStatus": "Not implemented",
+          "planned": "Future JWT implementation"
+        }
+      }
+    ],
+    "cliUtilities": {
+      "description": "Comprehensive CLI tools for development and testing",
+      "tools": [
+        {
+          "name": "upload-skills",
+          "file": "/Users/michaelstewart/Coding/assist/esp-organizer/cmd/upload-skills/main.go",
+          "purpose": "Load skills from JSON into MongoDB and Weaviate"
+        },
+        {
+          "name": "debug-embeddings", 
+          "file": "/Users/michaelstewart/Coding/assist/esp-organizer/cmd/debug-embeddings/main.go",
+          "purpose": "Test embedding generation and vector storage"
+        },
+        {
+          "name": "query-test",
+          "file": "/Users/michaelstewart/Coding/assist/esp-organizer/cmd/query-test/main.go", 
+          "purpose": "Test semantic query system end-to-end"
+        },
+        {
+          "name": "analyze-results",
+          "file": "/Users/michaelstewart/Coding/assist/esp-organizer/cmd/analyze-results/main.go",
+          "purpose": "Analyze semantic search quality and export results"
+        },
+        {
+          "name": "clear-db",
+          "file": "/Users/michaelstewart/Coding/assist/esp-organizer/cmd/clear-db/main.go",
+          "purpose": "Clear all database collections for fresh starts"
+        }
+      ]
+    },
+    "dockerSetup": {
+      "dockerComposeLocation": "/Users/michaelstewart/Coding/assist/esp-organizer/compose.yaml",
+      "services": [
+        "mongodb",
+        "weaviate", 
+        "api",
+        "frontend"
+      ],
+      "makefile": "/Users/michaelstewart/Coding/assist/esp-organizer/Makefile",
+      "commands": ["setup", "clear", "upload", "debug", "test", "server"]
+    },
+    "deployment": {
+      "developmentPlatform": "Docker Compose",
+      "developmentOS": "macOS",
+      "productionPlatform": "Vultr",
+      "productionOS": "Alpine Linux",
+      "reverseProxy": "ESP-NGINX global proxy"
+    },
+    "apiEndpoints": {
+      "semanticQuery": "/api/skills/semantic-query",
+      "description": "GET/POST endpoint for LLM-ready semantic skill queries",
+      "responseFormat": "Enhanced JSON with exact matches, semantic matches, and insights"
+    },
+    "dataAssets": {
+      "skillsDataset": {
+        "location": "/Users/michaelstewart/Coding/assist/esp-organizer/internal/temp/skills.json",
+        "description": "62 educational skills with hierarchical relationships and assessment criteria",
+        "structure": "MongoDB-ready JSON with skill definitions, criteria levels, and parent relationships"
+      }
+    },
+    "awsIntegration": {
+      "textract": {
+        "purpose": "Medical textbook OCR and content extraction",
+        "specialization": "Immunology content with case study parsing",
+        "configLocation": "/Users/michaelstewart/Coding/assist/esp-organizer/.env",
+        "codeLocation": "/Users/michaelstewart/Coding/assist/esp-organizer/internal/extraction/textract.go",
+        "features": [
+          "Complex medical formatting (subscripts, superscripts)",
+          "Case study extraction and parsing",
+          "Medical terminology recognition",
+          "Patient information extraction",
+          "Clinical findings categorization"
+        ]
+      },
+      "s3": {
+        "purpose": "Document storage and processing pipeline",
+        "bucket": "esp-new-organizer-immunology",
+        "configuration": "AWS_S3_BUCKET environment variable"
+      }
+    },
+    "medicalContent": {
+      "primarySource": {
+        "title": "Case Studies in Immunology: A Clinical Companion",
+        "isbn": "978-0-8153-4532-1",
+        "targetExam": "FRC Path Part 1",
+        "contentTypes": ["case_studies", "patient_presentations", "diagnostic_processes", "treatment_protocols"]
+      },
+      "extractedContent": {
+        "medicalTerms": ["CD_markers", "cytokines", "immunoglobulins", "complement_system", "MHC_molecules"],
+        "clinicalFormats": ["laboratory_results", "physical_examinations", "imaging_studies"],
+        "caseStudyElements": ["patient_info", "presenting_symptoms", "clinical_findings", "discussion_points"]
+      }
+    }
+}

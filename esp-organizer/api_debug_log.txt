@@ -1,0 +1,277 @@
+2025/10/05 07:23:03 Successfully connected to MongoDB
+2025/10/05 07:23:09 Request: GET /api/extraction/status/immunology-chapter-1759648882
+2025/10/05 07:23:09 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:23:09 Successfully connected to MongoDB
+2025/10/05 07:23:11 Request: GET /
+2025/10/05 07:23:21 Request: GET /
+2025/10/05 07:23:31 Request: GET /
+2025/10/05 07:23:41 Request: GET /
+2025/10/05 07:23:51 Request: GET /
+2025/10/05 07:24:01 Request: GET /
+2025/10/05 07:24:07 Request: POST /api/immunology/upload-chapter
+2025/10/05 07:24:07 [Batch immunology-chapter-1759649047] Starting immunology processing for file: upload.pdf
+2025/10/05 07:24:07 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:24:07 Successfully connected to MongoDB
+2025/10/05 07:24:07 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:24:07 Successfully connected to MongoDB
+2025/10/05 07:24:07 AWS_BEDROCK_COMPLETION_MODEL_ID not set, using default: anthropic.claude-3-sonnet-20240229-v1:0
+2025/10/05 07:24:07 Using AWS Bedrock for LLM with models: amazon.titan-embed-text-v2:0 (embeddings), anthropic.claude-v2 (completions)
+2025/10/05 07:24:07 === REAL AWS TEXTRACT OCR PROCESSING ===
+2025/10/05 07:24:07 Starting OCR processing for job: immunology-chapter-1759649047
+2025/10/05 07:24:07 Region: eu-west-2, Bucket: esp-new-organizer-immunology
+2025/10/05 07:24:07 Chapter: 1 - Test Chapter
+2025/10/05 07:24:07 Book: Test Book
+2025/10/05 07:24:07 File size: 3431998 bytes
+2025/10/05 07:24:07 Uploading to S3: s3://esp-new-organizer-immunology/textract-input/immunology-chapter-1759649047.pdf
+2025/10/05 07:24:07 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:24:07 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:24:07 Successfully connected to MongoDB
+2025/10/05 07:24:08 Successfully uploaded to S3
+2025/10/05 07:24:08 Starting Textract LAYOUT analysis for scanned book pages...
+2025/10/05 07:24:08 🔍 Attempting LAYOUT analysis with features: [LAYOUT, TABLES]
+2025/10/05 07:24:08 🚀 Starting LAYOUT analysis for S3 key: textract-input/immunology-chapter-1759649047.pdf
+2025/10/05 07:24:08 ⏳ LAYOUT analysis job started with ID: 5ac3c14a56ece4f80dc8f5cf381be5679469fceeb0e6751d4f3321cc4110bd8f
+2025/10/05 07:24:08 📊 LAYOUT analysis status: IN_PROGRESS (elapsed: 21.683ms)
+2025/10/05 07:24:12 Request: GET /
+2025/10/05 07:24:12 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:24:12 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:24:12 Successfully connected to MongoDB
+2025/10/05 07:24:17 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:24:17 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:24:17 Successfully connected to MongoDB
+2025/10/05 07:24:22 Request: GET /
+2025/10/05 07:24:22 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:24:22 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:24:22 Successfully connected to MongoDB
+2025/10/05 07:24:24 📊 LAYOUT analysis status: SUCCEEDED (elapsed: 15.441908424s)
+2025/10/05 07:24:24 🎉 LAYOUT analysis completed successfully!
+2025/10/05 07:24:24 📄 Retrieved 1000 blocks from first page
+2025/10/05 07:24:24 📄 Retrieving page 2 with NextToken...
+2025/10/05 07:24:24 📄 Retrieved 1000 blocks from page 2 (total: 2000)
+2025/10/05 07:24:24 📄 Retrieving page 3 with NextToken...
+2025/10/05 07:24:24 📄 Retrieved 1000 blocks from page 3 (total: 3000)
+2025/10/05 07:24:24 📄 Retrieving page 4 with NextToken...
+2025/10/05 07:24:25 📄 Retrieved 1000 blocks from page 4 (total: 4000)
+2025/10/05 07:24:25 📄 Retrieving page 5 with NextToken...
+2025/10/05 07:24:25 📄 Retrieved 73 blocks from page 5 (total: 4073)
+2025/10/05 07:24:25 ✅ LAYOUT analysis completed: 4073 total blocks across 5 pages
+2025/10/05 07:24:25 📋 LAYOUT analysis block breakdown: map[CELL:99 LAYOUT_FIGURE:11 LAYOUT_FOOTER:1 LAYOUT_HEADER:5 LAYOUT_LIST:2 LAYOUT_PAGE_NUMBER:6 LAYOUT_SECTION_HEADER:3 LAYOUT_TEXT:49 LAYOUT_TITLE:2 LINE:522 MERGED_CELL:10 PAGE:7 SELECTION_ELEMENT:2 TABLE:3 TABLE_TITLE:1 WORD:3350]
+2025/10/05 07:24:25 ✅ LAYOUT analysis successful: found 4073 blocks
+2025/10/05 07:24:25 Analyzing 4073 Textract blocks for OCR content...
+2025/10/05 07:24:25 📊 Detailed block analysis:
+2025/10/05 07:24:25   • WORD: 3350 blocks
+2025/10/05 07:24:25   • LAYOUT_SECTION_HEADER: 3 blocks
+2025/10/05 07:24:25   • CELL: 99 blocks
+2025/10/05 07:24:25   • LAYOUT_HEADER: 5 blocks
+2025/10/05 07:24:25   • LAYOUT_FIGURE: 11 blocks
+2025/10/05 07:24:25   • LINE: 522 blocks
+2025/10/05 07:24:25   • LAYOUT_TEXT: 49 blocks
+2025/10/05 07:24:25   • LAYOUT_FOOTER: 1 blocks
+2025/10/05 07:24:25   • TABLE: 3 blocks
+2025/10/05 07:24:25   • SELECTION_ELEMENT: 2 blocks
+2025/10/05 07:24:25   • MERGED_CELL: 10 blocks
+2025/10/05 07:24:25   • TABLE_TITLE: 1 blocks
+2025/10/05 07:24:25   • LAYOUT_PAGE_NUMBER: 6 blocks
+2025/10/05 07:24:25   • LAYOUT_LIST: 2 blocks
+2025/10/05 07:24:25   • PAGE: 7 blocks
+2025/10/05 07:24:25   • LAYOUT_TITLE: 2 blocks
+2025/10/05 07:24:25 📝 Contains readable text: true
+2025/10/05 07:24:25 OCR extraction: Found 522 LINE blocks, 3350 WORD blocks
+2025/10/05 07:24:25 Extracted text using LINE blocks: 522 lines
+2025/10/05 07:24:25 OCR text extracted: 21171 characters
+2025/10/05 07:24:25 OCR text preview: CASE 1
+X-LINKED AGAMMAGLOBULINEMIA
+An absence of B lymphocytes.
+One of the most important functions of the adaptive immune system is the pro-
+TOPICS BEARING
+duction of antibodies. It is estimated that...
+2025/10/05 07:24:25 Extracted 1 case studies and 12 medical terms
+2025/10/05 07:24:25 === OCR PROCESSING COMPLETED ===
+2025/10/05 07:24:25 Job immunology-chapter-1759649047 completed successfully
+2025/10/05 07:24:25 [Batch immunology-chapter-1759649047] Stored chapter in immunology_content with ID: ObjectID("68e21d29fc33feac02dadea2")
+2025/10/05 07:24:25 [Batch immunology-chapter-1759649047] ✅ Stored 1 case studies and 12 medical terms
+2025/10/05 07:24:25 [Batch immunology-chapter-1759649047] Starting semantic link extraction for 14 documents...
+2025/10/05 07:24:25 PIPELINE STAGE 1 ✅: Raw content already stored in MongoDB with ID 68e21d29fc33feac02dadea2
+2025/10/05 07:24:25 PIPELINE STAGE 2 ⏳: Beginning LLaMA semantic extraction on document 68e21d29fc33feac02dadea2
+2025/10/05 07:24:25 AWS Bedrock API error: operation error Bedrock Runtime: InvokeModel, https response error StatusCode: 400, RequestID: 24bbdc2f-87d9-4036-9fe8-e76558b234f6, ValidationException: The provided model identifier is invalid.
+2025/10/05 07:24:25 Using fallback text generation for prompt: Extract the key domain-specific terms from the fol...
+2025/10/05 07:24:25 [Batch immunology-chapter-1759649047] ERROR: Semantic link processing failed for Test Chapter: failed to extract terms from document 68e21d29fc33feac02dadea2: invalid JSON format in LLaMA response: I processed your request about 'Extract the key domain-specific terms from the fol...', but I'm currently in fallback mode with limited capabilities. Please ensure an LLM provider is properly configured.
+2025/10/05 07:24:25 PIPELINE STAGE 1 ✅: Raw content already stored in MongoDB with ID 68e21d29fc33feac02dadea3
+2025/10/05 07:24:25 PIPELINE STAGE 2 ⏳: Beginning LLaMA semantic extraction on document 68e21d29fc33feac02dadea3
+2025/10/05 07:24:25 AWS Bedrock API error: operation error Bedrock Runtime: InvokeModel, https response error StatusCode: 400, RequestID: e4b7f710-85e3-4ca9-9e7f-5b7c405a4bee, ValidationException: The provided model identifier is invalid.
+2025/10/05 07:24:25 Using fallback text generation for prompt: Extract the key domain-specific terms from the fol...
+2025/10/05 07:24:25 [Batch immunology-chapter-1759649047] ERROR: Semantic link processing failed for Case 1-1: : failed to extract terms from document 68e21d29fc33feac02dadea3: invalid JSON format in LLaMA response: I processed your request about 'Extract the key domain-specific terms from the fol...', but I'm currently in fallback mode with limited capabilities. Please ensure an LLM provider is properly configured.
+2025/10/05 07:24:25 PIPELINE STAGE 1 ✅: Raw content already stored in MongoDB with ID 68e21d29fc33feac02dadea4
+2025/10/05 07:24:25 PIPELINE STAGE 2 ⏳: Beginning LLaMA semantic extraction on document 68e21d29fc33feac02dadea4
+2025/10/05 07:24:25 AWS Bedrock API error: operation error Bedrock Runtime: InvokeModel, https response error StatusCode: 400, RequestID: 6384a0c0-f51f-4226-bc1c-7e9e733b5b19, ValidationException: The provided model identifier is invalid.
+2025/10/05 07:24:25 Using fallback text generation for prompt: Extract the key domain-specific terms from the fol...
+2025/10/05 07:24:25 [Batch immunology-chapter-1759649047] ERROR: Semantic link processing failed for Immunoglobulin: failed to extract terms from document 68e21d29fc33feac02dadea4: invalid JSON format in LLaMA response: I processed your request about 'Extract the key domain-specific terms from the fol...', but I'm currently in fallback mode with limited capabilities. Please ensure an LLM provider is properly configured.
+2025/10/05 07:24:25 PIPELINE STAGE 1 ✅: Raw content already stored in MongoDB with ID 68e21d29fc33feac02dadea5
+2025/10/05 07:24:25 PIPELINE STAGE 2 ⏳: Beginning LLaMA semantic extraction on document 68e21d29fc33feac02dadea5
+2025/10/05 07:24:25 AWS Bedrock API error: operation error Bedrock Runtime: InvokeModel, https response error StatusCode: 400, RequestID: dbb04d7e-b0aa-45b6-bd7d-e5baa9dfc997, ValidationException: The provided model identifier is invalid.
+2025/10/05 07:24:25 Using fallback text generation for prompt: Extract the key domain-specific terms from the fol...
+2025/10/05 07:24:25 [Batch immunology-chapter-1759649047] ERROR: Semantic link processing failed for Antibody: failed to extract terms from document 68e21d29fc33feac02dadea5: invalid JSON format in LLaMA response: I processed your request about 'Extract the key domain-specific terms from the fol...', but I'm currently in fallback mode with limited capabilities. Please ensure an LLM provider is properly configured.
+2025/10/05 07:24:25 PIPELINE STAGE 1 ✅: Raw content already stored in MongoDB with ID 68e21d29fc33feac02dadea6
+2025/10/05 07:24:25 PIPELINE STAGE 2 ⏳: Beginning LLaMA semantic extraction on document 68e21d29fc33feac02dadea6
+2025/10/05 07:24:25 AWS Bedrock API error: operation error Bedrock Runtime: InvokeModel, https response error StatusCode: 400, RequestID: 1d411359-9a21-4313-b120-bc5d316775fa, ValidationException: The provided model identifier is invalid.
+2025/10/05 07:24:25 Using fallback text generation for prompt: Extract the key domain-specific terms from the fol...
+2025/10/05 07:24:25 [Batch immunology-chapter-1759649047] ERROR: Semantic link processing failed for Antigen: failed to extract terms from document 68e21d29fc33feac02dadea6: invalid JSON format in LLaMA response: I processed your request about 'Extract the key domain-specific terms from the fol...', but I'm currently in fallback mode with limited capabilities. Please ensure an LLM provider is properly configured.
+2025/10/05 07:24:25 PIPELINE STAGE 1 ✅: Raw content already stored in MongoDB with ID 68e21d29fc33feac02dadea7
+2025/10/05 07:24:25 PIPELINE STAGE 2 ⏳: Beginning LLaMA semantic extraction on document 68e21d29fc33feac02dadea7
+2025/10/05 07:24:25 AWS Bedrock API error: operation error Bedrock Runtime: InvokeModel, https response error StatusCode: 400, RequestID: ba230b78-031d-4087-ab9b-fa06e176c87e, ValidationException: The provided model identifier is invalid.
+2025/10/05 07:24:25 Using fallback text generation for prompt: Extract the key domain-specific terms from the fol...
+2025/10/05 07:24:25 [Batch immunology-chapter-1759649047] ERROR: Semantic link processing failed for Lymphocyte: failed to extract terms from document 68e21d29fc33feac02dadea7: invalid JSON format in LLaMA response: I processed your request about 'Extract the key domain-specific terms from the fol...', but I'm currently in fallback mode with limited capabilities. Please ensure an LLM provider is properly configured.
+2025/10/05 07:24:25 PIPELINE STAGE 1 ✅: Raw content already stored in MongoDB with ID 68e21d29fc33feac02dadea8
+2025/10/05 07:24:25 PIPELINE STAGE 2 ⏳: Beginning LLaMA semantic extraction on document 68e21d29fc33feac02dadea8
+2025/10/05 07:24:25 AWS Bedrock API error: operation error Bedrock Runtime: InvokeModel, https response error StatusCode: 400, RequestID: d1f7a9f0-6908-47a1-8210-701e9e4059b1, ValidationException: The provided model identifier is invalid.
+2025/10/05 07:24:25 Using fallback text generation for prompt: Extract the key domain-specific terms from the fol...
+2025/10/05 07:24:25 [Batch immunology-chapter-1759649047] ERROR: Semantic link processing failed for Complement: failed to extract terms from document 68e21d29fc33feac02dadea8: invalid JSON format in LLaMA response: I processed your request about 'Extract the key domain-specific terms from the fol...', but I'm currently in fallback mode with limited capabilities. Please ensure an LLM provider is properly configured.
+2025/10/05 07:24:25 PIPELINE STAGE 1 ✅: Raw content already stored in MongoDB with ID 68e21d29fc33feac02dadea9
+2025/10/05 07:24:25 PIPELINE STAGE 2 ⏳: Beginning LLaMA semantic extraction on document 68e21d29fc33feac02dadea9
+2025/10/05 07:24:25 AWS Bedrock API error: operation error Bedrock Runtime: InvokeModel, https response error StatusCode: 400, RequestID: 614e9ea7-376e-4206-ae98-b4700ecf2fce, ValidationException: The provided model identifier is invalid.
+2025/10/05 07:24:25 Using fallback text generation for prompt: Extract the key domain-specific terms from the fol...
+2025/10/05 07:24:25 [Batch immunology-chapter-1759649047] ERROR: Semantic link processing failed for Macrophage: failed to extract terms from document 68e21d29fc33feac02dadea9: invalid JSON format in LLaMA response: I processed your request about 'Extract the key domain-specific terms from the fol...', but I'm currently in fallback mode with limited capabilities. Please ensure an LLM provider is properly configured.
+2025/10/05 07:24:25 PIPELINE STAGE 1 ✅: Raw content already stored in MongoDB with ID 68e21d29fc33feac02dadeaa
+2025/10/05 07:24:25 PIPELINE STAGE 2 ⏳: Beginning LLaMA semantic extraction on document 68e21d29fc33feac02dadeaa
+2025/10/05 07:24:25 AWS Bedrock API error: operation error Bedrock Runtime: InvokeModel, https response error StatusCode: 400, RequestID: 643bf6ac-efb1-48c0-8321-9b9293d1dcf1, ValidationException: The provided model identifier is invalid.
+2025/10/05 07:24:25 Using fallback text generation for prompt: Extract the key domain-specific terms from the fol...
+2025/10/05 07:24:25 [Batch immunology-chapter-1759649047] ERROR: Semantic link processing failed for Neutrophil: failed to extract terms from document 68e21d29fc33feac02dadeaa: invalid JSON format in LLaMA response: I processed your request about 'Extract the key domain-specific terms from the fol...', but I'm currently in fallback mode with limited capabilities. Please ensure an LLM provider is properly configured.
+2025/10/05 07:24:25 PIPELINE STAGE 1 ✅: Raw content already stored in MongoDB with ID 68e21d29fc33feac02dadeab
+2025/10/05 07:24:25 PIPELINE STAGE 2 ⏳: Beginning LLaMA semantic extraction on document 68e21d29fc33feac02dadeab
+2025/10/05 07:24:25 AWS Bedrock API error: operation error Bedrock Runtime: InvokeModel, https response error StatusCode: 400, RequestID: 662ab80c-e024-4569-907b-385a248786d6, ValidationException: The provided model identifier is invalid.
+2025/10/05 07:24:25 Using fallback text generation for prompt: Extract the key domain-specific terms from the fol...
+2025/10/05 07:24:25 [Batch immunology-chapter-1759649047] ERROR: Semantic link processing failed for Plasma Cell: failed to extract terms from document 68e21d29fc33feac02dadeab: invalid JSON format in LLaMA response: I processed your request about 'Extract the key domain-specific terms from the fol...', but I'm currently in fallback mode with limited capabilities. Please ensure an LLM provider is properly configured.
+2025/10/05 07:24:25 PIPELINE STAGE 1 ✅: Raw content already stored in MongoDB with ID 68e21d29fc33feac02dadeac
+2025/10/05 07:24:25 PIPELINE STAGE 2 ⏳: Beginning LLaMA semantic extraction on document 68e21d29fc33feac02dadeac
+2025/10/05 07:24:25 AWS Bedrock API error: operation error Bedrock Runtime: InvokeModel, https response error StatusCode: 400, RequestID: 1dfa326a-f949-4f5f-a586-5880e0763461, ValidationException: The provided model identifier is invalid.
+2025/10/05 07:24:25 Using fallback text generation for prompt: Extract the key domain-specific terms from the fol...
+2025/10/05 07:24:25 [Batch immunology-chapter-1759649047] ERROR: Semantic link processing failed for Helper T Cell: failed to extract terms from document 68e21d29fc33feac02dadeac: invalid JSON format in LLaMA response: I processed your request about 'Extract the key domain-specific terms from the fol...', but I'm currently in fallback mode with limited capabilities. Please ensure an LLM provider is properly configured.
+2025/10/05 07:24:25 PIPELINE STAGE 1 ✅: Raw content already stored in MongoDB with ID 68e21d29fc33feac02dadead
+2025/10/05 07:24:25 PIPELINE STAGE 2 ⏳: Beginning LLaMA semantic extraction on document 68e21d29fc33feac02dadead
+2025/10/05 07:24:25 AWS Bedrock API error: operation error Bedrock Runtime: InvokeModel, https response error StatusCode: 400, RequestID: 8f5e63ff-c81f-4a0f-8539-9de8e7bcae19, ValidationException: The provided model identifier is invalid.
+2025/10/05 07:24:25 Using fallback text generation for prompt: Extract the key domain-specific terms from the fol...
+2025/10/05 07:24:25 [Batch immunology-chapter-1759649047] ERROR: Semantic link processing failed for Cytotoxic T Cell: failed to extract terms from document 68e21d29fc33feac02dadead: invalid JSON format in LLaMA response: I processed your request about 'Extract the key domain-specific terms from the fol...', but I'm currently in fallback mode with limited capabilities. Please ensure an LLM provider is properly configured.
+2025/10/05 07:24:25 PIPELINE STAGE 1 ✅: Raw content already stored in MongoDB with ID 68e21d29fc33feac02dadeae
+2025/10/05 07:24:25 PIPELINE STAGE 2 ⏳: Beginning LLaMA semantic extraction on document 68e21d29fc33feac02dadeae
+2025/10/05 07:24:25 AWS Bedrock API error: operation error Bedrock Runtime: InvokeModel, https response error StatusCode: 400, RequestID: f53e388a-d87a-4a40-808d-792674f3dede, ValidationException: The provided model identifier is invalid.
+2025/10/05 07:24:25 Using fallback text generation for prompt: Extract the key domain-specific terms from the fol...
+2025/10/05 07:24:25 [Batch immunology-chapter-1759649047] ERROR: Semantic link processing failed for Immunodeficiency: failed to extract terms from document 68e21d29fc33feac02dadeae: invalid JSON format in LLaMA response: I processed your request about 'Extract the key domain-specific terms from the fol...', but I'm currently in fallback mode with limited capabilities. Please ensure an LLM provider is properly configured.
+2025/10/05 07:24:25 PIPELINE STAGE 1 ✅: Raw content already stored in MongoDB with ID 68e21d29fc33feac02dadeaf
+2025/10/05 07:24:25 PIPELINE STAGE 2 ⏳: Beginning LLaMA semantic extraction on document 68e21d29fc33feac02dadeaf
+2025/10/05 07:24:25 AWS Bedrock API error: operation error Bedrock Runtime: InvokeModel, https response error StatusCode: 400, RequestID: e921bfe6-1b2b-4ef7-aa8e-bcf8b42fd838, ValidationException: The provided model identifier is invalid.
+2025/10/05 07:24:25 Using fallback text generation for prompt: Extract the key domain-specific terms from the fol...
+2025/10/05 07:24:25 [Batch immunology-chapter-1759649047] ERROR: Semantic link processing failed for Inflammation: failed to extract terms from document 68e21d29fc33feac02dadeaf: invalid JSON format in LLaMA response: I processed your request about 'Extract the key domain-specific terms from the fol...', but I'm currently in fallback mode with limited capabilities. Please ensure an LLM provider is properly configured.
+2025/10/05 07:24:25 [Batch immunology-chapter-1759649047] Semantic link extraction complete.
+2025/10/05 07:24:25 ✅ [Batch immunology-chapter-1759649047] Immunology processing finished successfully. 14 documents processed for semantic links.
+2025/10/05 07:24:27 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:24:27 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:24:27 Successfully connected to MongoDB
+2025/10/05 07:24:32 Request: GET /
+2025/10/05 07:24:32 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:24:32 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:24:32 Successfully connected to MongoDB
+2025/10/05 07:24:37 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:24:37 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:24:37 Successfully connected to MongoDB
+2025/10/05 07:24:42 Request: GET /
+2025/10/05 07:24:42 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:24:42 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:24:42 Successfully connected to MongoDB
+2025/10/05 07:24:47 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:24:47 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:24:47 Successfully connected to MongoDB
+2025/10/05 07:24:52 Request: GET /
+2025/10/05 07:24:52 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:24:52 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:24:52 Successfully connected to MongoDB
+2025/10/05 07:24:57 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:24:57 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:24:57 Successfully connected to MongoDB
+2025/10/05 07:25:02 Request: GET /
+2025/10/05 07:25:02 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:25:02 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:25:02 Successfully connected to MongoDB
+2025/10/05 07:25:08 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:25:08 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:25:08 Successfully connected to MongoDB
+2025/10/05 07:25:12 Request: GET /
+2025/10/05 07:25:13 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:25:13 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:25:13 Successfully connected to MongoDB
+2025/10/05 07:25:18 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:25:18 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:25:18 Successfully connected to MongoDB
+2025/10/05 07:25:22 Request: GET /
+2025/10/05 07:25:23 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:25:23 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:25:23 Successfully connected to MongoDB
+2025/10/05 07:25:28 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:25:28 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:25:28 Successfully connected to MongoDB
+2025/10/05 07:25:32 Request: GET /
+2025/10/05 07:25:33 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:25:33 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:25:33 Successfully connected to MongoDB
+2025/10/05 07:25:38 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:25:38 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:25:38 Successfully connected to MongoDB
+2025/10/05 07:25:42 Request: GET /
+2025/10/05 07:25:43 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:25:43 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:25:43 Successfully connected to MongoDB
+2025/10/05 07:25:48 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:25:48 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:25:48 Successfully connected to MongoDB
+2025/10/05 07:25:52 Request: GET /
+2025/10/05 07:25:53 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:25:53 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:25:53 Successfully connected to MongoDB
+2025/10/05 07:25:58 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:25:58 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:25:58 Successfully connected to MongoDB
+2025/10/05 07:26:03 Request: GET /
+2025/10/05 07:26:03 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:26:03 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:26:03 Successfully connected to MongoDB
+2025/10/05 07:26:08 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:26:08 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:26:08 Successfully connected to MongoDB
+2025/10/05 07:26:13 Request: GET /
+2025/10/05 07:26:13 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:26:13 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:26:13 Successfully connected to MongoDB
+2025/10/05 07:26:19 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:26:19 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:26:19 Successfully connected to MongoDB
+2025/10/05 07:26:23 Request: GET /
+2025/10/05 07:26:24 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:26:24 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:26:24 Successfully connected to MongoDB
+2025/10/05 07:26:29 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:26:29 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:26:29 Successfully connected to MongoDB
+2025/10/05 07:26:33 Request: GET /
+2025/10/05 07:26:34 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:26:34 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:26:34 Successfully connected to MongoDB
+2025/10/05 07:26:39 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:26:39 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:26:39 Successfully connected to MongoDB
+2025/10/05 07:26:43 Request: GET /
+2025/10/05 07:26:44 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:26:44 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:26:44 Successfully connected to MongoDB
+2025/10/05 07:26:49 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:26:49 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:26:49 Successfully connected to MongoDB
+2025/10/05 07:26:53 Request: GET /
+2025/10/05 07:26:54 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:26:54 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:26:54 Successfully connected to MongoDB
+2025/10/05 07:26:59 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:26:59 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:26:59 Successfully connected to MongoDB
+2025/10/05 07:27:03 Request: GET /
+2025/10/05 07:27:04 Request: GET /api/extraction/status/immunology-chapter-1759649047
+2025/10/05 07:27:04 Connecting to MongoDB using URI: [masked for security] (database: esp_organizer)
+2025/10/05 07:27:04 Successfully connected to MongoDB

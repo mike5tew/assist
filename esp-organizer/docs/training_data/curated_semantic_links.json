@@ -1,0 +1,335 @@
+[
+  {
+    "link_id": "SL001",
+    "thread_id": "THREAD_XLA_PATHOPHYSIOLOGY",
+    "source_term": "Immunodeficiency Disorders",
+    "target_term": "X-Linked Agammaglobulinemia",
+    "relation_type": "encompasses",
+    "source_term_generality": 0.95,
+    "target_term_generality": 0.40,
+    "semantic_distance": 0.20,
+    "relationship_strength": 0.90,
+    "context": "X-linked agammaglobulinemia is a primary immunodeficiency disorder characterized by the absence of B lymphocytes",
+    "explanation": "Broad immunological category encompasses specific genetic disorder",
+    "hierarchy_rationale": "Source is domain-level concept (0.95) describing entire class of disorders. Target is specific disease entity (0.40). Distance is moderate (0.20) as XLA is one of many immunodeficiency types.",
+    "source_metadata": {
+      "document_id": "68e2ed2ffcc06550ef8703f8",
+      "chapter_number": "1",
+      "chapter_title": "X-Linked Agammaglobulinemia",
+      "book_title": "Case Studies in Immunology",
+      "book_isbn": "9780815345121",
+      "domain": "immunology"
+    }
+  },
+  {
+    "link_id": "SL002",
+    "thread_id": "THREAD_XLA_PATHOPHYSIOLOGY",
+    "source_term": "X-Linked Agammaglobulinemia",
+    "target_term": "BTK gene mutation",
+    "relation_type": "caused_by",
+    "source_term_generality": 0.40,
+    "target_term_generality": 0.15,
+    "semantic_distance": 0.10,
+    "relationship_strength": 0.95,
+    "context": "The gene defect in X-linked agammaglobulinemia was identified when the gene was mapped to the long arm of the X chromosome at Xq22. The gene, BTK, encodes a cytoplasmic protein tyrosine kinase called Bruton's tyrosine kinase",
+    "explanation": "Specific genetic disease directly caused by identified molecular defect",
+    "hierarchy_rationale": "Source is specific disease (0.40), target is molecular-level genetic mechanism (0.15). Very close relationship (0.10) due to direct causation. High strength (0.95) as this is a definitive genetic link.",
+    "source_metadata": {
+      "document_id": "68e2ed2ffcc06550ef8703f8",
+      "chapter_number": "1",
+      "chapter_title": "X-Linked Agammaglobulinemia",
+      "book_title": "Case Studies in Immunology",
+      "page_reference": "Page 6",
+      "domain": "immunology"
+    }
+  },
+  {
+    "link_id": "SL003",
+    "thread_id": "THREAD_XLA_PATHOPHYSIOLOGY",
+    "source_term": "BTK gene mutation",
+    "target_term": "B-cell deficiency",
+    "relation_type": "causes",
+    "source_term_generality": 0.15,
+    "target_term_generality": 0.50,
+    "semantic_distance": 0.12,
+    "relationship_strength": 0.95,
+    "context": "BTK is required to mediate the survival and further differentiation of the progenitor B cells in which successful rearrangement of their heavy-chain genes has occurred. It is also required for the survival of mature B cells",
+    "explanation": "Molecular defect leads to cellular deficiency",
+    "hierarchy_rationale": "Source is molecular mechanism (0.15), target is cellular-level pathology (0.50). Close relationship (0.12) as BTK directly regulates B-cell survival. Very high strength (0.95).",
+    "source_metadata": {
+      "document_id": "68e2ed2ffcc06550ef8703f8",
+      "chapter_number": "1",
+      "chapter_title": "X-Linked Agammaglobulinemia",
+      "book_title": "Case Studies in Immunology",
+      "domain": "immunology"
+    }
+  },
+  {
+    "link_id": "SL004",
+    "thread_id": "THREAD_XLA_PATHOPHYSIOLOGY",
+    "source_term": "B-cell deficiency",
+    "target_term": "Absent antibody production",
+    "relation_type": "causes",
+    "source_term_generality": 0.50,
+    "target_term_generality": 0.45,
+    "semantic_distance": 0.10,
+    "relationship_strength": 0.98,
+    "context": "This case concerns a young man who has an inherited inability to make antibodies. Further inquiry reveals that he has no B cells",
+    "explanation": "Cellular deficiency directly causes functional immune deficit",
+    "hierarchy_rationale": "Source is cellular pathology (0.50), target is functional consequence (0.45). Very close (0.10) as B cells are the sole producers of antibodies. Extremely high strength (0.98).",
+    "source_metadata": {
+      "document_id": "68e2ed2ffcc06550ef8703f8",
+      "chapter_number": "1",
+      "chapter_title": "X-Linked Agammaglobulinemia",
+      "book_title": "Case Studies in Immunology",
+      "domain": "immunology"
+    }
+  },
+  {
+    "link_id": "SL005",
+    "thread_id": "THREAD_XLA_CLINICAL",
+    "source_term": "Absent antibody production",
+    "target_term": "Recurrent bacterial infections",
+    "relation_type": "causes",
+    "source_term_generality": 0.45,
+    "target_term_generality": 0.30,
+    "semantic_distance": 0.20,
+    "relationship_strength": 0.85,
+    "context": "Males such as Bill with a hereditary inability to make antibodies are subject to recurrent infections. The infections are due almost exclusively to common extracellular bacterial pathogens-Haemophilus influenzae, Streptococcus pneumoniae, Streptococcus pyogenes, and Staphylococcus aureus",
+    "explanation": "Immunological defect leads to clinical manifestation",
+    "hierarchy_rationale": "Source is functional immune deficit (0.45), target is clinical symptom (0.30). Moderate distance (0.20) as causation is mediated by bacterial exposure. Strong but not absolute (0.85).",
+    "source_metadata": {
+      "document_id": "68e2ed2ffcc06550ef8703f8",
+      "chapter_number": "1",
+      "chapter_title": "X-Linked Agammaglobulinemia",
+      "book_title": "Case Studies in Immunology",
+      "domain": "immunology"
+    }
+  },
+  {
+    "link_id": "SL006",
+    "thread_id": "THREAD_XLA_TREATMENT",
+    "source_term": "Recurrent bacterial infections",
+    "target_term": "Intravenous immunoglobulin therapy",
+    "relation_type": "treated_with",
+    "source_term_generality": 0.30,
+    "target_term_generality": 0.25,
+    "semantic_distance": 0.30,
+    "relationship_strength": 0.90,
+    "context": "Bill was started on a preparation of gamma globulin rendered suitable for intravenous administration. He was given a dose of gamma globulin intravenously to maintain his IgG level at 600 mg dl⁻¹. He improved remarkably",
+    "explanation": "Clinical symptom managed by specific therapeutic intervention",
+    "hierarchy_rationale": "Source is clinical manifestation (0.30), target is therapeutic intervention (0.25). Greater distance (0.30) as treatment relationship is less direct than causation. High strength (0.90) based on clinical efficacy.",
+    "source_metadata": {
+      "document_id": "68e2ed2ffcc06550ef8703f8",
+      "chapter_number": "1",
+      "chapter_title": "X-Linked Agammaglobulinemia",
+      "book_title": "Case Studies in Immunology",
+      "page_reference": "Page 5",
+      "domain": "immunology"
+    }
+  },
+  {
+    "link_id": "SL007",
+    "thread_id": "THREAD_BCELL_FUNCTION",
+    "source_term": "B lymphocytes",
+    "target_term": "Antibody production",
+    "relation_type": "performs",
+    "source_term_generality": 0.55,
+    "target_term_generality": 0.45,
+    "semantic_distance": 0.05,
+    "relationship_strength": 1.00,
+    "context": "Mature circulating B cells proliferate on encounter with antigen and differentiate into plasma cells, which secrete antibody. Antibodies, which are made by the plasma cell progeny of B cells",
+    "explanation": "Cell type performs specific biological function",
+    "hierarchy_rationale": "Source is cell type (0.55), target is biological function (0.45). Very close (0.05) as this is the defining function of B cells. Perfect strength (1.00) - this is definitional.",
+    "source_metadata": {
+      "document_id": "68e2ed2ffcc06550ef8703f8",
+      "chapter_number": "1",
+      "chapter_title": "X-Linked Agammaglobulinemia",
+      "book_title": "Case Studies in Immunology",
+      "page_reference": "Page 1-2",
+      "domain": "immunology"
+    }
+  },
+  {
+    "link_id": "SL008",
+    "thread_id": "THREAD_XLA_PATHOPHYSIOLOGY",
+    "source_term": "Bruton's tyrosine kinase",
+    "target_term": "B-cell receptor signaling",
+    "relation_type": "regulates",
+    "source_term_generality": 0.18,
+    "target_term_generality": 0.40,
+    "semantic_distance": 0.15,
+    "relationship_strength": 0.95,
+    "context": "BTK phosphorylates several downstream molecules that are essential for BCR signaling and that include the B cell linker protein BLNK, phospholipase C-γ2 and protein kinase B",
+    "explanation": "Molecular enzyme regulates cellular signaling pathway",
+    "hierarchy_rationale": "Source is specific protein (0.18), target is signaling pathway (0.40). Moderate distance (0.15) as BTK is one component of the pathway. Very high strength (0.95) as BTK is essential.",
+    "source_metadata": {
+      "document_id": "68e2ed2ffcc06550ef8703f8",
+      "chapter_number": "1",
+      "chapter_title": "X-Linked Agammaglobulinemia",
+      "book_title": "Case Studies in Immunology",
+      "page_reference": "Page 6",
+      "domain": "immunology"
+    }
+  },
+  {
+    "link_id": "SL009",
+    "thread_id": "THREAD_IMMUNE_RESPONSE",
+    "source_term": "Pyogenic bacteria",
+    "target_term": "Complement fixation",
+    "relation_type": "requires_for_clearance",
+    "source_term_generality": 0.35,
+    "target_term_generality": 0.50,
+    "semantic_distance": 0.25,
+    "relationship_strength": 0.90,
+    "context": "The normal host response to pyogenic infections is the production of antibodies that coat the bacteria and fix complement, thereby enhancing rapid uptake of the bacteria into phagocytic cells",
+    "explanation": "Bacterial pathogen type requires specific immune mechanism for clearance",
+    "hierarchy_rationale": "Source is bacterial category (0.35), target is immune mechanism (0.50). Moderate distance (0.25) as complement is one of several clearance mechanisms. High strength (0.90).",
+    "source_metadata": {
+      "document_id": "68e2ed2ffcc06550ef8703f8",
+      "chapter_number": "1",
+      "chapter_title": "X-Linked Agammaglobulinemia",
+      "book_title": "Case Studies in Immunology",
+      "page_reference": "Page 5",
+      "domain": "immunology"
+    }
+  },
+  {
+    "link_id": "SL010",
+    "thread_id": "THREAD_IMMUNE_RESPONSE",
+    "source_term": "IgG antibodies",
+    "target_term": "Opsonization",
+    "relation_type": "enables",
+    "source_term_generality": 0.40,
+    "target_term_generality": 0.48,
+    "semantic_distance": 0.12,
+    "relationship_strength": 0.95,
+    "context": "Antibodies coating an antigen render it recognizable as foreign by phagocytes (macrophages and polymorphonuclear leukocytes), which then ingest and destroy it; this is called opsonization",
+    "explanation": "Antibody type enables specific immune effector function",
+    "hierarchy_rationale": "Source is antibody isotype (0.40), target is immune mechanism (0.48). Close (0.12) as IgG directly performs this function. Very high strength (0.95).",
+    "source_metadata": {
+      "document_id": "68e2ed2ffcc06550ef8703f8",
+      "chapter_number": "1",
+      "chapter_title": "X-Linked Agammaglobulinemia",
+      "book_title": "Case Studies in Immunology",
+      "page_reference": "Page 3",
+      "domain": "immunology"
+    }
+  },
+  {
+    "link_id": "SL011",
+    "thread_id": "THREAD_XLA_GENETICS",
+    "source_term": "X-chromosome Xq22 locus",
+    "target_term": "BTK gene",
+    "relation_type": "contains",
+    "source_term_generality": 0.20,
+    "target_term_generality": 0.15,
+    "semantic_distance": 0.08,
+    "relationship_strength": 1.00,
+    "context": "The gene defect in X-linked agammaglobulinemia was identified when the gene was mapped to the long arm of the X chromosome at Xq22 and subsequently cloned",
+    "explanation": "Chromosomal locus contains specific gene",
+    "hierarchy_rationale": "Source is chromosomal location (0.20), target is specific gene (0.15). Very close (0.08) as this is a direct containment relationship. Perfect strength (1.00) - definitional.",
+    "source_metadata": {
+      "document_id": "68e2ed2ffcc06550ef8703f8",
+      "chapter_number": "1",
+      "chapter_title": "X-Linked Agammaglobulinemia",
+      "book_title": "Case Studies in Immunology",
+      "page_reference": "Page 6",
+      "domain": "immunology"
+    }
+  },
+  {
+    "link_id": "SL012",
+    "thread_id": "THREAD_XLA_TREATMENT",
+    "source_term": "Gamma globulin",
+    "target_term": "IgG immunoglobulin",
+    "relation_type": "equivalent_to",
+    "source_term_generality": 0.35,
+    "target_term_generality": 0.35,
+    "semantic_distance": 0.00,
+    "relationship_strength": 1.00,
+    "context": "Cohn Fraction II is almost pure IgG and is called gamma globulin",
+    "explanation": "Clinical term is synonymous with scientific term",
+    "hierarchy_rationale": "Both terms refer to the same molecule (0.35 generality for both). Zero distance (0.00) as they are synonyms. Perfect strength (1.00).",
+    "source_metadata": {
+      "document_id": "68e2ed2ffcc06550ef8703f8",
+      "chapter_number": "1",
+      "chapter_title": "X-Linked Agammaglobulinemia",
+      "book_title": "Case Studies in Immunology",
+      "page_reference": "Page 5",
+      "domain": "immunology"
+    }
+  },
+  {
+    "link_id": "SL013",
+    "thread_id": "THREAD_XLA_CLINICAL",
+    "source_term": "T-cell function",
+    "target_term": "Viral infection clearance",
+    "relation_type": "enables",
+    "source_term_generality": 0.60,
+    "target_term_generality": 0.45,
+    "semantic_distance": 0.18,
+    "relationship_strength": 0.92,
+    "context": "T-cell number and function in males with X-linked agammaglobulinemia are normal, and these individuals therefore have normal cell-mediated responses, which are able to terminate viral infections",
+    "explanation": "Cellular immune function enables clearance of specific pathogen class",
+    "hierarchy_rationale": "Source is immune cell function (0.60), target is clinical outcome (0.45). Moderate distance (0.18) as other factors contribute. High strength (0.92).",
+    "source_metadata": {
+      "document_id": "68e2ed2ffcc06550ef8703f8",
+      "chapter_number": "1",
+      "chapter_title": "X-Linked Agammaglobulinemia",
+      "book_title": "Case Studies in Immunology",
+      "page_reference": "Page 5",
+      "domain": "immunology"
+    }
+  },
+  {
+    "link_id": "SL014",
+    "thread_id": "THREAD_XLA_COMPLICATIONS",
+    "source_term": "Chronic antibiotic use",
+    "target_term": "Bronchiectasis",
+    "relation_type": "prevents_but_risk",
+    "source_term_generality": 0.30,
+    "target_term_generality": 0.25,
+    "semantic_distance": 0.35,
+    "relationship_strength": 0.70,
+    "context": "Since antibiotics came into use, it has been possible to treat pyogenic infections successfully. However, when they recur frequently, the excessive release of proteolytic enzymes from the bacteria and from the host phagocytes causes anatomical damage, particularly to the airways of the lung. The bronchi lose their elasticity and become the site of chronic inflammation (this is called bronchiectasis)",
+    "explanation": "Treatment prevents immediate harm but doesn't prevent long-term complication from recurring infections",
+    "hierarchy_rationale": "Source is therapeutic intervention (0.30), target is chronic disease complication (0.25). Higher distance (0.35) as relationship is complex and indirect. Moderate strength (0.70) - connection exists but is multifactorial.",
+    "source_metadata": {
+      "document_id": "68e2ed2ffcc06550ef8703f8",
+      "chapter_number": "1",
+      "chapter_title": "X-Linked Agammaglobulinemia",
+      "book_title": "Case Studies in Immunology",
+      "page_reference": "Page 5",
+      "domain": "immunology"
+    }
+  },
+  {
+    "link_id": "SL015",
+    "thread_id": "THREAD_ADAPTIVE_IMMUNITY",
+    "source_term": "Adaptive immune system",
+    "target_term": "Antibody production",
+    "relation_type": "includes_function",
+    "source_term_generality": 0.92,
+    "target_term_generality": 0.45,
+    "semantic_distance": 0.28,
+    "relationship_strength": 0.95,
+    "context": "One of the most important functions of the adaptive immune system is the production of antibodies",
+    "explanation": "Immune system component includes specific functional capability",
+    "hierarchy_rationale": "Source is major system (0.92), target is specific function (0.45). Moderate distance (0.28) as adaptive immunity has many functions. Very high strength (0.95) as this is explicitly stated as important.",
+    "source_metadata": {
+      "document_id": "68e2ed2ffcc06550ef8703f8",
+      "chapter_number": "1",
+      "chapter_title": "X-Linked Agammaglobulinemia",
+      "book_title": "Case Studies in Immunology",
+      "page_reference": "Page 1",
+      "domain": "immunology"
+    }
+  }
+]
+      "book_title": "Case Studies in Immunology",
+      "page_reference": "Page 3",
+      "domain": "immunology"
+    }
+  }
+]

@@ -1,0 +1,356 @@
+4.1 Cell biology
+Cells are the basic unit of all forms of life. In this section we explore how structural differences between types of cells enables them to perform specific functions within the organism. These differences in cells are controlled by genes in the nucleus. For an organism to grow, cells must divide by mitosis producing two new identical cells. If cells are isolated at an early stage of growth before they have become too specialised, they can retain their ability to grow into a range of different types of cells. This phenomenon has led to the development of stem cell technology. This is a new branch of medicine that allows doctors to repair damaged organs by growing new tissue from stem cells.
+
+4.1.1 Cell structure
+4.1.1.1 Eukaryotes and prokaryotes
+Content
+
+Key opportunities for skills development
+
+Plant and animal cells (eukaryotic cells) have a cell membrane, cytoplasm and genetic material enclosed in a nucleus.
+
+ 
+Bacterial cells (prokaryotic cells) are much smaller in comparison. They have cytoplasm and a cell membrane surrounded by a cell wall. The genetic material is not enclosed in a nucleus. It is a single DNA loop and there may be one or more small rings of DNA called plasmids.
+
+ 
+Students should be able to demonstrate an understanding of the scale and size of cells and be able to make order of magnitude calculations, including the use of standard form.	
+MS 1b, 2a, 2h
+
+WS 4.4
+
+Use prefixes centi, milli, micro and nano.
+
+4.1.1.2 Animal and plant cells
+Content
+
+Key opportunities for skills development
+
+Students should be able to explain how the main sub-cellular structures, including the nucleus, cell membranes, mitochondria, chloroplasts in plant cells and plasmids in bacterial cells are related to their functions.
+
+Most animal cells have the following parts:
+
+a nucleus
+cytoplasm
+a cell membrane
+mitochondria
+ribosomes.
+In addition to the parts found in animal cells, plant cells often have:
+
+chloroplasts
+a permanent vacuole filled with cell sap.
+Plant and algal cells also have a cell wall made of cellulose, which strengthens the cell.
+
+WS 1.2
+
+Recognise, draw and interpret images of cells.
+
+Students should be able to use estimations and explain what they should be used to judge the relative size or area of sub-cellular structures.
+
+MS 1d, 3a
+
+AT 7
+
+Images of cells in videos, bioviewers, photographs and micrographs can be used as comparison for students own drawings.
+
+Required practical activity 1: use a light microscope to observe, draw and label a selection of plant and animal cells. A magnification scale must be included.
+
+AT skills covered by this practical activity: AT 1 and 7.
+
+This practical activity also provides opportunities to develop WS and MS. Details of all skills are given in Practical assessment .
+
+4.1.1.3 Cell specialisation
+Content
+
+Key opportunities for skills development
+
+Students should be able to, when provided with appropriate information, explain how the structure of different types of cell relate to their function in a tissue, an organ or organ system, or the whole organism.
+
+Cells may be specialised to carry out a particular function:
+
+sperm cells, nerve cells and muscle cells in animals
+root hair cells, xylem and phloem cells in plants.
+ 
+4.1.1.4 Cell differentiation
+Content
+
+Key opportunities for skills development
+
+Students should be able to explain the importance of cell differentiation.
+
+As an organism develops, cells differentiate to form different types of cells.
+Most types of animal cell differentiate at an early stage.
+Many types of plant cells retain the ability to differentiate throughout life.
+In mature animals, cell division is mainly restricted to repair and replacement. As a cell differentiates it acquires different sub-cellular structures to enable it to carry out a certain function. It has become a specialised cell.	 
+4.1.1.5 Microscopy
+Content
+
+Key opportunities for skills development
+
+Students should be able to:
+understand how microscopy techniques have developed over time
+explain how electron microscopy has increased understanding of sub-cellular structures.
+Limited to the differences in magnification and resolution.
+
+An electron microscope has much higher magnification and resolving power than a light microscope. This means that it can be used to study cells in much finer detail. This has enabled biologists to see and understand many more sub-cellular structures.
+
+WS 1.1
+
+Students should be able to carry out calculations involving magnification, real size and image size using the formula:
+
+m
+a
+g
+n
+i
+f
+i
+c
+a
+t
+i
+o
+n
+ 
+=
+s
+i
+z
+e
+ 
+o
+f
+ 
+i
+m
+a
+g
+e
+s
+i
+z
+e
+ 
+o
+f
+ 
+r
+e
+a
+l
+ 
+o
+b
+j
+e
+c
+t
+
+Students should be able to express answers in standard form if appropriate.
+
+MS 1a, 1b, 2h, 3b
+
+WS 4.4
+
+Use prefixes centi, milli, micro and nano.
+
+4.1.1.6 Culturing microorganisms (biology only)
+Content
+
+Key opportunities for skills development
+
+Bacteria multiply by simple cell division (binary fission) as often as once every 20 minutes if they have enough nutrients and a suitable temperature.
+
+Bacteria can be grown in a nutrient broth solution or as colonies on an agar gel plate.
+
+Uncontaminated cultures of microorganisms are required for investigating the action of disinfectants and antibiotics.
+
+MS 1a, 1b, 1d, 2a, 2h
+
+Calculate the number of bacteria in a population after a certain time if given the mean division time.
+
+MS 5c
+
+Calculate cross-sectional areas of colonies or clear areas around colonies using πr².
+
+Students should be able to describe how to prepare an uncontaminated culture using aseptic technique.
+
+They should be able to explain why:
+
+Petri dishes and culture media must be sterilised before use
+inoculating loops used to transfer microorganisms to the media must be sterilised by passing them through a flame
+the lid of the Petri dish should be secured with adhesive tape and stored upside down
+in school and college laboratories, cultures should be incubated at a maximum temperature of 25°C.
+WS 2.2, 2.4
+
+Students should be able to calculate cross-sectional areas of colonies or clear areas around colonies using πr².
+
+MS 5c
+
+Students should be able to calculate the number of bacteria in a population after a certain time if given the mean division time.
+
+MS 1a, 2a, 2h
+
+(HT only) Students should be able to express the answer in standard form.
+
+MS 1b
+
+Required practical activity 2: investigate the effect of antiseptics or antibiotics on bacterial growth using agar plates and measuring zones of inhibition.
+
+AT skills covered by this practical activity: AT 1, 3, 4 and 8.
+
+This practical activity also provides opportunities to develop WS and MS. Details of all skills are given in Key opportunities for skills development .
+
+There are links with this practical to Antibiotics and painkillers .
+
+4.1.2 Cell division
+4.1.2.1 Chromosomes
+Content
+
+Key opportunities for skills development
+
+The nucleus of a cell contains chromosomes made of DNA molecules. Each chromosome carries a large number of genes.
+
+In body cells the chromosomes are normally found in pairs.
+
+WS 1.2
+
+Use models and analogies to develop explanations of how cells divide.
+
+4.1.2.2 Mitosis and the cell cycle
+Content
+
+Key opportunities for skills development
+
+Cells divide in a series of stages called the cell cycle. Students should be able to describe the stages of the cell cycle, including mitosis.
+
+During the cell cycle the genetic material is doubled and then divided into two identical cells.
+
+Before a cell can divide it needs to grow and increase the number of sub-cellular structures such as ribosomes and mitochondria. The DNA replicates to form two copies of each chromosome.
+
+In mitosis one set of chromosomes is pulled to each end of the cell and the nucleus divides.
+
+Finally the cytoplasm and cell membranes divide to form two identical cells.
+
+Students need to understand the three overall stages of the cell cycle but do not need to know the different phases of the mitosis stage.
+
+Cell division by mitosis is important in the growth and development of multicellular organisms.
+
+Students should be able to recognise and describe situations in given contexts where mitosis is occurring.
+
+ 
+4.1.2.3 Stem cells
+Content
+
+Key opportunities for skills development
+
+A stem cell is an undifferentiated cell of an organism which is capable of giving rise to many more cells of the same type, and from which certain other cells can arise from differentiation.
+
+Students should be able to describe the function of stem cells in embryos, in adult animals and in the meristems in plants.
+
+Stem cells from human embryos can be cloned and made to differentiate into most different types of human cells.
+
+Stem cells from adult bone marrow can form many types of cells including blood cells.
+
+Meristem tissue in plants can differentiate into any type of plant cell, throughout the life of the plant.
+
+Knowledge and understanding of stem cell techniques are not required.
+
+Treatment with stem cells may be able to help conditions such as diabetes and paralysis.
+
+ 
+In therapeutic cloning an embryo is produced with the same genes as the patient. Stem cells from the embryo are not rejected by the patient’s body so they may be used for medical treatment.
+
+The use of stem cells has potential risks such as transfer of viral infection, and some people have ethical or religious objections.
+
+Stem cells from meristems in plants can be used to produce clones of plants quickly and economically.
+
+Rare species can be cloned to protect from extinction.
+Crop plants with special features such as disease resistance can be cloned to produce large numbers of identical plants for farmers.
+WS 1.3
+
+Evaluate the practical risks and benefits, as well as social and ethical issues, of the use of stem cells in medical research and treatments.
+
+4.1.3 Transport in cells
+4.1.3.1 Diffusion
+Content
+
+Key opportunities for skills development
+
+Substances may move into and out of cells across the cell membranes via diffusion.
+
+Diffusion is the spreading out of the particles of any substance in solution, or particles of a gas, resulting in a net movement from an area of higher concentration to an area of lower concentration.
+
+Some of the substances transported in and out of cells by diffusion are oxygen and carbon dioxide in gas exchange, and of the waste product urea from cells into the blood plasma for excretion in the kidney.
+
+Students should be able to explain how different factors affect the rate of diffusion.
+
+Factors which affect the rate of diffusion are:
+
+the difference in concentrations (concentration gradient)
+the temperature
+the surface area of the membrane.
+A single-celled organism has a relatively large surface area to volume ratio. This allows sufficient transport of molecules into and out of the cell to meet the needs of the organism.
+
+WS 1.2
+
+Recognise, draw and interpret diagrams that model diffusion.
+
+WS 1.5
+
+Use of isotonic drinks and high energy drinks in sport.
+
+Students should be able to calculate and compare surface area to volume ratios.
+
+Students should be able to explain the need for exchange surfaces and a transport system in multicellular organisms in terms of surface area to volume ratio.
+
+Students should be able to explain how the small intestine and lungs in mammals, gills in fish, and the roots and leaves in plants, are adapted for exchanging materials.
+
+In multicellular organisms, surfaces and organ systems are specialised for exchanging materials. This is to allow sufficient molecules to be transported into and out of cells for the organism’s needs. The effectiveness of an exchange surface is increased by:
+
+having a large surface area
+a membrane that is thin, to provide a short diffusion path
+(in animals) having an efficient blood supply
+(in animals, for gaseous exchange) being ventilated.
+MS 1c, 5c
+
+4.1.3.2 Osmosis
+Content
+
+Key opportunities for skills development
+
+Water may move across cell membranes via osmosis. Osmosis is the diffusion of water from a dilute solution to a concentrated solution through a partially permeable membrane.
+
+WS 1.2
+
+Recognise, draw and interpret diagrams that model osmosis.
+
+Students should be able to:
+use simple compound measures of rate of water uptake
+use percentiles
+calculate percentage gain and loss of mass of plant tissue.
+MS 1a, 1c
+
+Students should be able to plot, draw and interpret appropriate graphs.
+
+MS 4a, 4b, 4c, 4d
+
+Required practical activity 3: investigate the effect of a range of concentrations of salt or sugar solutions on the mass of plant tissue.
+
+AT skills covered by this practical activity: AT 1, 3 and 5.
+
+This practical activity also provides opportunities to develop WS and MS. Details of all skills are given in Required practical activity 3 .
+
+4.1.3.3 Active transport
+Content
+
+Key opportunities for skills development
+
+Active transport moves substances from a more dilute solution to a more concentrated solution (against a concentration gradient). This requires energy from respiration.
+
+Active transport allows mineral ions to be absorbed into plant root hairs from very dilute solutions in the soil. Plants require ions for healthy growth.
+
+It also allows sugar molecules to be absorbed from lower concentrations in the gut into the blood which has a higher sugar concentration. Sugar molecules are used for cell respiration.
+
+Students should be able to:
+describe how substances are transported into and out of cells by diffusion, osmosis and active transport
+explain the differences between the three processes.

@@ -1,0 +1,146 @@
+[
+  {
+    "thread_id": "THREAD_XLA_PATHOPHYSIOLOGY",
+    "thread_title": "XLA Disease Mechanism: Genetics to Cellular Pathology",
+    "domain": "immunology",
+    "semantic_link_chain": ["SL001", "SL002", "SL003", "SL004", "SL008"],
+    "narrative_summary": "X-linked agammaglobulinemia (XLA) is a primary immunodeficiency disorder caused by mutations in the BTK gene located on the X chromosome. The BTK protein is essential for B-cell receptor signaling and B-cell survival. Without functional BTK, patients develop severe B-cell deficiency, leading to absent antibody production and susceptibility to recurrent bacterial infections.",
+    "root_concept": "Immunodeficiency Disorders",
+    "terminal_concepts": ["Absent antibody production", "B-cell receptor signaling"],
+    "thread_type": "causal_chain",
+    "confidence": 0.94,
+    "created_at": "2025-01-05T22:00:00Z",
+    "source_metadata": {
+      "document_id": "68e2ed2ffcc06550ef8703f8",
+      "chapter_number": "1",
+      "chapter_title": "X-Linked Agammaglobulinemia",
+      "book_title": "Case Studies in Immunology"
+    }
+  },
+  {
+    "thread_id": "THREAD_XLA_CLINICAL",
+    "thread_title": "XLA Clinical Manifestations and Immune Specificity",
+    "domain": "immunology",
+    "semantic_link_chain": ["SL004", "SL005", "SL013"],
+    "narrative_summary": "Patients with XLA lack antibody production due to B-cell deficiency, making them susceptible to recurrent bacterial infections. However, their T-cell function remains normal, allowing them to clear viral infections effectively. This demonstrates the complementary roles of humoral and cell-mediated immunity.",
+    "root_concept": "Absent antibody production",
+    "terminal_concepts": ["Recurrent bacterial infections", "Viral infection clearance"],
+    "thread_type": "clinical_correlation",
+    "confidence": 0.88,
+    "created_at": "2025-01-05T22:00:00Z",
+    "source_metadata": {
+      "document_id": "68e2ed2ffcc06550ef8703f8",
+      "chapter_number": "1",
+      "chapter_title": "X-Linked Agammaglobulinemia",
+      "book_title": "Case Studies in Immunology"
+    }
+  },
+  {
+    "thread_id": "THREAD_XLA_TREATMENT",
+    "thread_title": "XLA Management: IVIG Replacement Therapy",
+    "domain": "immunology",
+    "semantic_link_chain": ["SL005", "SL006", "SL012"],
+    "narrative_summary": "Recurrent bacterial infections in XLA patients are managed with intravenous immunoglobulin (IVIG) therapy. Gamma globulin, which is essentially purified IgG, is administered regularly to maintain protective antibody levels and prevent infections. This replacement therapy has dramatically improved outcomes for XLA patients since its introduction.",
+    "root_concept": "Recurrent bacterial infections",
+    "terminal_concepts": ["Intravenous immunoglobulin therapy", "IgG immunoglobulin"],
+    "thread_type": "therapeutic_intervention",
+    "confidence": 0.92,
+    "created_at": "2025-01-05T22:00:00Z",
+    "source_metadata": {
+      "document_id": "68e2ed2ffcc06550ef8703f8",
+      "chapter_number": "1",
+      "chapter_title": "X-Linked Agammaglobulinemia",
+      "book_title": "Case Studies in Immunology"
+    }
+  },
+  {
+    "thread_id": "THREAD_XLA_GENETICS",
+    "thread_title": "Genetic Basis of XLA: BTK Gene Localization",
+    "domain": "immunology",
+    "semantic_link_chain": ["SL011", "SL002"],
+    "narrative_summary": "The genetic defect responsible for XLA was mapped to the Xq22 locus on the long arm of the X chromosome. This locus contains the BTK gene, which encodes Bruton's tyrosine kinase. The X-linked inheritance pattern explains why XLA predominantly affects males.",
+    "root_concept": "X-chromosome Xq22 locus",
+    "terminal_concepts": ["BTK gene mutation"],
+    "thread_type": "genetic_localization",
+    "confidence": 0.98,
+    "created_at": "2025-01-05T22:00:00Z",
+    "source_metadata": {
+      "document_id": "68e2ed2ffcc06550ef8703f8",
+      "chapter_number": "1",
+      "chapter_title": "X-Linked Agammaglobulinemia",
+      "book_title": "Case Studies in Immunology"
+    }
+  },
+  {
+    "thread_id": "THREAD_IMMUNE_RESPONSE",
+    "thread_title": "Antibody-Mediated Bacterial Clearance Mechanism",
+    "domain": "immunology",
+    "semantic_link_chain": ["SL009", "SL010"],
+    "narrative_summary": "The immune system clears pyogenic bacteria through antibody-dependent mechanisms. IgG antibodies bind to bacterial surfaces, enabling opsonization and complement fixation. These processes enhance phagocytosis by macrophages and neutrophils, leading to bacterial destruction.",
+    "root_concept": "Pyogenic bacteria",
+    "terminal_concepts": ["Complement fixation", "Opsonization"],
+    "thread_type": "immune_mechanism",
+    "confidence": 0.93,
+    "created_at": "2025-01-05T22:00:00Z",
+    "source_metadata": {
+      "document_id": "68e2ed2ffcc06550ef8703f8",
+      "chapter_number": "1",
+      "chapter_title": "X-Linked Agammaglobulinemia",
+      "book_title": "Case Studies in Immunology"
+    }
+  },
+  {
+    "thread_id": "THREAD_XLA_COMPLICATIONS",
+    "thread_title": "Long-Term Complications of Recurrent Infections",
+    "domain": "immunology",
+    "semantic_link_chain": ["SL005", "SL014"],
+    "narrative_summary": "While antibiotics can treat acute bacterial infections in XLA patients, recurrent infections lead to chronic tissue damage. Repeated cycles of infection and inflammation cause anatomical damage to the airways, resulting in bronchiectasis—a permanent enlargement and loss of elasticity of the bronchi.",
+    "root_concept": "Recurrent bacterial infections",
+    "terminal_concepts": ["Bronchiectasis"],
+    "thread_type": "disease_complication",
+    "confidence": 0.78,
+    "created_at": "2025-01-05T22:00:00Z",
+    "source_metadata": {
+      "document_id": "68e2ed2ffcc06550ef8703f8",
+      "chapter_number": "1",
+      "chapter_title": "X-Linked Agammaglobulinemia",
+      "book_title": "Case Studies in Immunology"
+    }
+  },
+  {
+    "thread_id": "THREAD_BCELL_FUNCTION",
+    "thread_title": "B Lymphocyte Function in Adaptive Immunity",
+    "domain": "immunology",
+    "semantic_link_chain": ["SL007", "SL015"],
+    "narrative_summary": "B lymphocytes are essential components of the adaptive immune system, with antibody production being their primary function. Upon antigen encounter, B cells differentiate into plasma cells that secrete antibodies. This humoral immune response is critical for defense against extracellular pathogens.",
+    "root_concept": "B lymphocytes",
+    "terminal_concepts": ["Antibody production"],
+    "thread_type": "functional_definition",
+    "confidence": 0.99,
+    "created_at": "2025-01-05T22:00:00Z",
+    "source_metadata": {
+      "document_id": "68e2ed2ffcc06550ef8703f8",
+      "chapter_number": "1",
+      "chapter_title": "X-Linked Agammaglobulinemia",
+      "book_title": "Case Studies in Immunology"
+    }
+  },
+  {
+    "thread_id": "THREAD_ADAPTIVE_IMMUNITY",
+    "thread_title": "Adaptive Immune System Functions",
+    "domain": "immunology",
+    "semantic_link_chain": ["SL015", "SL007"],
+    "narrative_summary": "The adaptive immune system encompasses multiple functions, with antibody production being one of its most important capabilities. B lymphocytes are the cells responsible for executing this function, producing highly specific antibodies against pathogens.",
+    "root_concept": "Adaptive immune system",
+    "terminal_concepts": ["B lymphocytes", "Antibody production"],
+    "thread_type": "system_overview",
+    "confidence": 0.96,
+    "created_at": "2025-01-05T22:00:00Z",
+    "source_metadata": {
+      "document_id": "68e2ed2ffcc06550ef8703f8",
+      "chapter_number": "1",
+      "chapter_title": "X-Linked Agammaglobulinemia",
+      "book_title": "Case Studies in Immunology"
+    }
+  }
+]

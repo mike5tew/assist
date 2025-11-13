@@ -1,0 +1,138 @@
+{
+    "subjects":
+    [
+        {
+            "subject": "English Language",
+            "code": "eng-lang",
+            "exam-board": "AQA",
+            "criteria-url": "https://www.aqa.org.uk/subjects/english/gcse/english-8700/specification/specification-at-a-glance",
+            "topics":
+            [
+                {
+                    "topic": "Reading Comprehension",
+                    "code": "read-comp"
+                },
+                {
+                    "topic": "Creative Writing",
+                    "code": "creat-write"
+                }
+            ]
+        },
+        {
+            "subject": "English Literature",
+            "code": "eng-lit",
+            "exam-board": "AQA",
+            "criteria-url": "https://www.aqa.org.uk/subjects/english/gcse/english-8702/specification/specification-at-a-glance",
+            "topics":
+            [
+                {
+                    "topic": "Shakespeare",
+                    "code": "shakes",
+                        "lessons":
+                        []
+                },
+                {
+                    "topic": "19th Century Novel",
+                    "code": "19novel",
+                        "lessons":
+                        []
+                },
+                {
+                    "topic": "Poetry",
+                    "code": "poetry",
+                        "lessons":
+                        []
+                }
+            ]
+
+        },
+        {
+            "subject": "Mathematics",
+            "code": "maths",
+            "exam-board": "Edexcel",
+            "criteria-url": "https://qualifications.pearson.com/en/qualifications/edexcel-gcses/mathematics-2015.html",
+            "topics":
+            [
+                {
+                    "topic": "Algebra",
+                    "code": "algebra",
+                        "lessons":
+                        []   
+                }
+            ]
+        },
+        {
+            "subject": "Biology",
+            "code": "bio",
+            "exam-board": "AQA",
+            "criteria-url": "https://www.aqa.org.uk/subjects/science/gcse/biology-8461/specification-at-a-glance",
+            "topics":
+            [
+                {
+                    "module": "Cell Biology",
+                    "code": "4.1",
+                    "outline": "Cells are the basic unit of all forms of life. In this section we explore how structural differences between types of cells enables them to perform specific functions within the organism. These differences in cells are controlled by genes in the nucleus. For an organism to grow, cells must divide by mitosis producing two new identical cells. If cells are isolated at an early stage of growth before they have become too specialised, they can retain their ability to grow into a range of different types of cells. This phenomenon has led to the development of stem cell technology. This is a new branch of medicine that allows doctors to repair damaged organs by growing new tissue from stem cells.",
+                        "topic":
+                        [
+                            {
+                                "topic": "Cell structure",
+                                "code": "4.1.1",
+                                "lessons" [ 
+                            {   
+                                "lesson": "Cell Structure",
+                            "code": "4.1.1",
+                            "lesson_content": [
+                            { 
+                                "content": "Plant and animal cells (eukaryotic cells) have a cell membrane, cytoplasm and genetic material enclosed in a nucleus.",
+                                "Key opportunities for skills development": []
+                            },
+                            {
+                            "content": "Bacterial cells (prokaryotic cells) are much smaller in comparison. They have cytoplasm and a cell membrane surrounded by a cell wall. The genetic material is not enclosed in a nucleus. It is a single DNA loop and there may be one or more small rings of DNA called plasmids.",
+                            "Key opportunities for skills development": []  
+                            },
+                            {
+                                "content": "Students should be able to demonstrate an understanding of the scale and size of cells and be able to make order of magnitude calculations, including the use of standard form.",
+                                "Key opportunities for skills development": [
+                                    {
+                                        "Skill_desc": "",
+                                        "Skill_code": "MS 1b"
+                                    },
+                                    {
+                                        "Skill_desc": "",
+                                        "Skill_code": "MS 2a"
+                                    },
+                                    {
+                                        "Skill_desc": "",
+                                        "Skill_code": "MS 2h"
+                                    },
+                                    {
+                                        "Skill_desc": "Use prefixes centi, milli, micro and nano.",
+                                        "Skill_code": "WS 4.4"
+                                    }
+                                ]
+                            }
+                        ]   
+                        },
+                        {
+                            "lesson":  "Animal and plant cells",
+                            "code": "4.1.1.2",
+                            "lesson_content":[
+                                {
+                                    "content": "Students should be able to explain how the main sub-cellular structures, including the nucleus, cell membranes, mitochondria, chloroplasts in plant cells and plasmids in bacterial cells are related to their functions.
+
+Most animal cells have the following parts:
+
+a nucleus
+cytoplasm
+a cell membrane
+mitochondria
+ribosomes.
+In addition to the parts found in animal cells, plant cells often have:
+
+chloroplasts
+a permanent vacuole filled with cell sap.
+Plant and algal cells also have a cell wall made of cellulose, which strengthens the cell."
+                                }
+                            ]
+
+                      
