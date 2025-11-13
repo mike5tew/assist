@@ -4,161 +4,99 @@ import (
 	"context"
 	"esp-organizer/internal/InfoFlow/InfoIn/api"
 	"esp-organizer/internal/InfoFlow/InfoStore/db"
-	"esp-organizer/internal/config"
-	"esp-organizer/internal/server"
-	"esp-organizer/internal/utils"
-	"io"
+	"fmt"
 	"log"
-	"net"
 	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 )
 
-// globalCorsHandler adds CORS headers to all responses
-func globalCorsHandler(handler http.Handler) http.Handler {
+func main() {
+	// Load environment variables
+	if err := godotenv.Load(); err != nil {
+		log.Printf("No .env file found, using environment variables")
+	}
+
+	// Initialize MongoDB
+	// mongoDB, err := db.NewFromEnv()
+	// if err != nil {
+	// 	log.Fatalf("Failed to initialize MongoDB: %v", err)
+	// }
+	// log.Println("MongoDB initialized successfully")
+
+	// Initialize Weaviate
+	if err := db.InitializeWeaviateFromEnv(); err != nil {
+		log.Printf("WARNING: Failed to initialize Weaviate: %v", err)
+		log.Printf("Some semantic search functionality may be limited")
+	} else {
+		log.Println("Weaviate initialized successfully")
+	}
+
+	// Create and configure router with proper routes
+	router := mux.NewRouter()
+
+	// CRITICAL FIX: Register routes from the api package
+	log.Println("Registering API routes...")
+	api.RegisterRoutes(router)
+
+	// Add middleware for CORS if needed
+	router.Use(corsMiddleware)
+
+	// Set the router as the main HTTP handler
+	// IMPORTANT: Ensure the router is the actual server handler
+	http.Handle("/", router)
+
+	// Configure the HTTP server
+	addr := fmt.Sprintf(":%s", os.Getenv("API_PORT"))
+	server := &http.Server{
+		Addr:         addr,
+		Handler:      router, // Make sure the router is set as the handler
+		ReadTimeout:  15 * time.Second,
+		WriteTimeout: 15 * time.Second,
+		IdleTimeout:  60 * time.Second,
+	}
+
+	// Start the server in a goroutine
+	go func() {
+		log.Printf("Starting ESP Organizer API server on %s", addr)
+		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Fatalf("Server failed to start: %v", err)
+		}
+	}()
+
+	// Set up graceful shutdown
+	stop := make(chan os.Signal, 1)
+	signal.Notify(stop, os.Interrupt, syscall.SIGTERM)
+	<-stop
+
+	log.Println("Shutting down server...")
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	if err := server.Shutdown(ctx); err != nil {
+		log.Fatalf("Server forced to shutdown: %v", err)
+	}
+
+	log.Println("Server exited gracefully")
+}
+
+// CORS middleware function
+func corsMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Set CORS headers
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, Accept")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 
-		// Special handling for OPTIONS requests
 		if r.Method == "OPTIONS" {
-			log.Printf("🔍 CORS: Handling OPTIONS preflight for %s", r.URL.Path)
 			w.WriteHeader(http.StatusOK)
 			return
 		}
 
-		// For all other requests, pass to the next handler
-		handler.ServeHTTP(w, r)
+		next.ServeHTTP(w, r)
 	})
-}
-
-func main() {
-	// Load environment variables from .env file
-	if err := godotenv.Load(); err != nil {
-		log.Printf("Warning: .env file not found or could not be loaded: %v", err)
-	}
-	// In your router setup (cmd/server/main.go or internal/routes/routes.go)
-
-	// Configure logging
-	logFile, err := os.OpenFile("api-server.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-	if err == nil {
-		// Use a multi-writer to log to both file and stdout
-		multiWriter := io.MultiWriter(os.Stdout, logFile)
-		log.SetOutput(multiWriter)
-		log.Println("✅ Log output configured to write to api-server.log")
-	} else {
-		log.Printf("⚠️ Could not open log file: %v", err)
-	}
-
-	// Initialize debug system with the same log file
-	utils.ForceFileLogging("api-server.log")
-
-	// Use either the server package or direct initialization based on your preference
-	useServerPackage := false
-
-	if useServerPackage {
-		// Create and start the server using the server package
-		s := server.NewServer()
-
-		// Print all registered routes for debugging
-		routes := s.GetRouter().Routes()
-		log.Println("=== REGISTERED ROUTES AT STARTUP ===")
-		for _, route := range routes {
-			log.Printf("%s %s", route.Method, route.Path)
-		}
-		log.Println("===================================")
-
-		if err := s.Start(); err != nil {
-			log.Fatalf("Server failed to start: %v", err)
-			os.Exit(1)
-		}
-	} else {
-		// Direct initialization approach
-		// Database connection setup
-		mongoDb, err := db.NewFromEnv()
-		if err != nil {
-			log.Fatalf("Failed to initialize MongoDB: %v", err)
-		}
-		defer mongoDb.Client.Disconnect(context.Background())
-
-		// Weaviate connection
-		log.Println("Connecting to Weaviate...")
-		if err := db.InitializeWeaviateFromEnv(); err != nil {
-			log.Fatalf("Failed to initialize Weaviate: %v", err)
-		}
-		defer db.CloseWeaviate()
-
-		// Initialize router
-		r := mux.NewRouter()
-
-		// Add logging middleware to the router
-		r.Use(func(next http.Handler) http.Handler {
-			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				log.Printf("Request: %s %s", r.Method, r.URL.Path)
-				next.ServeHTTP(w, r)
-			})
-		})
-
-		// Register API routes
-		api.RegisterRoutes(r)
-
-		// Create a handler chain with CORS handled at the HTTP server level
-		corsHandler := globalCorsHandler(r)
-
-		// Server configuration and startup
-		port := os.Getenv("SERVER_PORT")
-		if port == "" {
-			port = config.InitConfig().ServerPort // fallback to config
-		}
-		if port == "" {
-			port = "8080" // final fallback
-		}
-
-		log.Printf("🚀 ESP Organizer API Server starting on port %s", port)
-
-		// Check if port is in use
-		if isPortInUse(port) {
-			log.Printf("⚠️  Port %s is already in use. Attempting to find an alternative...", port)
-			alternatives := []string{"8081", "8082", "8083", "3000", "3001"}
-			foundAlternative := false
-			for _, altPort := range alternatives {
-				if !isPortInUse(altPort) {
-					port = altPort
-					log.Printf("✅ Using alternative port %s", port)
-					foundAlternative = true
-					break
-				}
-			}
-			if !foundAlternative {
-				log.Fatalf("❌ All alternative ports are in use. Please free port 8080 or kill conflicting processes")
-			}
-		}
-
-		log.Printf("📊 Available endpoints:")
-		log.Printf("   GET  / - Welcome message")
-		log.Printf("   GET  /api/skills/semantic-query?q=memory - Test semantic search")
-		log.Printf("   POST /api/immunology/upload-chapter - Upload immunology PDFs")
-		log.Printf("   GET  /api/immunology/chapters - View processed chapters")
-		log.Printf("🌐 Access at: http://localhost:%s", port)
-
-		// Start the server with our CORS handler wrapping everything
-		if err := http.ListenAndServe(":"+port, corsHandler); err != nil {
-			log.Fatalf("❌ Could not start server: %v", err)
-		}
-	}
-}
-
-// isPortInUse checks if a port is already in use
-func isPortInUse(port string) bool {
-	conn, err := net.Listen("tcp", ":"+port)
-	if err != nil {
-		return true
-	}
-	conn.Close()
-	return false
 }

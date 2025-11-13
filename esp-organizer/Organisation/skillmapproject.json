@@ -1,0 +1,44 @@
+{
+  "projectName": "espdata",
+  "description": "React-based web application for accessing and displaying data from Microsoft services, using Microsoft Graph for authentication.",
+  "rootDirectory": "/Users/michaelstewart/Coding/ESPProj/espdata",
+  "applicationType": "Dockerized Web Application",
+  "components": [
+    {
+      "name": "React Frontend",
+      "location": "/Users/michaelstewart/Coding/ESPProj/espdata/esp_react",
+      "sourceCodeRoot": "/Users/michaelstewart/Coding/ESPProj/espdata/esp_react/src",
+      "technology": "React",
+      "authentication": {
+        "provider": "Microsoft Graph",
+        "library": "@azure/msal-react",
+        "configurationFiles": [
+          "/Users/michaelstewart/Coding/ESPProj/espdata/esp_react/src/auth.ts"
+        ],
+        "environmentVariablesFile":"/Users/michaelstewart/Coding/ESPProj/espdata/.env",
+        "environmentVariables": [
+          "REACT_APP_CLIENT_ID",
+          "REACT_APP_TENANT_ID",
+          "REACT_APP_REDIRECT_URI"
+        ],
+        "initializationFunction": "N/A",
+        "authenticationContext": "N/A"
+      },
+      "api": {
+        "technology": "Go",
+        "location": "/Users/michaelstewart/Coding/ESPProj/espdata/goapi",
+        "description": "Go-based API to serve data to the React Frontend",
+        "dataSources": {
+          "database": "MySQL",
+          "vectorDatabase": "Pinecone",
+          "llm": "Llama2"
+        }
+      }
+    }
+  ],
+  "dockerSetup": {
+    "dockerfileLocation": "/Users/michaelstewart/Coding/ESPProj/espdata/Dockerfile",
+    "dockerComposeLocation": "/Users/michaelstewart/Coding/ESPProj/espdata/docker-compose.yml"
+  },
+  "notes": "The project uses Microsoft Graph Toolkit (MGT) with MSAL2 provider for authentication. Ensure environment variables are properly configured for the React application."
+}

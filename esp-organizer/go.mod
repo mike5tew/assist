@@ -7,22 +7,16 @@ toolchain go1.24.7
 require (
 	github.com/aws/aws-sdk-go-v2 v1.39.2
 	github.com/aws/aws-sdk-go-v2/config v1.31.6
-	github.com/aws/aws-sdk-go-v2/service/bedrock v1.47.2
 	github.com/aws/aws-sdk-go-v2/service/bedrockruntime v1.39.0
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.87.3
-	github.com/aws/aws-sdk-go-v2/service/sts v1.38.2
 	github.com/aws/aws-sdk-go-v2/service/textract v1.40.1
-	github.com/gin-contrib/cors v1.7.2
 	github.com/gin-gonic/gin v1.10.0
-	github.com/go-openapi/strfmt v0.23.0
 	github.com/go-resty/resty/v2 v2.16.5
-	github.com/google/uuid v1.6.0
 	github.com/gorilla/mux v1.8.0
 	github.com/joho/godotenv v1.5.1
 	github.com/weaviate/weaviate v1.28.8
 	github.com/weaviate/weaviate-go-client/v4 v4.16.1
 	go.mongodb.org/mongo-driver v1.15.0
-	gopkg.in/yaml.v2 v2.4.0
 )
 
 require (
@@ -40,6 +34,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.19.6 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sso v1.29.1 // indirect
 	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.34.2 // indirect
+	github.com/aws/aws-sdk-go-v2/service/sts v1.38.2 // indirect
 	github.com/aws/smithy-go v1.23.0 // indirect
 	github.com/bytedance/sonic v1.11.6 // indirect
 	github.com/bytedance/sonic/loader v0.1.1 // indirect
@@ -53,6 +48,7 @@ require (
 	github.com/go-openapi/jsonreference v0.21.0 // indirect
 	github.com/go-openapi/loads v0.22.0 // indirect
 	github.com/go-openapi/spec v0.21.0 // indirect
+	github.com/go-openapi/strfmt v0.23.0 // indirect
 	github.com/go-openapi/swag v0.23.0 // indirect
 	github.com/go-openapi/validate v0.24.0 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
@@ -60,6 +56,7 @@ require (
 	github.com/go-playground/validator/v10 v10.20.0 // indirect
 	github.com/goccy/go-json v0.10.5 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
+	github.com/google/uuid v1.6.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.18.0 // indirect
