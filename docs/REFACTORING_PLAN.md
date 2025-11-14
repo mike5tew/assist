@@ -124,11 +124,20 @@ git push -u origin pre-refactor-backup
 
 ## Step 3: Prepare for Refactoring
 
-After the backup is pushed, switch back to your main branch to perform the refactoring.
+After the backup is pushed, you need to create and switch to the `main` branch.
 
 ```bash
-# Switch back to the main branch
-git checkout main
+# Create the main branch (if it doesn't exist)
+git checkout -b main
+
+# Verify you're on the main branch
+git branch
+```
+
+You should see output like:
+```
+  pre-refactor-backup
+* main
 ```
 
 ## Step 4: Run the Refactoring Script
