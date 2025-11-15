@@ -2,7 +2,7 @@ package codeanalysis
 
 import (
 	"encoding/json"
-	"esp-organizer/internal/InfoFlow/InfoStore/db"
+	"esp-organizer/internal/store/db"
 	"io"
 	"net/http"
 	"regexp"

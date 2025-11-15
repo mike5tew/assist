@@ -1,4 +1,4 @@
-package InfoIn
+package infoin
 
 type TraversalConfig struct {
 	// Depth & Scope

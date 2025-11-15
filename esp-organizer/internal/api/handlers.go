@@ -2,9 +2,9 @@ package api
 
 import (
 	"context"
-	"esp-organizer/internal/InfoFlow/InfoOut/llm"
-	"esp-organizer/internal/InfoFlow/InfoStore/db"
-	"esp-organizer/internal/InfoFlow/InfoStore/skills"
+	"esp-organizer/internal/aws/llm"
+	"esp-organizer/internal/domain/skills"
+	"esp-organizer/internal/store/db"
 	"fmt"
 	"log"
 	"math"

@@ -1,7 +1,7 @@
 package api
 
 import (
-	"esp-organizer/internal/InfoFlow/InfoIn/api"
+	"esp-organizer/internal/domain/api"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

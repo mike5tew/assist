@@ -1,4 +1,4 @@
-package InfoIn
+package infoin
 
 import (
 	"context"
@@ -10,9 +10,9 @@ import (
 	"strings"
 	"time"
 
-	"esp-organizer/internal/InfoFlow/InfoOut/llm"
-	"esp-organizer/internal/InfoFlow/InfoStore/db"
+	"esp-organizer/internal/aws/llm"
 	"esp-organizer/internal/models"
+	"esp-organizer/internal/store/db"
 
 	"github.com/weaviate/weaviate-go-client/v4/weaviate"
 	"github.com/weaviate/weaviate-go-client/v4/weaviate/auth"

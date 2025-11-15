@@ -4,10 +4,10 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"esp-organizer/internal/InfoFlow/InfoIn"
-	"esp-organizer/internal/InfoFlow/InfoIn/extraction"
-	"esp-organizer/internal/InfoFlow/InfoStore/db"
+	"esp-organizer/internal/domain/extraction"
+	"esp-organizer/internal/domain/infoin"
 	"esp-organizer/internal/models"
+	"esp-organizer/internal/store/db"
 
 	"fmt"
 	"io"
@@ -15,7 +15,6 @@ import (
 	"net/http"
 	"os"
 	"runtime/debug"
-	"strconv"
 	"strings"
 	"time"
 
@@ -243,6 +242,89 @@ func ImmunologyChapterUploadHandler(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// Helper function to get or create source
+func getOrCreateSource(ctx context.Context, mongOb *db.MongoDB, formValues map[string]string) (*models.Source, error) {
+	sourceID := formValues["source_id"]
+	if sourceID != "" {
+		// Try to find existing source
+		objID, err := primitive.ObjectIDFromHex(sourceID)
+		if err == nil {
+			var existingSource models.Source
+			err := mongOb.Database.Collection("sources").FindOne(ctx, bson.M{"_id": objID}).Decode(&existingSource)
+			if err == nil {
+				return &existingSource, nil
+			}
+			// If we get an error, log it but continue to create a new source
+			log.Printf("Warning: Source ID %s not found, creating new source: %v", sourceID, err)
+		}
+	}
+
+	// Create new source with proper validation
+	source := &models.Source{
+		ID:        primitive.NewObjectID(),
+		Type:      "medical_textbook",
+		Title:     formValues["book_title"],
+		Authors:   []string{},
+		Publisher: formValues["book_publisher"],
+		Year:      formValues["book_year"],
+		ISBN:      formValues["book_isbn"],
+		Domain:    "immunology", // Default domain, can be made dynamic if needed
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
+
+	// Validate required fields
+	if source.Title == "" {
+		return nil, fmt.Errorf("book_title is required")
+	}
+
+	// Parse authors if provided
+	if authors, ok := formValues["book_authors"]; ok && authors != "" {
+		// Clean up authors - trim spaces and remove empty entries
+		authorList := strings.Split(authors, ",")
+		for i, author := range authorList {
+			authorList[i] = strings.TrimSpace(author)
+		}
+		// Remove empty strings
+		var cleanAuthors []string
+		for _, author := range authorList {
+			if author != "" {
+				cleanAuthors = append(cleanAuthors, author)
+			}
+		}
+		source.Authors = cleanAuthors
+	}
+
+	// Save new source
+	_, err := mongOb.Database.Collection("sources").InsertOne(ctx, source)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create source: %v", err)
+	}
+
+	log.Printf("Created new source: %s (ID: %s)", source.Title, source.ID.Hex())
+	return source, nil
+}
+
+// Create source reference helper - consistent across all usage
+func createSourceReference(source *models.Source, chapterInfo models.ChapterInfo, batchID string) models.SourceReference {
+	return models.SourceReference{
+		SourceID:      source.ID,
+		Title:         source.Title,
+		Authors:       source.Authors,
+		ChapterTitle:  chapterInfo.ChapterTitle,
+		ChapterNumber: chapterInfo.ChapterNumber,
+		UploadID:      batchID,
+	}
+}
+
+// Helper to extract chapter info from form values
+func getChapterInfo(formValues map[string]string) models.ChapterInfo {
+	return models.ChapterInfo{
+		ChapterNumber: formValues["chapter_number"],
+		ChapterTitle:  formValues["chapter_title"],
+	}
+}
+
 // process pdf using pdfcpu
 func processImmunologyChapterWithText(ctx context.Context, batchID, extractedText, filename string, formValues map[string]string) {
 	defer func() {
@@ -250,7 +332,9 @@ func processImmunologyChapterWithText(ctx context.Context, batchID, extractedTex
 			log.Printf("FATAL PANIC in batch %s: %v\n%s", batchID, r, debug.Stack())
 		}
 	}()
+
 	log.Printf("[Batch %s] Starting immunology processing for file: %s", batchID, filename)
+
 	// --- 1. Initialize Services ---
 	mongOb, err := db.NewFromEnv()
 	if err != nil {
@@ -258,61 +342,49 @@ func processImmunologyChapterWithText(ctx context.Context, batchID, extractedTex
 		return
 	}
 	defer mongOb.Client.Disconnect(ctx)
+
 	// Initialize extraction repository and service for status tracking
 	repo := NewRepository(mongOb.Client)
 	extractionService := NewService(repo)
+
 	// Initialize extraction job in database
 	if err := extractionService.InitializeExtractionJob(batchID); err != nil {
 		log.Printf("[Batch %s] ERROR: Failed to initialize extraction job: %v", batchID, err)
 		// Continue anyway - we'll try to process without status tracking
 	}
+
 	// Domain-specific collections
 	contentCollection := mongOb.Database.Collection("immunology_content")
 	termsCollection := mongOb.Database.Collection("immunology_terms")
+
 	// Initialize semantic link service for Weaviate
-	semanticLinkService, err := InfoIn.NewSemanticLinkService()
+	semanticLinkService, err := infoin.NewSemanticLinkService()
 	if err != nil {
 		log.Printf("[Batch %s] ERROR: Failed to initialize SemanticLinkService: %v", batchID, err)
 		extractionService.UpdateExtractionJobStatus(batchID, "failed", "Failed to initialize semantic link service", 0.0)
 		return
 	}
+
 	// --- 2. Get Source Info ---
-	var bookSource models.Source
-	sourceID := formValues["source_id"]
-	if sourceID != "" {
-		objID, _ := primitive.ObjectIDFromHex(sourceID)
-		_ = mongOb.Database.Collection("sources").FindOne(ctx, bson.M{"_id": objID}).Decode(&bookSource)
+	bookSource, err := getOrCreateSource(ctx, mongOb, formValues)
+	if err != nil {
+		log.Printf("[Batch %s] ERROR: Failed to get/create source: %v", batchID, err)
+		extractionService.UpdateExtractionJobStatus(batchID, "failed", "Failed to get/create source", 0.0)
+		return
 	}
-	if bookSource.ID == "" {
-		bookSource = models.Source{
-			ID:        primitive.NewObjectID().Hex(),
-			Title:     formValues["book_title"],
-			ISBN:      formValues["book_isbn"],
-			Type:      "medical_textbook",
-			Domain:    "immunology",
-			CreatedAt: time.Now(),
-			UpdatedAt: time.Now(),
-		}
-		if authors, ok := formValues["book_authors"]; ok {
-			bookSource.Authors = strings.Split(authors, ",")
-		}
-		if publisher, ok := formValues["book_publisher"]; ok {
-			bookSource.Publisher = publisher
-		}
-		if year, ok := formValues["book_year"]; ok {
-			if _, err := strconv.Atoi(year); err == nil {
-				bookSource.Year = year
-			}
-		}
-	}
+
 	chapterInfo := models.ChapterInfo{
 		ChapterNumber: formValues["chapter_number"],
 		ChapterTitle:  formValues["chapter_title"],
 	}
+
+	// Create consistent source reference
+	sourceRef := createSourceReference(bookSource, chapterInfo, batchID)
+
 	// --- 3. Process Extracted Text ---
 	extractionService.UpdateExtractionJobStatus(batchID, "processing", "Processing extracted text", 0.2)
 
-	job, err := extraction.ProcessExtractedText(ctx, extractedText, chapterInfo, bookSource, batchID)
+	job, err := extraction.ProcessExtractedText(ctx, extractedText, chapterInfo, *bookSource, batchID)
 	if err != nil {
 		log.Printf("[Batch %s] ERROR: Text processing failed: %v", batchID, err)
 		extractionService.UpdateExtractionJobStatus(batchID, "failed", fmt.Sprintf("Text processing failed: %v", err), 0.0)
@@ -327,16 +399,18 @@ func processImmunologyChapterWithText(ctx context.Context, batchID, extractedTex
 	}
 
 	extractionService.UpdateExtractionJobStatus(batchID, "processing", "Text processing complete, storing content", 0.5)
+
 	// --- 4. Store in Domain-Specific Collections ---
 	// Enhanced validation
 	hasContent := len(job.ExtractedData.RawText) > 0 ||
-
 		len(job.ExtractedData.CaseStudies) > 0 ||
 		len(job.ExtractedData.MedicalTerms) > 0
+
 	if !hasContent {
 		log.Printf("[Batch %s] ⚠️ No meaningful content extracted", batchID)
 		return
 	}
+
 	// Store main chapter content in immunology_content
 	chapterDoc := bson.M{
 		"domain":         "immunology",
@@ -344,13 +418,7 @@ func processImmunologyChapterWithText(ctx context.Context, batchID, extractedTex
 		"title":          chapterInfo.ChapterTitle,
 		"content":        job.ExtractedData.ChapterContent,
 		"chapter_number": chapterInfo.ChapterNumber,
-		"source": bson.M{
-			"source_id":     bookSource.ID,
-			"title":         bookSource.Title,
-			"authors":       bookSource.Authors,
-			"chapter_title": chapterInfo.ChapterTitle,
-			"upload_id":     batchID,
-		},
+		"source":         sourceRef, // Use consistent source reference
 		"metadata": bson.M{
 			"case_studies_count":  len(job.ExtractedData.CaseStudies),
 			"medical_terms_count": len(job.ExtractedData.MedicalTerms),
@@ -360,14 +428,17 @@ func processImmunologyChapterWithText(ctx context.Context, batchID, extractedTex
 		"created_at": time.Now(),
 		"updated_at": time.Now(),
 	}
+
 	chapterResult, err := contentCollection.InsertOne(ctx, chapterDoc)
 	if err != nil {
 		log.Printf("[Batch %s] ERROR: Failed to store chapter content: %v", batchID, err)
 		return
 	}
 	log.Printf("[Batch %s] Stored chapter in immunology_content with ID: %v", batchID, chapterResult.InsertedID)
+
 	// Store case studies in immunology_content
 	var storedDocuments []models.SubjectContent
+
 	// Add chapter to documents for semantic linking
 	if insertedID, ok := chapterResult.InsertedID.(primitive.ObjectID); ok {
 		chapterContent := models.SubjectContent{
@@ -376,81 +447,72 @@ func processImmunologyChapterWithText(ctx context.Context, batchID, extractedTex
 			ContentType: "chapter",
 			Title:       chapterInfo.ChapterTitle,
 			Content:     job.ExtractedData.ChapterContent,
-			Source: models.SourceReference{
-				SourceID:     bookSource.ID,
-				Title:        bookSource.Title,
-				Authors:      bookSource.Authors,
-				ChapterTitle: chapterInfo.ChapterTitle,
-				UploadID:     batchID,
-			},
-			Tags:      []string{"immunology", "chapter"},
-			CreatedAt: time.Now(),
-			UpdatedAt: time.Now(),
+			Source:      sourceRef, // Use consistent source reference
+			Tags:        []string{"immunology", "chapter"},
+			CreatedAt:   time.Now(),
+			UpdatedAt:   time.Now(),
 		}
 		storedDocuments = append(storedDocuments, chapterContent)
 	}
+
+	// Store case studies
 	for _, caseStudy := range job.ExtractedData.CaseStudies {
 		caseStudyDoc := bson.M{
 			"domain":       "immunology",
 			"content_type": "case_study",
-			"title":        caseStudy.Title,
+			"title":        fmt.Sprintf("Case %s: %s", caseStudy.CaseNumber, caseStudy.Title),
 			"content":      caseStudy.Content,
-			"source": bson.M{
-				"source_id":     bookSource.ID,
-				"title":         bookSource.Title,
-				"authors":       bookSource.Authors,
-				"chapter_title": chapterInfo.ChapterTitle,
-				"upload_id":     batchID,
+			"source":       sourceRef, // Use consistent source reference
+			"metadata": bson.M{
+				"case_number":       caseStudy.CaseNumber,
+				"clinical_findings": caseStudy.ClinicalFindings,
 			},
-			"tags":       []string{"immunology", "case_study"},
+			"tags":       append([]string{"immunology", "case_study"}, caseStudy.Tags...),
 			"created_at": time.Now(),
 			"updated_at": time.Now(),
 		}
+
 		caseStudyResult, err := contentCollection.InsertOne(ctx, caseStudyDoc)
 		if err != nil {
 			log.Printf("[Batch %s] ERROR: Failed to store case study: %v", batchID, err)
 			continue
 		}
 		log.Printf("[Batch %s] Stored case study in immunology_content with ID: %v", batchID, caseStudyResult.InsertedID)
+
 		// Add to documents for semantic linking
 		if insertedID, ok := caseStudyResult.InsertedID.(primitive.ObjectID); ok {
 			caseStudyContent := models.SubjectContent{
 				ID:          insertedID,
 				Domain:      "immunology",
 				ContentType: "case_study",
-				Title:       caseStudy.Title,
+				Title:       fmt.Sprintf("Case %s: %s", caseStudy.CaseNumber, caseStudy.Title),
 				Content:     caseStudy.Content,
-				Source: models.SourceReference{
-					SourceID:     bookSource.ID,
-					Title:        bookSource.Title,
-					Authors:      bookSource.Authors,
-					ChapterTitle: chapterInfo.ChapterTitle,
-					UploadID:     batchID,
+				Source:      sourceRef, // Use consistent source reference
+				Tags:        append([]string{"immunology", "case_study"}, caseStudy.Tags...),
+				Metadata: map[string]interface{}{
+					"case_number":       caseStudy.CaseNumber,
+					"clinical_findings": caseStudy.ClinicalFindings,
 				},
-				Tags:      []string{"immunology", "case_study"},
 				CreatedAt: time.Now(),
 				UpdatedAt: time.Now(),
 			}
 			storedDocuments = append(storedDocuments, caseStudyContent)
 		}
 	}
+
 	// Store medical terms in immunology_terms
 	for _, term := range job.ExtractedData.MedicalTerms {
 		termDoc := bson.M{
 			"domain":     "immunology",
 			"term":       term.Term,
 			"definition": term.Definition,
-			"source": bson.M{
-				"source_id":     bookSource.ID,
-				"title":         bookSource.Title,
-				"authors":       bookSource.Authors,
-				"chapter_title": chapterInfo.ChapterTitle,
-				"upload_id":     batchID,
-			},
-			"tags":       []string{"immunology", "medical_term"},
+			"category":   term.Category,
+			"source":     sourceRef, // Use consistent source reference
+			"tags":       append([]string{"immunology", "medical_term", term.Category}, term.Tags...),
 			"created_at": time.Now(),
 			"updated_at": time.Now(),
 		}
+
 		termResult, err := termsCollection.InsertOne(ctx, termDoc)
 		if err != nil {
 			log.Printf("[Batch %s] ERROR: Failed to store medical term: %v", batchID, err)
@@ -458,6 +520,7 @@ func processImmunologyChapterWithText(ctx context.Context, batchID, extractedTex
 		}
 		log.Printf("[Batch %s] Stored medical term in immunology_terms with ID: %v", batchID, termResult.InsertedID)
 	}
+
 	// --- 5. Create Semantic Links in Weaviate ---
 	if len(storedDocuments) > 0 {
 		err = semanticLinkService.CreateSemanticLinks(ctx, storedDocuments, "immunology", batchID)
@@ -468,6 +531,7 @@ func processImmunologyChapterWithText(ctx context.Context, batchID, extractedTex
 		}
 		log.Printf("[Batch %s] Successfully created semantic links in Weaviate", batchID)
 	}
+
 	// --- 6. Finalize Extraction Job ---
 	extractionService.UpdateExtractionJobStatus(batchID, "completed", "Processing complete", 1.0)
 	log.Printf("[Batch %s] Immunology chapter processing completed successfully", batchID)
@@ -505,47 +569,28 @@ func processImmunologyChapterInBackground(ctx context.Context, batchID string, f
 	termsCollection := mongOb.Database.Collection("immunology_terms")
 
 	// Initialize semantic link service for Weaviate
-	semanticLinkService, err := InfoIn.NewSemanticLinkService()
+	semanticLinkService, err := infoin.NewSemanticLinkService()
 	if err != nil {
 		log.Printf("[Batch %s] ERROR: Failed to initialize SemanticLinkService: %v", batchID, err)
 		extractionService.UpdateExtractionJobStatus(batchID, "failed", "Failed to initialize semantic link service", 0.0)
 		return
 	}
 
-	// --- 2. Get Source Info ---
-	var bookSource models.Source
-	sourceID := formValues["source_id"]
-	if sourceID != "" {
-		objID, _ := primitive.ObjectIDFromHex(sourceID)
-		_ = mongOb.Database.Collection("sources").FindOne(ctx, bson.M{"_id": objID}).Decode(&bookSource)
-	}
-	if bookSource.ID == "" {
-		bookSource = models.Source{
-			ID:        primitive.NewObjectID().Hex(),
-			Title:     formValues["book_title"],
-			ISBN:      formValues["book_isbn"],
-			Type:      "medical_textbook",
-			Domain:    "immunology",
-			CreatedAt: time.Now(),
-			UpdatedAt: time.Now(),
-		}
-		if authors, ok := formValues["book_authors"]; ok {
-			bookSource.Authors = strings.Split(authors, ",")
-		}
-		if publisher, ok := formValues["book_publisher"]; ok {
-			bookSource.Publisher = publisher
-		}
-		if year, ok := formValues["book_year"]; ok {
-			if _, err := strconv.Atoi(year); err == nil {
-				bookSource.Year = year
-			}
-		}
+	// --- 2. Get or Create Source ---
+	bookSource, err := getOrCreateSource(ctx, mongOb, formValues)
+	if err != nil {
+		log.Printf("[Batch %s] ERROR: Failed to get/create source: %v", batchID, err)
+		extractionService.UpdateExtractionJobStatus(batchID, "failed", "Failed to get/create source", 0.0)
+		return
 	}
 
 	chapterInfo := models.ChapterInfo{
 		ChapterNumber: formValues["chapter_number"],
 		ChapterTitle:  formValues["chapter_title"],
 	}
+
+	// Create source reference once
+	sourceRef := createSourceReference(bookSource, chapterInfo, batchID)
 
 	// --- 3. Initialize and use the TextractProcessor directly ---
 	region := os.Getenv("AWS_REGION")
@@ -571,7 +616,7 @@ func processImmunologyChapterInBackground(ctx context.Context, batchID string, f
 	fileReader := bytes.NewReader(fileBytes)
 	extractionService.UpdateExtractionJobStatus(batchID, "processing", "Extracting text with AWS Textract", 0.2)
 
-	job, err := processor.ProcessChapterFile(ctx, fileReader, chapterInfo, bookSource, batchID)
+	job, err := processor.ProcessChapterFile(ctx, fileReader, chapterInfo, *bookSource, batchID)
 	if err != nil {
 		log.Printf("[Batch %s] ERROR: Textract processing failed: %v", batchID, err)
 		extractionService.UpdateExtractionJobStatus(batchID, "failed", fmt.Sprintf("Textract processing failed: %v", err), 0.0)
@@ -598,20 +643,14 @@ func processImmunologyChapterInBackground(ctx context.Context, batchID string, f
 		return
 	}
 
-	// Store main chapter content in immunology_content
+	// For chapter content:
 	chapterDoc := bson.M{
 		"domain":         "immunology",
 		"content_type":   "chapter",
 		"title":          chapterInfo.ChapterTitle,
 		"content":        job.ExtractedData.ChapterContent,
 		"chapter_number": chapterInfo.ChapterNumber,
-		"source": bson.M{
-			"source_id":     bookSource.ID,
-			"title":         bookSource.Title,
-			"authors":       bookSource.Authors,
-			"chapter_title": chapterInfo.ChapterTitle,
-			"upload_id":     batchID,
-		},
+		"source":         sourceRef, // Use the consistent source reference
 		"metadata": bson.M{
 			"case_studies_count":  len(job.ExtractedData.CaseStudies),
 			"medical_terms_count": len(job.ExtractedData.MedicalTerms),
@@ -787,7 +826,7 @@ func processImmunologyChapterInBackground(ctx context.Context, batchID string, f
 
 	// --- 6. Vectorization (if needed) ---
 	// If you also need vector embeddings, add that logic here
-	// vectorizer := InfoIn.NewVectorizationService()
+	// vectorizer := infoin.NewVectorizationService()
 	// ... vectorization logic ...
 
 	log.Printf("✅ [Batch %s] Immunology processing finished successfully. %d documents processed for semantic links.", batchID, len(storedDocuments))
@@ -948,7 +987,7 @@ func HSGSearchHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("HSG Search: Query=%s, Domain/Subject=%s", req.Query, domainValue)
 
 	// Initialize HSG query service
-	hsgService, err := InfoIn.NewHSGQueryService()
+	hsgService, err := infoin.NewHSGQueryService()
 	if err != nil {
 		log.Printf("Failed to initialize HSG query service: %v", err)
 		http.Error(w, "Service initialization failed", http.StatusInternalServerError)
@@ -999,21 +1038,4 @@ func extractTextFromSearchablePDF(pdfBytes []byte) (string, error) {
 	// Use a Go PDF library (e.g., pdfcpu, unipdf)
 	// For now, return placeholder
 	return extractTextWithPDFCPU(pdfBytes)
-}
-
-// extractTextWithPDFCPU extracts text from PDF bytes
-// TODO: Implement actual PDF text extraction using pdfcpu or similar library
-func extractTextWithPDFCPU(pdfBytes []byte) (string, error) {
-	// Placeholder implementation
-	// You'll need to add a PDF library like:
-	// - github.com/pdfcpu/pdfcpu
-	// - github.com/ledongthuc/pdf
-	// - github.com/unidoc/unipdf/v3
-
-	// For now, return an error to indicate it's not implemented
-	return "", fmt.Errorf("PDF text extraction not yet implemented - please add a PDF library like pdfcpu")
-
-	// Example implementation with pdfcpu would look like:
-	// import "github.com/pdfcpu/pdfcpu/pkg/api"
-	// return api.ExtractText(bytes.NewReader(pdfBytes), nil)
 }

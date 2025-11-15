@@ -3,13 +3,12 @@ package api
 import (
 	"context"
 	"encoding/json"
-	"esp-organizer/internal/InfoFlow/InfoStore/db"
 	"esp-organizer/internal/integration"
 	"esp-organizer/internal/models"
+	"esp-organizer/internal/store/db"
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -134,7 +133,7 @@ func CoachRespondHandler(w http.ResponseWriter, r *http.Request) {
 
 	// 3. NEW: Diagnostic checking if student answer provided
 	if req.StudentAnswer != "" && req.ExpectedAnswer != "" {
-		diagnostics := performAnswerDiagnostics(ctx, req, response)
+		diagnostics := performAnswerDiagnostics(ctx, req)
 		response.AnswerDiagnostics = diagnostics
 		response.IsAnswerCorrect = (strings.TrimSpace(strings.ToLower(req.StudentAnswer)) ==
 			strings.TrimSpace(strings.ToLower(req.ExpectedAnswer)))
@@ -162,7 +161,7 @@ func CoachRespondHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("[Coach] CHISG Query: topic=%s, concepts=%v, audience=%s", topic, concepts, audience)
 
 	// 5. Query CHISG via client
-	chisgClient := integration.NewCHISGClient(os.Getenv("CHISG_BASE_URL"))
+	chisgClient, err := integration.NewCHISGClient()
 	chisgResponse, err := chisgClient.Query(ctx, query)
 	if err != nil {
 		log.Printf("[Coach] CHISG query failed: %v", err)
@@ -176,7 +175,7 @@ func CoachRespondHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// 6. MongoDB Enrichment - fetch related documents
-	mongoEnrichment := enrichWithMongoDB(ctx, req.Domain, topic, concepts, req.Age)
+	mongoEnrichment := enrichWithMongoDB(ctx, req.Domain, topic, concepts)
 	response.MongoDBEnrichment = mongoEnrichment
 
 	log.Printf("[Coach] MongoDB enrichment: %d results found", len(mongoEnrichment))
@@ -209,7 +208,7 @@ func CoachRespondHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // performAnswerDiagnostics analyzes a student's answer for errors
-func performAnswerDiagnostics(ctx context.Context, req CoachRespondRequest, response *CoachRespondResponse) *AnswerDiagnostics {
+func performAnswerDiagnostics(ctx context.Context, req CoachRespondRequest) *AnswerDiagnostics {
 	diagnostics := &AnswerDiagnostics{
 		StudentAnswer: req.StudentAnswer,
 		CorrectAnswer: req.ExpectedAnswer,
@@ -469,73 +468,90 @@ func findMisconceptionLinks(ctx context.Context, req CoachRespondRequest, diagno
 
 // generateCorrectionStrategy creates a pedagogically sound response
 func generateCorrectionStrategy(diagnostics *AnswerDiagnostics, links []MisconceptionLink, age int) string {
-	switch diagnostics.ErrorType {
-	// NEW: Phonetic error strategy
-	case "phonetic_error":
-		return fmt.Sprintf(
-			"These words sound almost identical, so it's a completely understandable mix-up! " +
-				"Here's how to remember the difference: [pronunciation guide would go here]. " +
-				"Once you hear them pronounced slowly, you'll notice the subtle difference.",
-		)
+	// Base strategy
+	var strategy string
 
+	switch diagnostics.ErrorType {
+	case "phonetic_error":
+		strategy = "These words sound almost identical, so it's an understandable mix-up. Let's look at the spelling and pronunciation to see the difference."
 	case "conceptual_confusion":
 		if len(links) > 0 {
-			return fmt.Sprintf(
-				"Let's explore the difference between '%s' and '%s'. "+
-					"Here's the key insight: %s",
-				links[0].MisconceptTopic,
-				links[0].CorrectConcept,
-				links[0].CorrectiveInsight)
+			strategy = fmt.Sprintf(
+				"This is a common point of confusion. Let's explore the difference between '%s' and '%s'. The key insight is: %s",
+				links[0].MisconceptTopic, links[0].CorrectConcept, links[0].CorrectiveInsight)
+		} else {
+			strategy = "These concepts are related, which can be tricky. Let's compare them side-by-side to clarify the distinction."
 		}
-		return fmt.Sprintf("These concepts might seem similar, but they're actually describing different things. Let's compare them side-by-side.")
-
 	case "incomplete_answer":
-		return fmt.Sprintf(
-			"Great start! You've identified '%s' which is part of the answer. "+
-				"Can you think about what else needs to be included to complete the answer?",
+		strategy = fmt.Sprintf(
+			"That's a great start! You've correctly identified '%s', which is a key part of the answer. What else is needed to make the answer complete?",
 			diagnostics.StudentAnswer)
-
 	case "computational_error":
-		return "Your method looks correct, but let's check the calculation step by step. Can you walk me through how you got that answer?"
-
+		strategy = "Your method seems correct, which is the most important part. Let's re-check the calculation together. Can you walk me through your steps?"
 	case "misreading_question":
-		return "Let's re-read the question carefully. Pay special attention to any words like 'not', 'except', or 'which is most likely'. Do you see anything you might have missed?"
-
+		strategy = "It's easy to misread a question, especially with words like 'not' or 'except'. Let's look at the question again carefully. Do you notice anything you might have missed?"
 	case "inverse_error":
-		return fmt.Sprintf(
-			"Interesting! You said '%s' but it's actually the opposite - '%s'. "+
-				"This is easy to mix up. What if you think about it from the opposite direction?",
+		strategy = fmt.Sprintf(
+			"You're thinking about the right concept but in the opposite direction. You said '%s', but it's actually '%s'. This is a very common mix-up. Let's clarify why.",
 			diagnostics.StudentAnswer, diagnostics.CorrectAnswer)
-
 	default:
-		return "I see why you might think that. Let me explain how this concept actually works, and then you'll see where the difference is."
+		strategy = "I can see the logic in your answer. Let's review the underlying concept, and the correct answer will become clear."
 	}
+
+	// Age-based adjustments
+	if age < 12 {
+		// Younger learners: More scaffolding and encouragement
+		switch diagnostics.ErrorType {
+		case "phonetic_error":
+			return "Those words sound the same, it's tricky! Let's say them out loud and see how they are spelled differently."
+		case "incomplete_answer":
+			return fmt.Sprintf("You're on the right track with '%s'! That's a big piece of the puzzle. What's the next piece?", diagnostics.StudentAnswer)
+		}
+	} else if age > 16 {
+		// Older learners: More direct and analytical
+		switch diagnostics.ErrorType {
+		case "conceptual_confusion":
+			return "This highlights a critical distinction between two related concepts. Let's break down the specific differences to solidify your understanding."
+		case "computational_error":
+			return "The methodology is sound. Let's audit the calculation to pinpoint the arithmetic error."
+		}
+	}
+
+	return strategy
 }
 
-// generateEncouragingResponse creates supportive language for wrong answers
+// generateEncouragingResponse creates supportive language for wrong answers based on the specific error type.
 func generateEncouragingResponse(diagnostics *AnswerDiagnostics, age int) string {
-	encouragement := []string{
-		"That's a thoughtful answer! You're clearly thinking about this topic.",
-		"I can see your reasoning there.",
-		"You're asking the right questions.",
-		"That shows you're engaged with the material.",
+	// Select a base message based on the error type.
+	errorSpecificMessages := map[string]string{
+		"phonetic_error":       "That's a very easy mistake to make, those words sound so similar!",
+		"incomplete_answer":    "You're definitely on the right track! That's a great start.",
+		"conceptual_confusion": "I can see why you'd connect those two ideas. It's a common point of confusion.",
+		"computational_error":  "Getting the method right is the hardest part, and you've done that! Let's just double-check the numbers.",
+		"misreading_question":  "That's a sharp observation, even if it's for a slightly different question. It's an easy detail to miss!",
+		"inverse_error":        "You've got the right concept but in reverse. That's a super common mix-up!",
 	}
 
-	// Age-appropriate follow-up
-	ageAppropriate := ""
+	baseMessage, ok := errorSpecificMessages[diagnostics.ErrorType]
+	if !ok {
+		baseMessage = "That's a thoughtful answer! You're clearly thinking about this topic."
+	}
+
+	// Add an age-appropriate follow-up.
+	ageAppropriateFollowUp := ""
 	if age < 12 {
-		ageAppropriate = "Let's figure this out together - mistakes are how we learn!"
+		ageAppropriateFollowUp = "Mistakes are how our brains get stronger. Let's figure this out together!"
 	} else if age < 16 {
-		ageAppropriate = "This is actually a really common misconception. You're not alone in thinking this!"
+		ageAppropriateFollowUp = "This is actually a really common misconception. You're not alone in thinking this!"
 	} else {
-		ageAppropriate = "This highlights an important nuance in the concept. Let's dig deeper."
+		ageAppropriateFollowUp = "This highlights an important nuance in the concept. Let's dig deeper."
 	}
 
-	return encouragement[0] + " " + ageAppropriate
+	return baseMessage + " " + ageAppropriateFollowUp
 }
 
 // enrichWithMongoDB fetches related documents from MongoDB for enrichment
-func enrichWithMongoDB(ctx context.Context, domain string, topic string, concepts []string, age int) map[string]interface{} {
+func enrichWithMongoDB(ctx context.Context, domain string, topic string, concepts []string) map[string]interface{} {
 	result := make(map[string]interface{})
 
 	mongoDb, err := db.NewFromEnv()
@@ -786,12 +802,28 @@ func adjustForAge(text string, age int) string {
 }
 
 // generateIntervention creates supportive language based on barriers
+// generateIntervention creates supportive language based on barriers and age.
 func generateIntervention(barriers []string, age int) string {
+	// Default scripts for a general audience (e.g., teens)
 	scripts := map[string]string{
-		"confusion":      "That's a complex topic! Let me break it down into smaller, easier parts.",
-		"low_confidence": "You're asking great questions! Let me help you understand this better.",
-		"frustration":    "I know this can feel tough sometimes. Take your time, and we'll work through it together.",
-		"age_too_young":  "This topic is a bit advanced for your age. Let's start with the basics first.",
+		"confusion":      "That's a complex topic, which can be confusing. Let me break it down into smaller, easier parts for you.",
+		"low_confidence": "It's completely normal to feel unsure about this. You're asking great questions, which is the first step to understanding. Let's build that confidence together.",
+		"frustration":    "I understand this can feel tough and frustrating. It's okay to feel that way. Take a deep breath, and we'll work through it step-by-step.",
+		"age_too_young":  "This topic is a bit advanced for your age. Let's start with some of the basic ideas first to build a strong foundation.",
+	}
+
+	// Age-specific overrides for younger learners
+	if age < 12 {
+		scripts["confusion"] = "I know this seems tricky! Let's look at it in a simpler way."
+		scripts["low_confidence"] = "It's okay to not be sure! Asking for help is smart. We can figure this out together."
+		scripts["frustration"] = "It's frustrating when things are hard. Don't worry, we'll get through this. Every expert was once a beginner!"
+	}
+
+	// Age-specific overrides for older learners
+	if age > 16 {
+		scripts["confusion"] = "This is a nuanced topic. Let's deconstruct it to clarify the core components."
+		scripts["low_confidence"] = "I see you're being cautious with your answer, which is a good analytical trait. Let's review the evidence to solidify your position."
+		scripts["frustration"] = "I can see this part is a bottleneck. Let's isolate the issue and resolve it. Frustration is often a sign you're close to a breakthrough."
 	}
 
 	messages := []string{}
@@ -1064,7 +1096,7 @@ func CreateMisunderstandingRecord(ctx context.Context, req CoachRespondRequest, 
 		"symptom_pattern":           diagnostics.ErrorDescription,
 		"root_causes":               identifyRootCauses(diagnostics),
 		"correct_understanding":     req.ExpectedAnswer,
-		"repair_strategy":           generateRepairStrategy(diagnostics),
+		"repair_strategy":           generateRepairStrategy(diagnostics.ErrorType),
 		"related_misunderstandings": findRelatedMisunderstandings(ctx, req.Domain, req.StudentAnswer, req.ExpectedAnswer),
 		"evidence_patterns":         []string{},
 		"question_keywords":         extractKeywords(req.QuestionText),
@@ -1161,7 +1193,7 @@ func identifyRootCauses(diagnostics *AnswerDiagnostics) []string {
 }
 
 // generateRepairStrategy creates a targeted repair strategy for the misunderstanding
-func generateRepairStrategy(diagnostics *AnswerDiagnostics) string {
+func generateRepairStrategy(errorType string) string {
 	strategies := map[string]string{
 		"phonetic_error":       "Teach pronunciation and spelling differences through auditory/visual comparison. Use minimal pairs to highlight distinctions.",
 		"conceptual_confusion": "Create explicit contrasts between the two concepts. Use analogies and visual representations to show differences.",
@@ -1171,7 +1203,7 @@ func generateRepairStrategy(diagnostics *AnswerDiagnostics) string {
 		"inverse_error":        "Explicitly teach the directionality of the concept. Use arrows, timelines, or directional language to reinforce order.",
 	}
 
-	if strategy, ok := strategies[diagnostics.ErrorType]; ok {
+	if strategy, ok := strategies[errorType]; ok {
 		return strategy
 	}
 

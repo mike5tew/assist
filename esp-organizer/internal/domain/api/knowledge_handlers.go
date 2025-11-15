@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"time"
 
-	"esp-organizer/internal/InfoFlow/InfoIn"
-	wfilters "esp-organizer/internal/InfoFlow/InfoIn/filters"
-	"esp-organizer/internal/InfoFlow/InfoStore/db"
+	wfilters "esp-organizer/internal/domain/filters"
+	"esp-organizer/internal/domain/infoin"
+	"esp-organizer/internal/store/db"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -72,7 +72,7 @@ func HandleKnowledgeQuery(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// turn the user query into a vector via your existing service
-	vectorizer := InfoIn.NewVectorizationService()
+	vectorizer := infoin.NewVectorizationService()
 	vec, err := vectorizer.GenerateEmbedding(ctx, req.Query)
 	if err != nil {
 		http.Error(w, "embed error: "+err.Error(), http.StatusInternalServerError)

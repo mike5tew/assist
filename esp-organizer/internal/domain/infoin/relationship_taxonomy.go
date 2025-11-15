@@ -1,9 +1,9 @@
-package InfoIn
+package infoin
 
 import (
 	"context"
 	"encoding/json"
-	"esp-organizer/internal/InfoFlow/InfoOut/llm"
+	"esp-organizer/internal/aws/llm"
 	"fmt"
 	"os"
 	"strings"

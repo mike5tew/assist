@@ -3,7 +3,7 @@ package api
 import (
 	"context"
 	"encoding/json"
-	"esp-organizer/internal/InfoFlow/InfoStore/db"
+	"esp-organizer/internal/store/db"
 	"esp-organizer/internal/utils"
 
 	"fmt"

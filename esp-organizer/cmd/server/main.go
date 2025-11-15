@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
-	"esp-organizer/internal/InfoFlow/InfoIn/api"
-	"esp-organizer/internal/InfoFlow/InfoStore/db"
+	"esp-organizer/internal/domain/api"
+	"esp-organizer/internal/store/db"
 	"fmt"
 	"log"
 	"net/http"

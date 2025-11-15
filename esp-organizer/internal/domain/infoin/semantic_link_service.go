@@ -1,11 +1,11 @@
-package InfoIn
+package infoin
 
 import (
 	"context"
 	"encoding/json"
-	"esp-organizer/internal/InfoFlow/InfoOut/llm"
-	"esp-organizer/internal/InfoFlow/InfoStore/db"
+	"esp-organizer/internal/aws/llm"
 	"esp-organizer/internal/models"
+	"esp-organizer/internal/store/db"
 	"fmt"
 	"log"
 	"strings"
@@ -1305,5 +1305,45 @@ func (s *SemanticLinkService) CurateHighQualityExtractions(ctx context.Context) 
 	}
 
 	log.Printf("✅ Curated %d new extraction samples", len(highQualityLinks))
+	return nil
+}
+
+// CreateSemanticLinks processes multiple documents and creates semantic links for them
+func (s *SemanticLinkService) CreateSemanticLinks(
+	ctx context.Context,
+	documents []models.SubjectContent,
+	domain string,
+	batchID string,
+) error {
+	if len(documents) == 0 {
+		log.Printf("[Batch %s] No documents to process for semantic links", batchID)
+		return nil
+	}
+
+	log.Printf("[Batch %s] Starting semantic link creation for %d documents in domain: %s", batchID, len(documents), domain)
+
+	// Process each document
+	var processedCount int
+	var failedCount int
+
+	for _, doc := range documents {
+		// Process the document to extract semantic links
+		if err := s.ProcessDocument(ctx, doc); err != nil {
+			log.Printf("[Batch %s] ⚠️ Failed to process document %s (%s): %v", batchID, doc.ID.Hex(), doc.Title, err)
+			failedCount++
+			continue
+		}
+
+		processedCount++
+		log.Printf("[Batch %s] ✅ Processed document: %s", batchID, doc.Title)
+	}
+
+	log.Printf("[Batch %s] Semantic link creation complete. Processed: %d, Failed: %d", batchID, processedCount, failedCount)
+
+	// If all documents failed, return an error
+	if processedCount == 0 && failedCount > 0 {
+		return fmt.Errorf("failed to process any documents for semantic links")
+	}
+
 	return nil
 }

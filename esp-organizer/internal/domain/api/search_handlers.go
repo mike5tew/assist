@@ -9,12 +9,13 @@ import (
 	"os"
 	"time"
 
-	"esp-organizer/internal/InfoFlow/InfoIn"
-	"esp-organizer/internal/InfoFlow/InfoOut/llm"
-	"esp-organizer/internal/InfoFlow/InfoStore/db"
-	"esp-organizer/internal/InfoFlow/InfoStore/skills"
-	"esp-organizer/internal/factory"
+	"esp-organizer/internal/aws/llm"
+	"esp-organizer/internal/domain/infoin"
+	"esp-organizer/internal/domain/rawText/query"
+	"esp-organizer/internal/domain/skills"
+
 	"esp-organizer/internal/models"
+	"esp-organizer/internal/store/db"
 
 	"go.mongodb.org/mongo-driver/bson"
 )
@@ -63,6 +64,10 @@ var domainConfigs = map[string]DomainConfig{
 		Implemented:       true,
 		UseSubjectContent: false, // Assuming general search doesn't filter by subject content
 	},
+}
+
+func NewQueryProcessor(skillService *skills.SkillService, llamaClient *llm.LlamaClient) models.QueryProcessor {
+	return query.NewQueryHandler(skillService, llamaClient)
 }
 
 // SearchImmunologyContent searches immunology content and terms
@@ -318,7 +323,7 @@ func handleDomainSearch(w http.ResponseWriter, r *http.Request, queryText string
 			log.Printf("Using HSG query service for domain '%s' query: %s", domain, queryText)
 
 			// Initialize HSG query service instead of using semanticSearchMedicalContent
-			hsgService, err := InfoIn.NewHSGQueryService()
+			hsgService, err := infoin.NewHSGQueryService()
 			if err != nil {
 				log.Printf("Error initializing HSG query service: %v", err)
 				response["medical_content_error"] = "Failed to initialize HSG service: " + err.Error()
@@ -348,7 +353,7 @@ func handleDomainSearch(w http.ResponseWriter, r *http.Request, queryText string
 
 	// Search in Weaviate for semantic matches
 	log.Printf("Starting semantic search with class '%s' for query: %s", config.WeaviateClass, queryText)
-	queryHandler := factory.NewQueryProcessor(skillService, llamaClient)
+	queryHandler := NewQueryProcessor(skillService, llamaClient)
 	// Use the domain-specific Weaviate class for search
 	semanticResponse, err := queryHandler.ProcessQuery(r.Context(), queryText, filters, config.WeaviateClass)
 	if err != nil {

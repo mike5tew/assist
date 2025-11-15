@@ -2,7 +2,8 @@ package api
 
 import (
 	"encoding/json"
-	"esp-organizer/internal/InfoFlow/InfoStore/db"
+	"esp-organizer/internal/models"
+	"esp-organizer/internal/store/db"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -101,14 +102,7 @@ func GetSourcesHandler(w http.ResponseWriter, r *http.Request) {
 func CreateSourceHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	var source struct {
-		Type      string   `json:"type"`
-		ISBN      string   `json:"isbn"`
-		Title     string   `json:"title"`
-		Authors   []string `json:"authors"`
-		Publisher string   `json:"publisher"`
-		Year      string   `json:"year"`
-	}
+	var source models.Source
 
 	if err := json.NewDecoder(r.Body).Decode(&source); err != nil {
 		http.Error(w, "Invalid request body: "+err.Error(), http.StatusBadRequest)

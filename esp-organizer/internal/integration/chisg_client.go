@@ -20,6 +20,15 @@ type KnowledgeQuery struct {
 	TargetAudience string   `json:"target_audience"` // e.g., "gcse_student", "medical_student"
 }
 
+// HumanOSResponse wraps CHISG knowledge with age-appropriate adjustments
+type HumanOSResponse struct {
+	OriginalKnowledge *KnowledgeResponse `json:"knowledge"`
+	AdjustedForAge    string             `json:"adjusted_summary"`
+	DevelopmentStage  string             `json:"development_stage"`
+	BarriersDetected  []string           `json:"barriers_detected"`
+	Interventions     []string           `json:"recommended_interventions"`
+}
+
 // KnowledgeResponse matches the CHISG API contract response format
 type KnowledgeResponse struct {
 	Summary         string            `json:"summary"`

@@ -3,10 +3,10 @@ package rawText
 import (
 	"context"
 	"encoding/json"
-	"esp-organizer/internal/InfoFlow/InfoIn"
-	"esp-organizer/internal/InfoFlow/InfoStore/db"
 	"esp-organizer/internal/config"
+	"esp-organizer/internal/domain/infoin"
 	"esp-organizer/internal/models"
+	"esp-organizer/internal/store/db"
 	"esp-organizer/internal/utils"
 	"log"
 	"net/http"
@@ -65,7 +65,7 @@ func RawTextPOSTHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Initialize the modern semantic link service
-	semanticService, err := InfoIn.NewSemanticLinkService()
+	semanticService, err := infoin.NewSemanticLinkService()
 	if err != nil {
 		http.Error(w, "Failed to create semantic service: "+err.Error(), http.StatusInternalServerError)
 		return
@@ -79,8 +79,8 @@ func RawTextPOSTHandler(w http.ResponseWriter, r *http.Request) {
 		Domain:      submission.Metadata["domain"], // Assuming domain is passed in metadata
 		Title:       submission.SourceID,
 		Source: models.SourceReference{
-			SourceID: submission.SourceID,
 			Title:    submission.Source,
+			UploadID: submission.SourceID,
 		},
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
@@ -161,131 +161,155 @@ func backfillLegacyImmunologyCollections(ctx context.Context, mdb *db.MongoDB, d
 	// For now, this placeholder approach resolves the immediate issue.
 }
 
-// SubmitConceptHandler handles the creation of a Concept and its associated Chunks and SemanticLinks
 func SubmitConceptHandler(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
 	var submission ConceptSubmission
 	if err := json.NewDecoder(r.Body).Decode(&submission); err != nil {
 		http.Error(w, "Invalid request body: "+err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	//ctx := r.Context() // Use request context
+	// Validate required fields
+	if strings.TrimSpace(submission.Name) == "" {
+		http.Error(w, "Concept name is required", http.StatusBadRequest)
+		return
+	}
+
+	// Initialize MongoDB connection
+	mdb, err := db.NewFromEnv()
+	if err != nil {
+		log.Printf("Failed to connect to database: %v", err)
+		http.Error(w, "Database connection failed", http.StatusInternalServerError)
+		return
+	}
 
 	// 1. Create DataSource for this concept submission
 	dataSource := models.DataSource{
 		ID:          primitive.NewObjectID(),
-		Type:        "concept_submission", // Or derive from submission.SourceType if added
-		Source:      submission.SourceID,  // e.g., "manual_entry_caffeine_study"
+		Type:        "concept_submission",
+		Source:      submission.Source,
+		SourceID:    submission.SourceID,
 		ProcessedAt: time.Now().Unix(),
 	}
-	// _, err := db.GetCollection("datasources").InsertOne(ctx, dataSource)
-	// if err != nil {
-	// 	http.Error(w, "Failed to create data source: "+err.Error(), http.StatusInternalServerError)
-	// 	return
-	// }
-	// For now, we simulate success
+
+	if _, err := mdb.Database.Collection("datasources").InsertOne(ctx, dataSource); err != nil {
+		log.Printf("Failed to create data source: %v", err)
+		http.Error(w, "Failed to create data source", http.StatusInternalServerError)
+		return
+	}
 
 	// 2. Create the main Chunk for the Concept's description
-	// This chunk will be vectorized and stored in Pinecone.
 	vectSource := models.VectorSource{
 		SourceID: dataSource.ID,
-		// VectorID: "vector_id_from_pinecone_for_concept", // Placeholder, would be set after vectorization
 	}
+
 	conceptDescriptionChunk := models.Chunk{
 		ID:           primitive.NewObjectID(),
-		VectorSource: vectSource,             // Link to the DataSource
-		Content:      submission.Description, // The concept's description becomes a chunk
-		// VectorID: "vector_id_from_pinecone_for_description", // Placeholder
-		Metadata:  map[string]any{"name": submission.Name, "type": "concept_description"},
+		VectorSource: vectSource,
+		Content:      submission.Description,
+		Metadata: map[string]any{
+			"name":   submission.Name,
+			"type":   "concept_description",
+			"source": submission.Source,
+		},
 		CreatedAt: time.Now().Unix(),
 	}
-	// _, err = db.GetCollection("chunks").InsertOne(ctx, conceptDescriptionChunk)
-	// if err != nil {
-	// 	http.Error(w, "Failed to create concept chunk: "+err.Error(), http.StatusInternalServerError)
-	// 	return
-	// }
-	// TODO: Vectorize conceptDescriptionChunk.Content and upsert to Pinecone, then update VectorID
+
+	if _, err := mdb.Database.Collection("chunks").InsertOne(ctx, conceptDescriptionChunk); err != nil {
+		log.Printf("Failed to create concept chunk: %v", err)
+		http.Error(w, "Failed to create concept chunk", http.StatusInternalServerError)
+		return
+	}
+
+	// TODO: Vectorize conceptDescriptionChunk.Content and upsert to Pinecone
+	// This would set the VectorID field
 
 	// 3. Create the Concept document in MongoDB
-
 	concept := models.Concept{
-		ID:             primitive.NewObjectID(), // This will be the source for semantic links
+		ID:             primitive.NewObjectID(),
 		Name:           submission.Name,
 		Description:    submission.Description,
 		DataSourceID:   dataSource.ID,
 		PrimaryChunkID: conceptDescriptionChunk.ID,
-		Influences:     submission.Influences, // Store raw influences for now, or process into SemanticLinks directly
+		Influences:     submission.Influences,
 		CreatedAt:      time.Now().Unix(),
 		UpdatedAt:      time.Now().Unix(),
 	}
-	// _, err = db.GetCollection("concepts").InsertOne(ctx, concept)
-	// if err != nil {
-	// 	http.Error(w, "Failed to create concept: "+err.Error(), http.StatusInternalServerError)
-	// 	return
-	// }
 
-	// 4. Create SemanticLink documents based on Influences
-	// Each Influence translates into a SemanticLink.
-	// The TargetConceptID in the Influence refers to an *existing* Concept's ID.
-	// The SourceChunkID for these links will be the conceptDescriptionChunk.ID created above.
-	var createdSemanticLinks []models.SemanticLink
-	for _, influence := range submission.Influences {
-		// We need to find the PrimaryChunkID of the target concept.
-		// This requires fetching the target concept from the DB.
-		// targetConcept, err := db.GetConceptByID(ctx, influence.TargetConceptID)
-		// if err != nil {
-		//    log.Printf("Warning: Could not find target concept %s for influence: %v", influence.TargetConceptID.Hex(), err)
-		//    continue // or handle error more robustly
-		// }
-		// if targetConcept.PrimaryChunkID.IsZero() {
-		//    log.Printf("Warning: Target concept %s has no primary chunk ID", influence.TargetConceptID.Hex())
-		//    continue
-		// }
-
-		semanticLink := models.SemanticLink{
-			ID:           primitive.NewObjectID(),
-			SourceID:     concept.ID,                      // The concept's ID is the source
-			TargetID:     influence.TargetConceptID,       // This is the ID of the target
-			SourceTerm:   concept.Name,                    // The term from the source concept
-			TargetTerm:   influence.TargetConceptID.Hex(), // The term from the target concept
-			RelationType: string(influence.RelationType),  // e.g., "influences", "related_to"
-			Context:      influence.Context,               // Optional context for the link
-			Confidence:   influence.Strength,              // Convert Strength to Confidence
-			Vector:       nil,                             // Placeholder for vector, would be set after vectorization
-			BatchID:      "",                              // Optional batch ID if this is part of a batch process
-			Domain:       "concept_influence",             // Domain for this semantic link
-			CreatedAt:    time.Now(),                      // Timestamp for when this link was created
-			// Additional fields can be added as needed
-		}
-
-		// _, err = db.GetCollection("semantic_links").InsertOne(ctx, semanticLink)
-		// if err != nil {
-		// 	log.Printf("Failed to create semantic link for influence %+v: %v", influence, err)
-		// 	// Decide on error handling: continue, or fail the whole request?
-		// } else {
-		createdSemanticLinks = append(createdSemanticLinks, semanticLink)
-		// }
+	if _, err := mdb.Database.Collection("concepts").InsertOne(ctx, concept); err != nil {
+		log.Printf("Failed to create concept: %v", err)
+		http.Error(w, "Failed to create concept", http.StatusInternalServerError)
+		return
 	}
 
-	// Placeholder for actual database operations
-	// Simulate saving these to MongoDB
-	// db.SaveConcept(concept)
-	// for _, sl := range createdSemanticLinks {
-	// 	db.SaveSemanticLink(sl)
-	// }
-	// db.SaveChunk(conceptDescriptionChunk) // (and upsert to Pinecone)
+	// 4. Create SemanticLink documents based on Influences
+	createdSemanticLinks, err := createSemanticLinksFromInfluences(ctx, mdb, concept, submission.Influences)
+	if err != nil {
+		log.Printf("Warning: Failed to create some semantic links: %v", err)
+		// Continue anyway - the main concept was created successfully
+	}
 
 	response := map[string]any{
-		"message":           "Concept and influences submitted for processing.",
+		"message":           "Concept and influences submitted successfully",
 		"conceptId":         concept.ID.Hex(),
 		"primaryChunkId":    conceptDescriptionChunk.ID.Hex(),
 		"semanticLinkCount": len(createdSemanticLinks),
-		// "createdSemanticLinkIds": getIDs(createdSemanticLinks), // Helper to get just IDs
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusAccepted)
+	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(response)
+}
+
+// createSemanticLinksFromInfluences creates semantic links for concept influences
+func createSemanticLinksFromInfluences(ctx context.Context, mdb *db.MongoDB, concept models.Concept, influences []models.Influence) ([]primitive.ObjectID, error) {
+	var createdLinkIDs []primitive.ObjectID
+
+	for _, influence := range influences {
+		// Get the target concept to ensure it exists and get its name
+		var targetConcept models.Concept
+		err := mdb.Database.Collection("concepts").FindOne(ctx, bson.M{"_id": influence.TargetConceptID}).Decode(&targetConcept)
+		if err != nil {
+			log.Printf("Warning: Target concept %s not found: %v", influence.TargetConceptID.Hex(), err)
+			continue
+		}
+
+		semanticLink := models.SemanticLink{
+			ID:           primitive.NewObjectID(),
+			SourceID:     concept.ID,
+			TargetID:     influence.TargetConceptID,
+			SourceTerm:   concept.Name,
+			TargetTerm:   targetConcept.Name,
+			RelationType: string(influence.RelationType),
+			Context:      influence.Context,
+			Confidence:   strengthToConfidence(influence.Strength),
+			Domain:       "concept_influence",
+			CreatedAt:    time.Now(),
+		}
+
+		result, err := mdb.Database.Collection("semantic_links").InsertOne(ctx, semanticLink)
+		if err != nil {
+			log.Printf("Failed to create semantic link for influence %+v: %v", influence, err)
+			continue
+		}
+
+		if insertedID, ok := result.InsertedID.(primitive.ObjectID); ok {
+			createdLinkIDs = append(createdLinkIDs, insertedID)
+		}
+	}
+
+	return createdLinkIDs, nil
+}
+
+// strengthToConfidence if the strength is a float64 already then this is converted to a confidence score directly.
+func strengthToConfidence(strength float64) float64 {
+	if strength < 0.0 {
+		return 0.0
+	} else if strength > 1.0 {
+		return 1.0
+	}
+	return strength
 }
 
 // strengthToConfidence converts a string representation of strength to a float64 confidence score.

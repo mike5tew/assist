@@ -3,7 +3,7 @@ package api
 // import (
 // 	"context"
 // 	"encoding/json"
-// 	"esp-organizer/internal/InfoFlow/InfoIn"
+// 	"esp-organizer/internal/domain/infoin"
 // 	"fmt"
 // 	"io"
 // 	"log"
@@ -13,15 +13,15 @@ package api
 // )
 
 // // This is a placeholder for your actual document processing service
-// var semanticLinkService *InfoIn.SemanticLinkService
+// var semanticLinkService *infoin.SemanticLinkService
 
 // func init() {
 // 	// Initialize your semantic service here. This is a critical step.
 // 	// You may need to pass database clients or other dependencies.
-// 	// Example: semanticLinkService = InfoIn.NewSemanticLinkService(db.GetMongoClient(), db.GetWeaviateClient())
+// 	// Example: semanticLinkService = infoin.NewSemanticLinkService(db.GetMongoClient(), db.GetWeaviateClient())
 // 	// For now, we'll assume it can be created. If this fails, the service will be nil.
 // 	var err error
-// 	semanticLinkService, err = InfoIn.NewSemanticLinkService()
+// 	semanticLinkService, err = infoin.NewSemanticLinkService()
 // 	if err != nil {
 // 		log.Printf("FATAL: Failed to initialize SemanticLinkService: %v", err)
 // 		semanticLinkService = nil // Ensure it's nil on failure
@@ -78,7 +78,7 @@ package api
 // 		// Replace the placeholder with the actual call to your service.
 // 		// This assumes your service has a method like ProcessDocument.
 // 		// You will need to create the RawTextSubmission struct with the form data.
-// 		submission := InfoIn.RawTextSubmission{
+// 		submission := infoin.RawTextSubmission{
 // 			Content:  string(data), // Or however you need to pass it
 // 			Source:   "book",
 // 			SourceID: sourceID,

@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	"esp-organizer/internal/InfoFlow/InfoStore/db"
+	"esp-organizer/internal/store/db"
 
 	"github.com/gin-gonic/gin"
 	"github.com/weaviate/weaviate/entities/models"

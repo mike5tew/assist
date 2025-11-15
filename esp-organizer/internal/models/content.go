@@ -6,25 +6,13 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-// ChapterInfo represents metadata about a chapter being uploaded or processed
-type ChapterInfo struct {
-	ChapterNumber string `bson:"chapter_number,omitempty" json:"chapter_number,omitempty"`
-	ChapterTitle  string `bson:"chapter_title,omitempty" json:"chapter_title,omitempty"`
-	Domain        string `bson:"domain,omitempty" json:"domain,omitempty"`
-}
-
-// Section represents a section in the chapter
-type Section struct {
-	Title   string `json:"title"`
-	Content string `json:"content"`
-}
-
 // DataSource represents the original source of content (files, uploads, web scrapes)
 type DataSource struct {
 	ID          primitive.ObjectID     `bson:"_id,omitempty" json:"id,omitempty"`
 	Type        string                 `bson:"type" json:"type"`
 	Source      string                 `bson:"source" json:"source"`
 	ProcessedAt int64                  `bson:"processed_at" json:"processed_at"`
+	SourceID    string                 `bson:"source_id,omitempty" json:"source_id,omitempty"`
 	Metadata    map[string]interface{} `bson:"metadata,omitempty" json:"metadata,omitempty"`
 }
 

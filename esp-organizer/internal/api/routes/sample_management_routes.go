@@ -2,8 +2,8 @@ package routes
 
 import (
 	"context"
-	"esp-organizer/internal/InfoFlow/InfoIn"
-	"esp-organizer/internal/InfoFlow/InfoStore/db"
+	"esp-organizer/internal/domain/infoin"
+	"esp-organizer/internal/store/db"
 	"net/http"
 	"time"
 
@@ -63,7 +63,7 @@ func ListSamples(c *gin.Context) {
 	}
 	defer cursor.Close(ctx)
 
-	var samples []InfoIn.ExtractionSample
+	var samples []map[string]interface{} // TODO: Replace with infoin.ExtractionSample
 	if err := cursor.All(ctx, &samples); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to decode samples"})
 		return
@@ -94,7 +94,7 @@ func GetSample(c *gin.Context) {
 	}
 
 	collection := mongoDB.Database.Collection("extraction_samples")
-	var sample InfoIn.ExtractionSample
+	var sample infoin.ExtractionSample
 
 	err = collection.FindOne(ctx, bson.M{"_id": objID}).Decode(&sample)
 	if err != nil {
@@ -115,7 +115,7 @@ func CreateSample(c *gin.Context) {
 	}
 	defer mongoDB.Client.Disconnect(ctx)
 
-	var sample InfoIn.ExtractionSample
+	var sample infoin.ExtractionSample
 	if err := c.BindJSON(&sample); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
 		return
@@ -217,7 +217,7 @@ func DeleteSample(c *gin.Context) {
 func TriggerCuration(c *gin.Context) {
 	ctx := context.Background()
 
-	semanticService, err := InfoIn.NewSemanticLinkService()
+	semanticService, err := infoin.NewSemanticLinkService()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to initialize service"})
 		return

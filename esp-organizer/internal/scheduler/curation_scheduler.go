@@ -2,7 +2,7 @@ package scheduler
 
 import (
 	"context"
-	"esp-organizer/internal/InfoFlow/InfoIn"
+	"esp-organizer/internal/domain/infoin"
 	"log"
 	"time"
 )
@@ -11,12 +11,12 @@ import (
 type CurationScheduler struct {
 	interval time.Duration
 	stopChan chan bool
-	service  *InfoIn.SemanticLinkService
+	service  *infoin.SemanticLinkService
 }
 
 // NewCurationScheduler creates a new curation scheduler
 func NewCurationScheduler(intervalHours int) (*CurationScheduler, error) {
-	service, err := InfoIn.NewSemanticLinkService()
+	service, err := infoin.NewSemanticLinkService()
 	if err != nil {
 		return nil, err
 	}

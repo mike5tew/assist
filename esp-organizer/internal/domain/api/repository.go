@@ -4,48 +4,35 @@ import (
 	"context"
 	"esp-organizer/internal/models"
 	"fmt"
-	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// MongoRepository implements Repository interface using MongoDB
+// MongoRepository is the concrete implementation for MongoDB operations.
 type MongoRepository struct {
-	client *mongo.Client
+	collection *mongo.Collection
 }
 
-// NewRepository creates a new MongoDB-backed repository
+// NewRepository creates a new repository for extraction jobs.
 func NewRepository(client *mongo.Client) *MongoRepository {
+	collection := client.Database("esp_organizer").Collection("extraction_jobs")
 	return &MongoRepository{
-		client: client,
+		collection: collection,
 	}
 }
 
-const defaultTimeout = 10 * time.Second
-
-// extractionJobsCollection returns the MongoDB collection for extraction jobs
-func (r *MongoRepository) extractionJobsCollection() *mongo.Collection {
-	return r.client.Database("esp_organizer").Collection("extraction_jobs")
-}
-
-// CreateExtractionJob creates a new extraction job record
+// CreateExtractionJob creates a new job record.
 func (r *MongoRepository) CreateExtractionJob(job *models.ExtractionJob) error {
-	ctx, cancel := context.WithTimeout(context.Background(), defaultTimeout)
-	defer cancel()
-
-	_, err := r.extractionJobsCollection().InsertOne(ctx, job)
-	if err != nil {
-		return fmt.Errorf("failed to create extraction job: %w", err)
-	}
-	return nil
+	_, err := r.collection.InsertOne(context.Background(), job)
+	return err
 }
 
-// UpdateExtractionJob updates an existing extraction job
+// UpdateExtractionJob updates an existing job record.
 func (r *MongoRepository) UpdateExtractionJob(job *models.ExtractionJob) error {
-	ctx, cancel := context.WithTimeout(context.Background(), defaultTimeout)
-	defer cancel()
-
+	opts := options.Update().SetUpsert(true)
+	filter := bson.M{"_id": job.ID}
 	update := bson.M{
 		"$set": bson.M{
 			"status":     job.Status,
@@ -53,37 +40,25 @@ func (r *MongoRepository) UpdateExtractionJob(job *models.ExtractionJob) error {
 			"progress":   job.Progress,
 			"updated_at": job.UpdatedAt,
 		},
+		"$setOnInsert": bson.M{
+			"created_at": job.CreatedAt,
+		},
 	}
 
-	_, err := r.extractionJobsCollection().UpdateOne(
-		ctx,
-		bson.M{"id": job.ID},
-		update,
-	)
-
-	if err != nil {
-		return fmt.Errorf("failed to update extraction job: %w", err)
-	}
-	return nil
+	_, err := r.collection.UpdateOne(context.Background(), filter, update, opts)
+	return err
 }
 
-// GetExtractionJob retrieves an extraction job by ID
+// GetExtractionJob retrieves a job by its ID.
 func (r *MongoRepository) GetExtractionJob(jobID string) (*models.ExtractionJob, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), defaultTimeout)
-	defer cancel()
-
 	var job models.ExtractionJob
-	err := r.extractionJobsCollection().FindOne(
-		ctx,
-		bson.M{"id": jobID},
-	).Decode(&job)
-
+	filter := bson.M{"_id": jobID}
+	err := r.collection.FindOne(context.Background(), filter).Decode(&job)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
-			return nil, fmt.Errorf("extraction job not found: %s", jobID)
+			return nil, fmt.Errorf("job with ID '%s' not found", jobID)
 		}
-		return nil, fmt.Errorf("failed to get extraction job: %w", err)
+		return nil, err
 	}
-
 	return &job, nil
 }

@@ -50,7 +50,7 @@ type SubjectContent struct {
 
 // Source represents any content source (book, document, web page, etc.)
 type Source struct {
-	ID        string                 `json:"id" bson:"_id,omitempty"`
+	ID        primitive.ObjectID     `bson:"_id,omitempty" json:"id"`
 	Type      string                 `json:"type" bson:"type"` // "book", "article", "web", "upload"
 	Title     string                 `json:"title" bson:"title"`
 	Authors   []string               `json:"authors" bson:"authors,omitempty"`
@@ -84,13 +84,13 @@ type MedicalExcerpt struct {
 
 // SourceReference is a lightweight reference to a source with specific location info
 type SourceReference struct {
-	SourceID      string   `json:"source_id" bson:"source_id"`
-	Title         string   `json:"title" bson:"title"` // Cache of source title
-	ChapterNumber string   `json:"chapter_number,omitempty" bson:"chapter_number,omitempty"`
-	ChapterTitle  string   `json:"chapter_title,omitempty" bson:"chapter_title,omitempty"`
-	PageNumbers   string   `json:"page_numbers,omitempty" bson:"page_numbers,omitempty"`
-	UploadID      string   `json:"upload_id,omitempty" bson:"upload_id,omitempty"`
-	Authors       []string `json:"authors,omitempty" bson:"authors,omitempty"`
+	SourceID      primitive.ObjectID `bson:"_id,omitempty" json:"id"`
+	Title         string             `json:"title" bson:"title"` // Cache of source title
+	ChapterNumber string             `json:"chapter_number,omitempty" bson:"chapter_number,omitempty"`
+	ChapterTitle  string             `json:"chapter_title,omitempty" bson:"chapter_title,omitempty"`
+	PageNumbers   string             `json:"page_numbers,omitempty" bson:"page_numbers,omitempty"`
+	UploadID      string             `json:"upload_id,omitempty" bson:"upload_id,omitempty"`
+	Authors       []string           `json:"authors,omitempty" bson:"authors,omitempty"`
 }
 
 // Term represents a verified term from Weaviate search results
@@ -99,4 +99,31 @@ type Term struct {
 	Verified bool                   `json:"verified"`
 	MongoID  primitive.ObjectID     `json:"mongo_id"`
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
+}
+
+type MedicalTerm struct {
+	Term       string   `json:"term"`
+	Definition string   `json:"definition,omitempty"`
+	Context    []string `json:"context,omitempty"`
+	Category   string   `json:"category,omitempty"` // e.g., "Cell Type", "Cytokine", "Disorder"
+	Tags       []string `json:"tags,omitempty"`
+}
+
+type CaseStudy struct {
+	CaseNumber       string   `json:"case_number"`
+	Title            string   `json:"title"`
+	Content          string   `json:"content"`
+	ClinicalFindings string   `json:"clinical_findings,omitempty"`
+	Tags             []string `json:"tags,omitempty"`
+}
+
+type Section struct {
+	Title   string `json:"title"`
+	Content string `json:"content"`
+	Level   int    `json:"level"` // e.g., 1 for chapter title, 2 for section, 3 for subsection
+}
+
+type ChapterInfo struct {
+	ChapterNumber string `json:"chapter_number"`
+	ChapterTitle  string `json:"chapter_title"`
 }

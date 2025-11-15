@@ -3,9 +3,9 @@ package extraction
 import (
 	"context"
 	"crypto/rand"
-	"esp-organizer/internal/InfoFlow/InfoIn/codeanalysis"
+	"esp-organizer/internal/domain/codeanalysis"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -54,7 +54,7 @@ func ProcessCodeFile(ctx context.Context, filePath string) (*CodeExtractionJob, 
 	}
 
 	// Read file content
-	content, err := ioutil.ReadFile(filePath)
+	content, err := os.ReadFile(filePath)
 	if err != nil {
 		job.Status = "failed"
 		job.Error = err.Error()
