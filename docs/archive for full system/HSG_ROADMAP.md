@@ -35,7 +35,7 @@
   - Duration: 15 min
 
 - [ ] **2.1.2**: Create hierarchy classification logic
-  - File: `/internal/InfoFlow/InfoIn/semantic_link_service.go`
+  - File: `/internal/InfoFlow/infoin/semantic_link_service.go`
   - Function: `classifyHierarchyLevel(sourceTerm, targetTerm, relationType) int`
   - Logic:
     ```
@@ -46,7 +46,7 @@
   - Duration: 1 hour
 
 - [ ] **2.1.3**: Modify `ProcessDocument()` to set hierarchy
-  - File: `/internal/InfoFlow/InfoIn/semantic_link_service.go`
+  - File: `/internal/InfoFlow/infoin/semantic_link_service.go`
   - Change: Set `hierarchy_level` field when creating Weaviate properties
   - Duration: 30 min
 
@@ -69,13 +69,13 @@
 
 #### Tasks:
 - [ ] **2.2.1**: Create relationship builder service
-  - File: `/internal/InfoFlow/InfoIn/link_relationship_builder.go` (NEW)
+  - File: `/internal/InfoFlow/infoin/link_relationship_builder.go` (NEW)
   - Function: `BuildRelationships(links []SemanticLink) error`
   - Logic: Analyze `source_term`, `target_term`, `relation_type` to infer parent/child
   - Duration: 1.5 hours
 
 - [ ] **2.2.2**: Update existing links with relationships
-  - File: `/internal/InfoFlow/InfoIn/link_relationship_builder.go`
+  - File: `/internal/InfoFlow/infoin/link_relationship_builder.go`
   - Function: `UpdateLinkRelationships(ctx context.Context, linkID string, parentIDs, childIDs []string) error`
   - Duration: 1 hour
 
@@ -102,7 +102,7 @@
   - Duration: 1 hour
 
 - [ ] **2.3.2**: Implement `TraverseHierarchy()` function
-  - File: `/internal/InfoFlow/InfoIn/hsg_query_service.go`
+  - File: `/internal/InfoFlow/infoin/hsg_query_service.go`
   - Function signature:
     ```go
     func (h *HSGQueryService) TraverseHierarchy(
@@ -114,7 +114,7 @@
   - Duration: 2 hours
 
 - [ ] **2.3.3**: Update `QueryHSG()` to use traversal
-  - File: `/internal/InfoFlow/InfoIn/hsg_query_service.go`
+  - File: `/internal/InfoFlow/infoin/hsg_query_service.go`
   - Change: Replace flat search with hierarchical traversal
   - Duration: 1 hour
 
@@ -162,7 +162,7 @@
 
 #### Tasks:
 - [ ] **3.2.1**: Create summarization service
-  - File: `/internal/InfoFlow/InfoIn/tier2_summarization.go` (NEW)
+  - File: `/internal/InfoFlow/infoin/tier2_summarization.go` (NEW)
   - Function: `SummarizeSemanticLinkGroup(links []SemanticLink) (*SummaryChunk, error)`
   - Duration: 2 hours
 
@@ -195,7 +195,7 @@
 
 #### Tasks:
 - [ ] **3.3.1**: Implement Tier 2 search
-  - File: `/internal/InfoFlow/InfoIn/hsg_query_service.go`
+  - File: `/internal/InfoFlow/infoin/hsg_query_service.go`
   - Function: `SearchSummaries(query string) ([]SummaryChunk, error)`
   - Duration: 1 hour
 

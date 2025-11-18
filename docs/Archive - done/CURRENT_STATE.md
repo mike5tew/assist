@@ -15,7 +15,7 @@
 - ✅ Files uploaded to: `s3://esp-new-organizer-immunology`
 
 **Evidence**: 
-- File: `/internal/InfoFlow/InfoIn/extraction/textract.go`
+- File: `/internal/InfoFlow/infoin/extraction/textract.go`
 - Test data: `data/esp_organizer.immunology_content.json` (5 documents)
 - Latest successful job: `immunology-chapter-1759702301`
 
@@ -43,7 +43,7 @@
 - ✅ External vectorization with AWS Titan (1024-dim embeddings)
 
 **Evidence**:
-- File: `/internal/InfoFlow/InfoIn/semantic_link_service.go`
+- File: `/internal/InfoFlow/infoin/semantic_link_service.go`
 - Weaviate class: `SemanticLinks` ✅ EXISTS
 - Vectorizer: `text2vec-aws` (AWS Titan)
 - Model: `amazon.titan-embed-text-v2:0`
@@ -78,7 +78,7 @@
 - Add `classifyHierarchyLevel()` function
 - Set `hierarchy_level` when creating Weaviate properties
 
-**File**: `/internal/InfoFlow/InfoIn/semantic_link_service.go`
+**File**: `/internal/InfoFlow/infoin/semantic_link_service.go`
 
 ---
 
@@ -158,7 +158,7 @@ query {
 - ✅ **🆕 Creates bidirectional references** (summary ↔ derived links)
 
 **Evidence**:
-- File: `/internal/InfoFlow/InfoIn/semantic_link_service.go`
+- File: `/internal/InfoFlow/infoin/semantic_link_service.go`
 - Functions: 
   - `processTier2SummaryChunks()` ✅ COMPLETE
   - `extractHigherLevelLinksFromSummary()` ✅ **NEW**

@@ -1,34 +1,35 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
 import App from './App';
-import { ThemeProvider } from '@mui/material/styles';
-import { CssBaseline } from '@mui/material';
-import { createTheme } from '@mui/material/styles';
+import './index.css';
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+
+// Initialize i18n to prevent warnings
+i18n
+  .use(initReactI18next)
+  .init({
+    resources: {
+      en: {
+        translation: {
+          welcome: "Welcome to ESP Organizer",
+          // Add more translations as needed
+        }
+      }
+    },
+    lng: "en",
+    fallbackLng: "en",
+    interpolation: {
+      escapeValue: false
+    }
+  });
+
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
-const theme = createTheme({
-  palette: {
-    mode: 'light',
-  },
-});
-
-// Add debugging to help identify which server we're on
-if (process.env.NODE_ENV === 'development') {
-  console.log('=======================================');
-  console.log('FRONTEND SERVER RUNNING ON PORT 3000');
-  console.log('If you see "Welcome to ESP Organizer API", you\'ve been redirected to the API server (8080)');
-  console.log('This is a routing issue - you should be on http://localhost:3000/');
-  console.log('=======================================');
-}
-
 root.render(
   <React.StrictMode>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <App />
-      </ThemeProvider>
+    <App />
   </React.StrictMode>
 );

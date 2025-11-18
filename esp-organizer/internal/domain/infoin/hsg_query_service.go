@@ -860,3 +860,91 @@ func min(a, b int) int {
 	}
 	return b
 }
+
+// TraverseHierarchy finds semantically connected links from a starting point,
+// acting as the first step in building a "knowledge route".
+func (s *HSGQueryService) TraverseHierarchy(ctx context.Context, rootLinkID string) ([]models.SemanticLink, error) {
+	log.Printf("🗺️ Traversing hierarchy from root link ID: %s", rootLinkID)
+
+	// Step 1: Fetch the root link to get its concepts
+	var rootLink models.SemanticLink
+	collection := s.MongoClient.Database.Collection("semantic_links")
+	objID, err := primitive.ObjectIDFromHex(rootLinkID)
+	if err != nil {
+		return nil, fmt.Errorf("invalid root link ID format: %w", err)
+	}
+
+	if err := collection.FindOne(ctx, bson.M{"_id": objID}).Decode(&rootLink); err != nil {
+		return nil, fmt.Errorf("could not find root link with ID %s: %w", rootLinkID, err)
+	}
+
+	log.Printf("Found root link: %s -> %s", rootLink.SourceTerm, rootLink.TargetTerm)
+
+	// Step 2: Find connecting links in Weaviate.
+	// This is like finding the next street on the sat nav.
+	// We look for other links that start where our root link ends, or vice-versa.
+	where := filters.Where().
+		WithOperator(filters.Or).
+		WithOperands([]*filters.WhereBuilder{
+			filters.Where().
+				WithPath([]string{"source_mongo_id"}).
+				WithOperator(filters.Equal).
+				WithValueString(rootLink.TargetID.Hex()), // Find links starting from our target
+			filters.Where().
+				WithPath([]string{"target_mongo_id"}).
+				WithOperator(filters.Equal).
+				WithValueString(rootLink.SourceID.Hex()), // Find links ending at our source
+		})
+
+	fields := []graphql.Field{
+		{Name: "source_term"},
+		{Name: "target_term"},
+		{Name: "relation_type"},
+		{Name: "context"},
+		{Name: "confidence"},
+		{Name: "source_mongo_id"},
+		{Name: "target_mongo_id"},
+	}
+
+	queryBuilder := s.WeaviateClient.GraphQL().Get().
+		WithClassName("SemanticLinks").
+		WithFields(fields...).
+		WithWhere(where).
+		WithLimit(5) // Limit to 5 related concepts for the demo
+
+	response, err := queryBuilder.Do(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("weaviate traversal query failed: %w", err)
+	}
+
+	if response.Errors != nil {
+		return nil, fmt.Errorf("weaviate traversal query returned errors: %v", response.Errors)
+	}
+
+	// Step 3: Parse the results
+	data, ok := response.Data["Get"].(map[string]interface{})
+	if !ok {
+		return nil, fmt.Errorf("unexpected response format from Weaviate")
+	}
+
+	items, ok := data["SemanticLinks"].([]interface{})
+	if !ok {
+		return []models.SemanticLink{}, nil // No connected links found
+	}
+
+	var connectedLinks []models.SemanticLink
+	for _, item := range items {
+		if itemMap, ok := item.(map[string]interface{}); ok {
+			link, err := s.parseSemanticLinkFromWeaviate(itemMap)
+			if err != nil {
+				log.Printf("Warning: Failed to parse connected semantic link: %v", err)
+				continue
+			}
+			log.Printf("Found connected link: %s -> %s", link.SourceTerm, link.TargetTerm)
+			connectedLinks = append(connectedLinks, *link)
+		}
+	}
+
+	log.Printf("✅ Traversal complete. Found %d connected links.", len(connectedLinks))
+	return connectedLinks, nil
+}

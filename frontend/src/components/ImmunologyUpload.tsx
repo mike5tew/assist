@@ -30,7 +30,7 @@ import {
   Add,
   Delete
 } from '@mui/icons-material';
-import { apiHelpers, API_ENDPOINTS } from '../config/api'; // Use the helpers
+import { apiClient, API_ENDPOINTS } from '../config/api'; // Use apiClient instead of apiHelpers
 
 interface BookDetails {
   id?: string;
@@ -105,7 +105,7 @@ const ImmunologyUpload: React.FC = () => {
     const interval = setInterval(async () => {
       try {
         // Use the correct API endpoint from the configuration
-        const statusResult = await apiHelpers.get<any>(API_ENDPOINTS.extraction.status(pollingJobId));
+        const statusResult = await apiClient.get<any>(API_ENDPOINTS.extraction.status(pollingJobId));
         setPollingStatus(statusResult.status);
 
         if (statusResult.status === 'COMPLETE' || statusResult.status === 'FAILED') {
@@ -126,8 +126,8 @@ const ImmunologyUpload: React.FC = () => {
 
   const fetchBooks = async () => {
     try {
-      // Use the apiHelpers.get method
-      const data = await apiHelpers.get<any>('/api/sources?type=book');
+      // Use the apiClient.get method
+      const data = await apiClient.get<any>('/api/sources?type=book');
       const fetchedBooks = data.sources || [];
       setBooks(fetchedBooks);
       if (fetchedBooks.length > 0) {
@@ -192,8 +192,8 @@ const ImmunologyUpload: React.FC = () => {
         year: (newBook.year || '').toString().trim() || new Date().getFullYear().toString(),
       };
       
-      // Use apiHelpers.post
-      const result = await apiHelpers.post<any>('/api/sources', payload);
+      // Use apiClient.post
+      const result = await apiClient.post<any>('/api/sources', payload);
       
       if (result.source) {
         setShowAddBookDialog(false);
@@ -251,9 +251,9 @@ const ImmunologyUpload: React.FC = () => {
     console.log('Form data keys:', formDataKeys);
 
     try {
-      // Use apiHelpers.upload for file uploads
-      const result = await apiHelpers.upload<UploadResponse>(
-        API_ENDPOINTS.studyAreas.immunology.upload, // FIXED: use correct path
+      // Use apiClient.upload for file uploads
+      const result = await apiClient.upload<UploadResponse>(
+        API_ENDPOINTS.studyAreas.immunology.upload,
         formData,
         (progressEvent) => {
           const progress = Math.round(

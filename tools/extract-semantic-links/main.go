@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"esp-organizer/internal/InfoFlow/InfoIn"
-	"esp-organizer/internal/InfoFlow/InfoOut/llm"
+	"esp-organizer/internal/aws/llm"
+	"esp-organizer/internal/domain/infoin"
 	"esp-organizer/internal/models"
 )
 
@@ -115,7 +115,7 @@ Return ONLY a JSON array of relationships.`, domain, content)
 	}
 
 	// Clean response (remove markdown code fences if present)
-	response = InfoIn.CleanJSONResponse(response)
+	response = infoin.CleanJSONResponse(response)
 
 	// Parse JSON
 	var links []models.SemanticLink

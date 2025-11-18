@@ -8,7 +8,7 @@ import (
 	"syscall"
 	"time"
 
-	"esp-organizer/internal/InfoFlow/InfoIn"
+	"esp-organizer/internal/domain/infoin"
 )
 
 func main() {
@@ -28,7 +28,7 @@ func main() {
 	log.Println("Starting revectorization of all content...")
 
 	// Call the function
-	if err := InfoIn.ReVectorizeAllContent(ctx); err != nil {
+	if err := infoin.ReVectorizeAllContent(ctx); err != nil {
 		log.Fatalf("Error during revectorization: %v", err)
 	}
 

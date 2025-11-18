@@ -17,16 +17,26 @@ RUN npm cache clean --force && \
 # Copy the rest of the application source code
 COPY . .
 
-# Set environment variables to reduce memory usage and avoid conflicts
+# Set environment variables for build
 ENV NODE_OPTIONS="--max-old-space-size=4096"
 ENV GENERATE_SOURCEMAP=false
 ENV NODE_ENV=production
 ENV SKIP_PREFLIGHT_CHECK=true
+# This variable is baked into the build. An empty string makes requests relative.
+ENV REACT_APP_API_URL=""
+ENV REACT_APP_ENVIRONMENT=production
 
 # Build with error handling
 RUN npm run build || (echo "Build failed, trying with different settings..." && \
     npm install --legacy-peer-deps --force && \
     npm run build)
 
-# The serve stage is removed. The main nginx-local service will now handle serving static files.
-# The nginx-local service will handle serving the static files.
+# ---- Runtime Stage ----
+FROM nginx:alpine
+
+COPY --from=builder /app/build /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]

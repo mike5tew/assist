@@ -4,8 +4,8 @@ import (
 	"context"
 	"log"
 
-	"esp-organizer/internal/InfoFlow/InfoStore/db"
 	"esp-organizer/internal/models"
+	"esp-organizer/internal/store/db"
 
 	"go.mongodb.org/mongo-driver/bson"
 )

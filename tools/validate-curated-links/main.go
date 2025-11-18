@@ -7,14 +7,14 @@ import (
 	"os"
 	"strings"
 
-	"esp-organizer/internal/InfoFlow/InfoIn"
-	"esp-organizer/internal/InfoFlow/InfoOut/llm"
+	"esp-organizer/internal/aws/llm"
+	"esp-organizer/internal/domain/infoin"
 	"esp-organizer/internal/models"
 )
 
 func main() {
 	// Initialize taxonomy and LLM client
-	taxonomy := InfoIn.NewRelationshipTaxonomy()
+	taxonomy := infoin.NewRelationshipTaxonomy()
 	llmClient := llm.NewLlamaClient()
 	ctx := context.Background()
 

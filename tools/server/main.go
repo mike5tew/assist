@@ -2,10 +2,10 @@ package main
 
 import (
 	"context"
-	"esp-organizer/internal/InfoFlow/InfoIn/api"
-	"esp-organizer/internal/InfoFlow/InfoStore/db"
 	"esp-organizer/internal/config"
+	"esp-organizer/internal/domain/api"
 	"esp-organizer/internal/server"
+	"esp-organizer/internal/store/db"
 	"esp-organizer/internal/utils"
 	"io"
 	"log"

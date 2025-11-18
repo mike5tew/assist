@@ -2,9 +2,9 @@ package main
 
 import (
 	"context"
-	"esp-organizer/internal/InfoFlow/InfoIn"
-	"esp-organizer/internal/InfoFlow/InfoStore/db"
+	"esp-organizer/internal/domain/infoin"
 	"esp-organizer/internal/models"
+	"esp-organizer/internal/store/db"
 	"fmt"
 	"log"
 	"strings"
@@ -197,7 +197,7 @@ Diagnosis of XLA is based on very low immunoglobulin levels, absent or very low 
 
 	// Initialize semantic link service for LLaMA processing
 	log.Println("DEBUG: Creating semantic service...")
-	semanticService, err := InfoIn.NewSemanticLinkService()
+	semanticService, err := infoin.NewSemanticLinkService()
 	if err != nil {
 		log.Printf("❌ ERROR: Failed to create semantic service: %v", err)
 		return fmt.Errorf("failed to create semantic service: %w", err)

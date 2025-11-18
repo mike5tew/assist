@@ -1,7 +1,7 @@
 package main
 
 import (
-	"esp-organizer/internal/api"
+	"esp-organizer/internal/domain/api"
 	"fmt"
 	"os"
 

@@ -2,7 +2,8 @@ package main
 
 import (
 	"context"
-	"esp-organizer/internal/domain/api"
+	"esp-organizer/internal/domain/api" // Add this import
+	"esp-organizer/internal/domain/coach"
 	"esp-organizer/internal/store/db"
 	"fmt"
 	"log"
@@ -22,7 +23,14 @@ func main() {
 		log.Printf("No .env file found, using environment variables")
 	}
 
-	// Initialize MongoDB
+	// Initialize MVP Coach Service
+	coachService, err := coach.NewCoachServiceMVP() // Fixed: use mvpHandler package
+	if err != nil {
+		log.Fatalf("FATAL: Failed to create MVP coach service: %v", err)
+	}
+	log.Println("MVP Coach Service initialized successfully")
+
+	// Initialize MongoDB (commented out as in your original)
 	// mongoDB, err := db.NewFromEnv()
 	// if err != nil {
 	// 	log.Fatalf("Failed to initialize MongoDB: %v", err)
@@ -40,22 +48,18 @@ func main() {
 	// Create and configure router with proper routes
 	router := mux.NewRouter()
 
-	// CRITICAL FIX: Register routes from the api package
+	// CRITICAL FIX: Register routes from the api package with the coach service
 	log.Println("Registering API routes...")
-	api.RegisterRoutes(router)
+	api.RegisterRoutes(router, coachService) // coachService is already the right type
 
 	// Add middleware for CORS if needed
 	router.Use(corsMiddleware)
-
-	// Set the router as the main HTTP handler
-	// IMPORTANT: Ensure the router is the actual server handler
-	http.Handle("/", router)
 
 	// Configure the HTTP server
 	addr := fmt.Sprintf(":%s", os.Getenv("API_PORT"))
 	server := &http.Server{
 		Addr:         addr,
-		Handler:      router, // Make sure the router is set as the handler
+		Handler:      router,
 		ReadTimeout:  15 * time.Second,
 		WriteTimeout: 15 * time.Second,
 		IdleTimeout:  60 * time.Second,

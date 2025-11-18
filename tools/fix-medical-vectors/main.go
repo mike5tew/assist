@@ -2,9 +2,9 @@ package main
 
 import (
 	"context"
-	"esp-organizer/internal/InfoFlow/InfoOut/llm"
-	"esp-organizer/internal/InfoFlow/InfoStore/db"
+	"esp-organizer/internal/aws/llm"
 	"esp-organizer/internal/models"
+	"esp-organizer/internal/store/db"
 	"fmt"
 	"log"
 	"os"

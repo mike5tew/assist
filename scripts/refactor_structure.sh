@@ -58,13 +58,13 @@ fi
 # Refactor the internal directory
 echo "-> Refactoring internal/ directory..."
 if [ -d "esp-organizer/internal" ]; then
-    mv esp-organizer/internal/api esp-organizer-new/internal/
+    mv esp-organizer/internal/domain/api esp-organizer-new/internal/
     mv esp-organizer/internal/models esp-organizer-new/internal/domain/
     mv esp-organizer/internal/InfoFlow/InfoStore/db esp-organizer-new/internal/store/
     mv esp-organizer/internal/InfoFlow/InfoOut/llm esp-organizer-new/internal/aws/
     mv esp-organizer/internal/scheduler esp-organizer-new/internal/
     # Move remaining core logic
-    mv esp-organizer/internal/InfoFlow/InfoIn/* esp-organizer-new/internal/domain/
+    mv esp-organizer/internal/domain/infoin/* esp-organizer-new/internal/domain/
     rm -rf esp-organizer/internal
 fi
 

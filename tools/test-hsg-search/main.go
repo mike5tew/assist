@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"esp-organizer/internal/InfoFlow/InfoIn"
+	"esp-organizer/internal/domain/infoin"
 	"flag"
 	"fmt"
 	"log"
@@ -50,7 +50,7 @@ func main() {
 		fmt.Println("✅ HSG Schema setup complete")
 	}
 
-	hsgService, err := InfoIn.NewHSGQueryService()
+	hsgService, err := infoin.NewHSGQueryService()
 	if err != nil {
 		log.Fatalf("Failed to initialize HSG query service: %v", err)
 	}

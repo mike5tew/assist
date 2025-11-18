@@ -1,21 +1,25 @@
 import axios from 'axios';
 
-// Get API base URL from environment or use empty string for relative paths
-const API_BASE_URL = process.env.REACT_APP_API_URL || '';
+// Use RELATIVE paths - Nginx will handle proxying
+// Don't specify a base URL at all
+const API_BASE = '';
+
+console.log('🔗 API Routes: Using relative paths (proxied by Nginx)');
 
 // Centralized API endpoints configuration
 export const API_ENDPOINTS = {
   coach: {
-    respond: '/api/coach/respond',        // ← NEW
-    status: '/api/coach/status/:jobId',   // ← NEW
+    respond: '/api/coach/respond',
+    status: '/api/coach/status/:jobId',
+    mvcDemo: '/api/coach/mvp-demo',
   },
   chisg: {
-    query: '/api/chisg/query',            // ← NEW
+    query: '/api/chisg/query',
   },
   studyAreas: {
     immunology: {
       search: '/api/immunology/search',
-      hsgSearch: '/api/immunology/hsg-search', // New HSG search endpoint
+      hsgSearch: '/api/immunology/hsg-search',
       chapters: '/api/immunology/chapters',
       caseStudies: '/api/immunology/case-studies',
       terms: '/api/immunology/medical-terms',
@@ -39,9 +43,10 @@ const logRequest = (endpoint: string) => {
 };
 
 // API helper methods with consistent return patterns
-export const apiHelpers = {
+export const apiClient = {
   get: async <T>(endpoint: string): Promise<T> => {
-    const fullUrl = `${API_BASE_URL}${endpoint}`;
+    // This becomes just: /api/coach/mvp-demo (relative)
+    const fullUrl = `${API_BASE}${endpoint}`;
     logRequest(fullUrl);
     
     try {
@@ -49,13 +54,12 @@ export const apiHelpers = {
       return response.data;
     } catch (error: any) {
       console.error('API Response Error:', error);
-      console.error('Request failed for:', endpoint);
       throw error;
     }
   },
 
   post: async <T>(endpoint: string, data: any): Promise<T> => {
-    const fullUrl = `${API_BASE_URL}${endpoint}`;
+    const fullUrl = `${API_BASE}${endpoint}`;
     logRequest(fullUrl);
     
     try {
@@ -63,17 +67,16 @@ export const apiHelpers = {
       return response.data;
     } catch (error: any) {
       console.error('API Response Error:', error);
-      console.error('POST request failed for:', endpoint);
       throw error;
     }
   },
 
   upload: async <T>(
-    endpoint: string, 
-    formData: FormData, 
+    endpoint: string,
+    formData: FormData,
     onProgress?: (progressEvent: any) => void
   ): Promise<T> => {
-    const fullUrl = `${API_BASE_URL}${endpoint}`;
+    const fullUrl = `${API_BASE}${endpoint}`;
     logRequest(fullUrl);
     
     try {
@@ -86,16 +89,7 @@ export const apiHelpers = {
       return response.data;
     } catch (error: any) {
       console.error('API Response Error:', error);
-      console.error('Upload request failed for:', endpoint);
       throw error;
     }
   }
-};
-
-// Legacy API client for backward compatibility
-// Make sure it's consistent with the new helpers
-export const apiClient = {
-  get: apiHelpers.get,
-  post: apiHelpers.post,
-  upload: apiHelpers.upload
 };

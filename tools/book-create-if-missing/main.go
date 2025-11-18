@@ -11,8 +11,8 @@ import (
 	"path/filepath"
 	"time"
 
-	"esp-organizer/internal/InfoFlow/InfoIn/vectorize"
-	"esp-organizer/internal/InfoFlow/InfoStore/db"
+	"esp-organizer/internal/domain/infoin/vectorize"
+	"esp-organizer/internal/store/db"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"

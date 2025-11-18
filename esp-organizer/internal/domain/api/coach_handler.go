@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"esp-organizer/internal/integration"
-	"esp-organizer/internal/models"
 	"esp-organizer/internal/store/db"
 	"fmt"
 	"log"
@@ -88,8 +87,8 @@ type MisconceptionLink struct {
 	ConfidenceScore   float64 `json:"confidence_score"`
 }
 
-// CoachRespondHandler now handles diagnostic checking
-func CoachRespondHandler(w http.ResponseWriter, r *http.Request) {
+// FullDiagnosticCoachHandler handles full diagnostic checking. RENAMED to avoid collision.
+func FullDiagnosticCoachHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	startTime := time.Now()
@@ -1317,83 +1316,41 @@ func extractKeywords(text string) []string {
 	return removeDuplicates(keywords)
 }
 
-// Initialize misunderstanding map on startup
-func init() {
-	ctx := context.Background()
-	mongoDb, err := db.NewFromEnv()
-	if err != nil {
-		log.Printf("⚠️  Warning: Could not initialize MongoDB for misunderstanding map: %v", err)
+// SemanticQueryHandler is a stub for the skills semantic query endpoint
+func SemanticQueryHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	var req struct {
+		Query string `json:"query"`
+	}
+
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "Invalid request", http.StatusBadRequest)
 		return
 	}
 
-	// Create indexes for efficient queries
-	if err := db.CreateMisunderstandingIndexes(mongoDb.Database); err != nil {
-		log.Printf("⚠️  Warning: Could not create misunderstanding indexes: %v", err)
-	}
-
-	// Initialize schema with sample data (optional)
-	initializeSampleMisunderstandings(ctx, mongoDb)
-}
-
-// initializeSampleMisunderstandings seeds the database with known misconception patterns
-func initializeSampleMisunderstandings(ctx context.Context, mongoDb *db.MongoDB) {
-	collection := mongoDb.Database.Collection("misunderstanding_map")
-
-	// Check if collection already has data
-	count, err := collection.CountDocuments(ctx, bson.M{})
-	if err == nil && count > 0 {
-		log.Printf("✅ Misunderstanding map already initialized (%d patterns)", count)
-		return
-	}
-
-	samplePatterns := []interface{}{
-		&models.MisunderstandingMap{
-			ID:                   primitive.NewObjectID(),
-			WrongAnswer:          "Argon oil",
-			CorrectAnswer:        "Argan oil",
-			Domain:               "general",
-			AgeGroup:             "all",
-			ErrorType:            "phonetic_error",
-			SymptomPattern:       "Student confuses 'Argon' (inert gas) with 'Argan' (plant oil)",
-			RootCauses:           []string{"homophone_confusion", "auditory_processing"},
-			CorrectUnderstanding: "Argan oil is a natural oil from the argan tree. Argon is a colorless inert gas.",
-			RepairStrategy:       "Teach pronunciation difference: Ar-GON (gas) vs Ar-GAN (oil from trees)",
-			QuestionKeywords:     []string{"argon", "argan", "oil", "gas"},
-			Frequency:            42,
-			FirstObserved:        time.Now().AddDate(0, -3, 0),
-			LastObserved:         time.Now(),
-			ConfidenceScore:      0.95,
+	// Stub response for MVP
+	response := map[string]interface{}{
+		"query": req.Query,
+		"results_summary": map[string]int{
+			"total_exact_matches":    0,
+			"total_semantic_matches": 2,
+			"total_related_skills":   3,
 		},
-		&models.MisunderstandingMap{
-			ID:                   primitive.NewObjectID(),
-			WrongAnswer:          "Cellular respiration produces oxygen",
-			CorrectAnswer:        "Cellular respiration consumes oxygen",
-			Domain:               "gcse",
-			AgeGroup:             "middle_school",
-			ErrorType:            "conceptual_confusion",
-			SymptomPattern:       "Student confuses photosynthesis (produces O2) with respiration (uses O2)",
-			RootCauses:           []string{"related_concepts_merged", "process_direction_confusion"},
-			CorrectUnderstanding: "Photosynthesis produces oxygen. Cellular respiration USES oxygen to produce energy (ATP).",
-			RepairStrategy:       "Create side-by-side comparison: Photosynthesis INPUT→OUTPUT vs Respiration INPUT→OUTPUT",
-			RelatedMisunderstandings: []models.RelatedMisunderstanding{
-				{
-					WrongAnswer:    "Plants respire to produce oxygen",
-					CorrectAnswer:  "Plants photosynthesize to produce oxygen",
-					SymptomPattern: "Confusing the two processes",
-				},
+		"exact_matches":    []interface{}{},
+		"semantic_matches": []interface{}{},
+		"related_skills":   []interface{}{},
+		"llm_synthesis":    "This is a stub response. Full semantic search coming soon.",
+		"semantic_insights": map[string]interface{}{
+			"query_complexity": "medium",
+			"confidence_levels": map[string]int{
+				"high_confidence":   1,
+				"medium_confidence": 1,
+				"low_confidence":    0,
 			},
-			QuestionKeywords: []string{"respiration", "oxygen", "photosynthesis"},
-			Frequency:        156,
-			FirstObserved:    time.Now().AddDate(0, -6, 0),
-			LastObserved:     time.Now(),
-			ConfidenceScore:  0.92,
 		},
+		"timestamp": time.Now(),
 	}
 
-	_, err = collection.InsertMany(ctx, samplePatterns)
-	if err != nil {
-		log.Printf("⚠️  Could not insert sample misunderstandings: %v", err)
-	} else {
-		log.Printf("✅ Seeded misunderstanding map with %d sample patterns", len(samplePatterns))
-	}
+	json.NewEncoder(w).Encode(response)
 }

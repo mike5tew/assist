@@ -5,7 +5,7 @@ import (
 	"flag"
 	"log"
 
-	"esp-organizer/internal/InfoFlow/InfoStore/db"
+	"esp-organizer/internal/store/db"
 
 	wvmodels "github.com/weaviate/weaviate/entities/models"
 )

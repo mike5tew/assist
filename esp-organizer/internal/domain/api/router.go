@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"esp-organizer/internal/domain/coach"
 	"net/http"
 	"time"
 
@@ -10,25 +11,21 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// RegisterRoutes sets up all API routes
-func RegisterRoutes(r *mux.Router) {
-	// Add a debug log to confirm routes are registered
-	log.Println("Registering API routes...")
+// RegisterRoutes sets up all API routes and accepts the coach service
+func RegisterRoutes(r *mux.Router, coachService coach.CoachServiceMVP) {
+	log.Println("Registering API routes with MVP Coach service...")
 
-	// --- All Application Routes Defined Here ---
+	// Add CORS middleware
+	r.Use(corsMiddleware)
+
+	// Basic routes
 	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("ESP Organizer API is running"))
 	}).Methods("GET")
 
 	apiRouter := r.PathPrefix("/api").Subrouter()
 
-	// Source management
-	apiRouter.HandleFunc("/sources", GetSourcesHandler).Methods(http.MethodGet)
-	apiRouter.HandleFunc("/sources", CreateSourceHandler).Methods(http.MethodPost)
-
-	// Domain-aware search
-	//apiRouter.HandleFunc("/search/domain", DomainSearchHandler).Methods(http.MethodGet, http.MethodPost)
-	apiRouter.HandleFunc("/search/tags", SearchByTagsHandler).Methods(http.MethodGet)
+	// Health checks
 	apiRouter.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]interface{}{
@@ -38,59 +35,61 @@ func RegisterRoutes(r *mux.Router) {
 		})
 	}).Methods("GET")
 
-	// Immunology endpoints
-	apiRouter.HandleFunc("/immunology/upload-chapter", ImmunologyChapterUploadHandler).Methods(http.MethodPost)
-	apiRouter.HandleFunc("/immunology/search", SearchImmunologyContent).Methods(http.MethodGet)
-	apiRouter.HandleFunc("/immunology/search", ImmunologySearchHandler).Methods(http.MethodPost, http.MethodOptions)
-	apiRouter.HandleFunc("/immunology/hsg-search", HSGSearchHandler).Methods(http.MethodPost, http.MethodOptions)
-	apiRouter.HandleFunc("/immunology/chapters", GetImmunologyChapters).Methods(http.MethodGet)
-	apiRouter.HandleFunc("/immunology/terms", GetImmunologyTerms).Methods(http.MethodGet)
-	// CHISG integration
-	// Add to RegisterRoutes()
-	apiRouter.HandleFunc("/coach/respond", CoachRespondHandler).Methods(http.MethodPost)
-	// Extraction status
-	apiRouter.HandleFunc("/extraction/status/{jobId}", ExtractionStatusHandler).Methods(http.MethodGet)
-	apiRouter.HandleFunc("/upload/immunology/chapter", ImmunologyChapterUploadHandler).Methods(http.MethodPost)
-	apiRouter.HandleFunc("/upload/document", DocumentUploadHandler).Methods(http.MethodPost)
-
-	// Study area specific routes
-	apiRouter.HandleFunc("/gcse/search", GCSESearchHandler).Methods(http.MethodGet, http.MethodPost)
-	apiRouter.HandleFunc("/civil-engineering/search", CivilEngineeringSearchHandler).Methods(http.MethodGet, http.MethodPost)
-
-	// AI Chat
-	apiRouter.HandleFunc("/ai/chat", AIChatHandler).Methods(http.MethodPost)
-	apiRouter.HandleFunc("/batches", GetProcessingBatchesHandler).Methods(http.MethodGet)
-
-	apiRouter.HandleFunc("/diagnostics/config", DiagnosticsConfigHandler).Methods(http.MethodGet)
-	apiRouter.HandleFunc("/diagnostics/document", DiagnosticsDocumentHandler).Methods(http.MethodGet)
-	apiRouter.HandleFunc("/diagnostics/collections", DiagnosticsCollectionsHandler).Methods(http.MethodGet)
-
-	// Add a simple test endpoint that's guaranteed to work
-	r.HandleFunc("/api/ping", func(w http.ResponseWriter, r *http.Request) {
+	apiRouter.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]string{"status": "ok", "message": "API is running"})
 	}).Methods("GET")
 
-	// Health check
-	r.HandleFunc("/api/health", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(map[string]interface{}{
-			"status":    "ok",
-			"service":   "esp-organizer-api",
-			"timestamp": time.Now(),
-		})
-	}).Methods("GET")
+	// MVP Coach endpoints
+	coachHandler := NewCoachHandlerMVP(coachService)
+	apiRouter.HandleFunc("/coach/mvp-demo", coachHandler.CoachMVPDemoHandler).Methods("POST", "OPTIONS")
+	log.Println("✅ Coach endpoints registered")
 
-	log.Println("API routes registered successfully. 2")
+	// Full Diagnostic Coach endpoint
+	apiRouter.HandleFunc("/coach/respond", FullDiagnosticCoachHandler).Methods("POST", "OPTIONS")
+	log.Println("✅ Full diagnostic coach endpoint registered")
+
+	// Skills/Semantic endpoints (MVP stubs)
+	apiRouter.HandleFunc("/skills/semantic-query", SemanticQueryHandler).Methods("POST", "OPTIONS")
+	log.Println("✅ Semantic query endpoint registered")
+
+	// Existing routes (keep all your current routes)
+	apiRouter.HandleFunc("/sources", GetSourcesHandler).Methods("GET")
+	apiRouter.HandleFunc("/sources", CreateSourceHandler).Methods("POST")
+	apiRouter.HandleFunc("/search/tags", SearchByTagsHandler).Methods("GET")
+	apiRouter.HandleFunc("/immunology/upload-chapter", ImmunologyChapterUploadHandler).Methods("POST")
+	apiRouter.HandleFunc("/immunology/search", SearchImmunologyContent).Methods("GET")
+	apiRouter.HandleFunc("/immunology/search", ImmunologySearchHandler).Methods("POST", "OPTIONS")
+	apiRouter.HandleFunc("/immunology/hsg-search", HSGSearchHandler).Methods("POST", "OPTIONS")
+	apiRouter.HandleFunc("/immunology/chapters", GetImmunologyChapters).Methods("GET")
+	apiRouter.HandleFunc("/immunology/terms", GetImmunologyTerms).Methods("GET")
+	apiRouter.HandleFunc("/extraction/status/{jobId}", ExtractionStatusHandler).Methods("GET")
+	apiRouter.HandleFunc("/upload/immunology/chapter", ImmunologyChapterUploadHandler).Methods("POST")
+	apiRouter.HandleFunc("/upload/document", DocumentUploadHandler).Methods("POST")
+	apiRouter.HandleFunc("/gcse/search", GCSESearchHandler).Methods("GET", "POST")
+	apiRouter.HandleFunc("/civil-engineering/search", CivilEngineeringSearchHandler).Methods("GET", "POST")
+	apiRouter.HandleFunc("/ai/chat", AIChatHandler).Methods("POST")
+	apiRouter.HandleFunc("/batches", GetProcessingBatchesHandler).Methods("GET")
+	apiRouter.HandleFunc("/diagnostics/config", DiagnosticsConfigHandler).Methods("GET")
+	apiRouter.HandleFunc("/diagnostics/document", DiagnosticsDocumentHandler).Methods("GET")
+	apiRouter.HandleFunc("/diagnostics/collections", DiagnosticsCollectionsHandler).Methods("GET")
+
+	log.Println("API routes registered successfully with MVP Coach integration")
 }
 
-// RegisterAdditionalRoutes adds potentially missing routes
-func RegisterAdditionalRoutes(r *mux.Router) {
-	log.Println("Registering additional diagnostic routes...")
+// corsMiddleware adds CORS headers to all responses
+func corsMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 
-	r.HandleFunc("/api/diagnostics/config", DiagnosticsConfigHandler).Methods("GET")
-	r.HandleFunc("/api/diagnostics/document", DiagnosticsDocumentHandler).Methods("GET")
-	r.HandleFunc("/api/diagnostics/collections", DiagnosticsCollectionsHandler).Methods("GET")
+		// Handle preflight requests
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
 
-	log.Println("Additional diagnostic routes registered")
+		next.ServeHTTP(w, r)
+	})
 }

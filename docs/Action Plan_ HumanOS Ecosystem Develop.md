@@ -70,14 +70,21 @@
 **Target**: 80% complete (integrated with HumanOS via Go API)
 
 **Tasks**:
-- [ ] **CRITICAL PRIORITY: Create Go client for CHISG API** ⚠️ NEXT
-  - [ ] Create `/backend/internal/integration/chisg_client.go`
-  - [ ] Define client struct and methods for knowledge graph queries
-- [ ] Define shared types between HumanOS and CHISG
-- [ ] Expand subject ontologies (GCSE Science, Math, English)
-- [ ] Integrate with HumanOS barrier detection
-- [ ] Combined endpoint: `/api/coach/respond`
-- [ ] Test latency < 200ms
+- [ ] **Priority 1: Define Shared Integration Types**
+  - [ ] Create `/internal/integration/chisg_types.go`.
+  - [ ] Move `KnowledgeQuery` and `KnowledgeResponse` from the client to this new shared file.
+  - [ ] Define `HumanOSResponse` and other bridge types.
+- [ ] **Priority 2: Implement HSG Query Service**
+  - [ ] Create `/internal/domain/hsg_query_service.go`.
+  - [ ] Implement `TraverseHierarchy(rootLinkID string)` to query Weaviate for related links.
+  - [ ] Keep traversal simple (2 levels) for the MVP.
+- [ ] **Priority 3: Implement CoachRespondHandler**
+  - [ ] Create the `/api/coach/respond` endpoint.
+  - [ ] Use the `HSGQueryService` to fetch context from the knowledge graph.
+  - [ ] Integrate with the existing `HumanOS Core` for barrier detection and intervention.
+- [ ] Expand subject ontologies (GCSE Science, Math, English).
+- [ ] Test latency < 200ms.
+
 
 ## Phase 2: Product Development & Initial Revenue (Months 3-4)
 **Goal**: Launch GCSE Tool + Skills Tree Rising beta  

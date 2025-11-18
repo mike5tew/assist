@@ -6,8 +6,8 @@ import (
 	"log"
 	"time"
 
-	"esp-organizer/internal/InfoFlow/InfoStore/db"
 	"esp-organizer/internal/config"
+	"esp-organizer/internal/store/db"
 	"esp-organizer/internal/utils"
 
 	"go.mongodb.org/mongo-driver/bson"

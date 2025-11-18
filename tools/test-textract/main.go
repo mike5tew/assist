@@ -1,7 +1,7 @@
 package main
 
 import (
-	"esp-organizer/internal/InfoFlow/InfoIn/extraction"
+	"esp-organizer/internal/domain/infoin/extraction"
 	"esp-organizer/internal/models"
 	"fmt"
 	"log"

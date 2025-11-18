@@ -25,7 +25,7 @@ This thread tracks the full implementation of hierarchical semantic link classif
    - Completed: 2025-01-05 20:15
 
 3. **SL003**: Semantic link extraction needs hierarchy classification - ⏳ CURRENT STEP
-   - File: `/internal/InfoFlow/InfoIn/semantic_link_service.go`
+   - File: `/internal/InfoFlow/infoin/semantic_link_service.go`
    - Need to add `classifyHierarchyLevel()` function
    - Set `hierarchy_level` during link creation
    - **Blocker**: Not yet started
@@ -36,7 +36,7 @@ This thread tracks the full implementation of hierarchical semantic link classif
    - Enable bidirectional graph traversal
 
 5. **SL005**: Multi-hop traversal service - ❌ NOT STARTED
-   - File: `/internal/InfoFlow/InfoIn/hsg_query_service.go`
+   - File: `/internal/InfoFlow/infoin/hsg_query_service.go`
    - Implement `TraverseHierarchy()` function
    - Breadth-first search with max depth 3
 
@@ -93,7 +93,7 @@ properties := map[string]interface{}{
 ## Next Actions (Atomic Tasks)
 
 ### Immediate (Next 2-3 hours):
-- [ ] **Action 1**: Open `/internal/InfoFlow/InfoIn/semantic_link_service.go`
+- [ ] **Action 1**: Open `/internal/InfoFlow/infoin/semantic_link_service.go`
 - [ ] **Action 2**: Locate `ProcessDocument()` function (around line 50-100)
 - [ ] **Action 3**: Add helper function:
   ```go
@@ -117,7 +117,7 @@ properties := map[string]interface{}{
   ```
 
 ### After Classification Works:
-- [ ] **Action 7**: Create `/internal/InfoFlow/InfoIn/link_relationship_builder.go`
+- [ ] **Action 7**: Create `/internal/InfoFlow/infoin/link_relationship_builder.go`
 - [ ] **Action 8**: Implement `BuildRelationships()` function
 - [ ] **Action 9**: Update existing links with parent/child IDs
 - [ ] **Action 10**: Test hierarchical traversal

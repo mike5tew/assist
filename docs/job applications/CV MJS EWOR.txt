@@ -1,0 +1,96 @@
+Michael Stewart
+69 Dovecote Road, Bromsgrove, B61 7BP | 07525 359661 | michael.stewart@espthinking.co.uk | linkedin.com/in/michael-stewart-espthinking
+
+Professional Summary
+Future Unicorn Founder & Deep Tech Architect with a validated, prototype-ready Integrated EdTech OS. My core strength is in bridging complex scientific theory and €1B+ scale execution, evidenced by a unique blend of Deep Scientific Acumen (Biophysics PhD research, peer-reviewed publication), Strategic Execution (scaled a company 13x from £230K to £3M), and hands-on AI Architecture (Go, AWS, CHISG). I bring the blueprint for a company that redefines how the world learns—ready to scale this de-risked vision with EWOR.
+
+Professional Experience
+Director & Founder | ESP Thinking Ltd | Bromsgrove, UK
+Jan 2016 - Present
+
+Founded and led an EdTech venture to solve core challenges in education through systems thinking.
+Architected and developed the foundational prototypes for an integrated learning OS, including:
+Human-OS ETP Framework: A system mapping psychological barriers to learning.
+CHISG Knowledge Architecture: A semantic knowledge graph to structure information and reduce AI hallucination.
+Skills Mapping & Analytics Engine: A platform for tracking skill progression over content memorization.
+Designed and implemented two flagship applications: ESP Seating (classroom logistics) and ESP Behaviour Lite (gamified behaviour management), providing deep insights into teacher workflow and student engagement.
+Director | David Manners Ltd | Oldbury, UK
+Jul 2000 - Aug 2010
+
+Led the turnaround of a subsidiary company (Abingdon MG Parts Ltd), scaling its turnover from £230,000 to £3 million within five years through strategic project development, process streamlining, and system implementation.
+Managed a group of five companies with over 50 employees, holding directorships for two.
+Oversaw the rapid integration of a newly acquired company, warehousing over 300 product lines and establishing a full sales pipeline (catalogues, website) within the first month.
+ISU Administrator | Birmingham University, Interactive Studies Unit | Birmingham, UK
+Mar 2023 - Jan 2024
+
+Managed the deployment of role-players for communication skills training across the Institute of Clinical Sciences, including for classes, exams, and individual coaching.
+Operated in a high-paced environment, supporting the team in all aspects of program delivery.
+Science Teacher (NQT & QTS) | Various Schools including Kenilworth School & St Georges School | West Midlands, UK
+Sep 2010 - Dec 2014
+
+Gained Qualified Teacher Status (QTS) and completed NQT year at an OFSTED 'Outstanding' rated school.
+Taught Science from Key Stage 2 through to A-Level Physics, gaining a comprehensive overview of the UK education system and curriculum which directly informed later EdTech architecture.
+Education & Certifications
+AI Solutions Architect | Elvtr
+Nov 2024 - Feb 2025
+
+Completed a rigorous program covering AI architecture fundamentals, model evaluation, orchestration, scalability, and responsible AI principles.
+Received an exceptional endorsement from the program lead for mastery of concepts and for the development of an innovative AI-powered teaching framework.
+Science Teacher GTP (inc. QTS) | Titan Partnership, Birmingham
+Sep 2011 - Aug 2012
+
+Qualified Teacher Status: 10/82800
+Biophysics PhD (Research Completed) | National Institute for Medical Research
+Sep 1996 - Mar 2000
+
+Completed a three-year research project studying the molecular mechanism of smooth muscle contraction under a Fellow of the Royal Society. Thesis was not submitted due to external factors.
+Biochemistry BSc (2:1) | University College London
+Sep 1993 - Aug 1996
+
+Final year project focused on Bioinformatics, laying the foundation for later work in data architecture.
+Technical Skills & Competencies
+AI & Machine Learning: LLM Orchestration (Bedrock), Vector Databases (Weaviate), Semantic Search, RAG Pipelines, Data Extraction (Textract).
+Backend Development: Go (Golang), Python.
+Frontend Development: React, TypeScript, HTML/CSS.
+Databases: MongoDB, SQL.
+Infrastructure & DevOps: AWS (S3, EC2, Lambda), Docker, CI/CD.
+Strategic: AI Product Strategy, Systems Architecture, Scalable Platform Design, Lean/MVP Methodologies.
+Publications
+Jones, S., Stewart, M., Michie, A., Swindells, M. B., Orengo, C., & Thornton, J. M. (1998). "Domain assignment for protein structures using a consensus approach: Characterization and analysis." Protein Science, 7(2), 233-242.
+
+My biggest achievements fall into three categories—Business Execution, Technical Innovation, and Outlier Discipline—all of which demonstrate the ability to lead and scale a transformative company.
+
+1. Business Execution & Scale
+These achievements prove my capacity to take full responsibility and drive a business to significant growth:
+
+Scaled Turnover 13x: Led the complete turnaround of a struggling subsidiary (Abingdon MG Parts Ltd), successfully increasing annual turnover from £230,000 to £3 Million within five years.
+
+Rapid M&A Integration: Following a company buyout, I directed the rapid warehousing, cataloguing, and pricing of £90K of stock in one month, demonstrating the speed and execution rigor required to rapidly integrate new business units.
+
+Operational Efficiency: Designed and implemented new systems for the returns department, reducing bottlenecks and redesigning both the physical warehouse layout and the computer system to drive efficiency across the business unit.
+
+2. Technical Innovation & De-Risking
+These achievements validate the technical depth and problem-solving required for a Deep Tech founder:
+
+Architected a Prototype-Ready EdTech OS: Designed and built the foundational prototypes for an integrated learning OS (CHISG, Skills Map, ETP). Initial models project this system can reduce teacher marking time by 3+ hours per week, validating a clear path to market value and adoption.
+
+Deep Tech Interdisciplinary Innovation: Applied high-level scientific rigor to develop multiple advanced concepts, including:
+
+A method to sequester CO2 and produce a carbon-negative fuel source.
+
+A mechanism to grow meat cells using renewable energy.
+
+An early concept for a form of cancer therapy developed during my first year of university.
+
+Elite Scientific Rigor: Completed three years of PhD research at the National Institute for Medical Research under a Fellow of the Royal Society, providing the scientific methodology necessary to evaluate and architect complex, reliable systems.
+
+3. Founder Discipline & Outlier Status (Commitment to Vision)
+This reflects the extreme personal and professional commitment required to lead a venture to £1B+:
+
+Unwavering Commitment (The Outlier): The integrated EdTech OS is the result of 10 years of work, often requiring me to balance its development with up to four other jobs and work until I fell asleep at my laptop. I have taken no more than two weeks off in the last six years. This commitment is driven by the conviction that these integrated ideas can solve fundamental, real-world problems in education.
+
+Exceptional Mental Discipline: Successfully maintained PhD-level research while competing at an elite level, culminating in representing the UK in the World Kickboxing Championship and becoming a National Kickboxing Champion at the same time.
+
+Leadership & High-Stakes Performance: Captained the UCL First Team Football and played volleyball for the South East of England, proving the ability to lead, motivate, and perform under high-stakes pressure, including setting up the winning goal against Chelsea Football Club (youth level).
+
+High Tolerance for Scrutiny: Demonstrated an ability to attract attention and manage reputation, including participating in one of the top three worst TV moments ever, proving a resilience essential for a founder facing public scrutiny and failure.

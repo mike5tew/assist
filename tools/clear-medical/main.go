@@ -8,7 +8,7 @@ import (
 
 	"github.com/joho/godotenv"
 
-	"esp-organizer/internal/InfoFlow/InfoStore/db"
+	"esp-organizer/internal/store/db"
 	"esp-organizer/internal/utils"
 
 	weaviate "github.com/weaviate/weaviate-go-client/v4/weaviate"
