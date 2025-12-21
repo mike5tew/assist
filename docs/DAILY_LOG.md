@@ -2,6 +2,22 @@
 
 ---
 
+## 2025-12-21 (SSH & GitHub: key setup)
+
+**Goal**: Generate and register a new SSH key for GitHub, add it to the macOS keychain, and verify authentication.
+
+**Action**:
+1. Generated an ed25519 key `~/.ssh/gitkey11-25` (comment: `mike5tew@hotmail.com`).
+2. Added it to the ssh-agent and macOS Keychain using `ssh-add --apple-use-keychain ~/.ssh/gitkey11-25`.
+3. Uploaded the public key to GitHub using `gh ssh-key add ~/.ssh/gitkey11-25.pub --title "macbook gitkey11-25"`.
+4. Confirmed the public key fingerprint: `SHA256:NjZnU2BgMPLMuqRJq4oucSxMLamQUbtopiuhxA4X4L0` and verified authentication via `ssh -T git@github.com` (greeted as `mike5tew`).
+5. Noted: the earlier fingerprint `SHA256:mf/...` was not found on this machine; this is a new key. I recommended (and can perform) pruning unused SSH keys from the GitHub account if desired.
+6. Recommended adding a Host block for `github.com` to `~/.ssh/config` to explicitly use `~/.ssh/gitkey11-25` for Git operations (current `~/.ssh/config` has a `vultr` host block; I can add the `github.com` block on request).
+
+**Next steps**: Add `github.com` host config (if preferred), optionally remove unused keys from GitHub, and continue with project setup.
+
+---
+
 ## 2025-12-21 (Semantic Link Extraction Tool - Architecture & Sprint Planning)
 
 **Goal**: Define a step-by-step implementation plan for the Semantic Link Extraction Tool and integrate it into the roadmap and status.
