@@ -272,4 +272,24 @@ docker-compose logs
 # Look for any ERROR or WARNING messages.
 ```
 
+## Log rotation (Recommended)
+
+Logs can grow over time and may fill disks. Install `logrotate` on your server and create a rotation config. An example file is provided at `scripts/logrotate.conf` in this repo — deploy it to `/etc/logrotate.d/esp-organizer` and adjust paths if your logs live elsewhere (for example `/opt/esp/logs/*.log` or `/var/log/esp/*.log`). Example rotation policy:
+
+- Rotate daily
+- Keep 14 rotations
+- Compress rotated files
+- Use `copytruncate` if the process cannot be restarted during rotation
+
+Example deployment steps (on the server):
+
+```bash
+# Install logrotate (Debian/Ubuntu)
+sudo apt-get update && sudo apt-get install -y logrotate
+
+# Copy the example config and verify
+sudo cp /opt/esp/scripts/logrotate.conf /etc/logrotate.d/esp-organizer
+sudo logrotate --debug /etc/logrotate.d/esp-organizer
+```
+
 If all these checks pass, your deployment was successful. If you encounter any issues, refer to the debugging section of this playbook.

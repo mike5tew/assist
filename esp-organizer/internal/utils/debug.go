@@ -10,7 +10,44 @@ import (
 	"runtime"
 	"strings"
 	"time"
+
+	lumberjack "gopkg.in/natefinch/lumberjack.v2"
 )
+
+// timestampWriter prefixes each written line with an RFC3339 timestamp.
+type timestampWriter struct {
+	w io.Writer
+}
+
+func (t timestampWriter) Write(p []byte) (n int, err error) {
+	// Split incoming data into lines and prefix each line to ensure timestamps for multi-line writes
+	s := string(p)
+	lines := strings.Split(strings.TrimRight(s, "\n"), "\n")
+	total := 0
+	for i, line := range lines {
+		l := fmt.Sprintf("%s %s", time.Now().Format(time.RFC3339), line)
+		if i < len(lines)-1 {
+			l = l + "\n"
+		}
+		m, err := t.w.Write([]byte(l))
+		total += m
+		if err != nil {
+			return total, err
+		}
+	}
+	return len(p), nil
+}
+
+func makeLogWriter(path string) io.Writer {
+	lj := &lumberjack.Logger{
+		Filename:   path,
+		MaxSize:    100, // megabytes
+		MaxBackups: 7,
+		MaxAge:     28,   // days
+		Compress:   true, // gzip rotated logs
+	}
+	return io.MultiWriter(os.Stdout, lj)
+}
 
 // DebugConfig holds the configuration for debug operations
 type DebugConfig struct {
@@ -45,8 +82,8 @@ type Debugger struct {
 
 // NewDebugger creates a new debugger with the given configuration
 func NewDebugger(config DebugConfig) *Debugger {
-	// Start with a simple stdout logger
-	logger := log.New(os.Stdout, "[DEBUG] ", log.LstdFlags)
+	// Start with a simple stdout logger (timestamps will be prepended by timestampWriter)
+	logger := log.New(os.Stdout, "[DEBUG] ", 0)
 
 	// Debug the actual environment variable values to help troubleshoot
 	debugEnvValue := os.Getenv("DEBUG_LOG_TO_FILE")
@@ -58,56 +95,30 @@ func NewDebugger(config DebugConfig) *Debugger {
 		log.Printf("✅ Forcing LogToFile=true based on environment variable")
 	}
 
-	var logFile *os.File
-
 	if config.LogToFile {
 		// Get the main application log file first (for combined logging)
 		mainLogPath := "api-server.log" // This is your main app log
 
-		// Try to open the main log file first
-		var err error
-		logFile, err = os.OpenFile(mainLogPath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-		if err == nil {
-			absPath, _ := filepath.Abs(mainLogPath)
-			log.Printf("✅ Using main application log file: %s", absPath)
-			currentLogPath = absPath
+		// Create a lumberjack-backed writer for rotation and a multi-writer
+		multiWriter := makeLogWriter(mainLogPath)
+		tw := timestampWriter{w: multiWriter}
 
-			// Create a multi-writer to write to both stdout and the log file
-			multiWriter := io.MultiWriter(os.Stdout, logFile)
-			logger = log.New(multiWriter, "[DEBUG] ", log.LstdFlags)
+		absPath, _ := filepath.Abs(mainLogPath)
+		log.Printf("✅ Using main application log file: %s", absPath)
+		currentLogPath = absPath
 
-			// Redirect standard log package to also write to our file
-			log.SetOutput(multiWriter)
-		} else {
-			log.Printf("⚠️ Could not open main log file, falling back to separate debug log")
+		// Create logger that uses timestamp writer and remove default flags
+		logger = log.New(tw, "[DEBUG] ", 0)
 
-			// Try the custom debug log path
-			if config.LogFilePath != "" {
-				// Create logs directory if needed
-				logDir := filepath.Dir(config.LogFilePath)
-				if logDir != "" && logDir != "." {
-					os.MkdirAll(logDir, 0755)
-				}
-
-				// Try to open the custom debug log
-				logFile, err = os.OpenFile(config.LogFilePath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-				if err == nil {
-					absPath, _ := filepath.Abs(config.LogFilePath)
-					log.Printf("✅ Using separate debug log file: %s", absPath)
-					currentLogPath = absPath
-
-					// Create a multi-writer for stdout and log file
-					multiWriter := io.MultiWriter(os.Stdout, logFile)
-					logger = log.New(multiWriter, "[DEBUG] ", log.LstdFlags)
-				} else {
-					log.Printf("❌ Failed to open debug log file: %v", err)
-					currentLogPath = "CONSOLE_ONLY"
-				}
-			}
-		}
+		// Redirect standard log package to also write with RFC3339 timestamps
+		log.SetOutput(tw)
 	} else {
 		log.Printf("ℹ️ File logging is disabled. Set DEBUG_LOG_TO_FILE=true to enable.")
 		currentLogPath = "CONSOLE_ONLY"
+
+		// Ensure standard logger uses timestamp prefixing for console output
+		log.SetOutput(timestampWriter{w: os.Stdout})
+		logger = log.New(timestampWriter{w: os.Stdout}, "[DEBUG] ", 0)
 	}
 
 	// Log the full debug configuration
