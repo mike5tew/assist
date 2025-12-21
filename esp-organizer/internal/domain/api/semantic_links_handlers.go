@@ -1,7 +1,6 @@
 package api
 
 import (
-	"context"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -10,23 +9,21 @@ import (
 
 	"esp-organizer/internal/domain/infoin"
 	"esp-organizer/internal/models"
-
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // Request structures for the semantic links extractor
 type semanticLinkSelection struct {
-	SourceTerm   string             `json:"source_term"`
-	TargetTerm   string             `json:"target_term"`
-	RelationType string             `json:"relation_type"`
-	TextContext  string             `json:"text_context"`
-	Position     map[string]int     `json:"position,omitempty"`
-	QualityFlag  string             `json:"quality_flag,omitempty"`
-	Confidence   *float64           `json:"confidence,omitempty"`
+	SourceTerm   string         `json:"source_term"`
+	TargetTerm   string         `json:"target_term"`
+	RelationType string         `json:"relation_type"`
+	TextContext  string         `json:"text_context"`
+	Position     map[string]int `json:"position,omitempty"`
+	QualityFlag  string         `json:"quality_flag,omitempty"`
+	Confidence   *float64       `json:"confidence,omitempty"`
 }
 
 type semanticLinksExtractRequest struct {
-	DocumentID string                   `json:"document_id"`
+	DocumentID string                  `json:"document_id"`
 	Selections []semanticLinkSelection `json:"selections"`
 }
 
@@ -52,12 +49,12 @@ func SemanticLinksExtractHandler(w http.ResponseWriter, r *http.Request) {
 
 	for _, sel := range req.Selections {
 		link := models.SemanticLink{
-			SourceTerm: sel.SourceTerm,
-			TargetTerm: sel.TargetTerm,
+			SourceTerm:   sel.SourceTerm,
+			TargetTerm:   sel.TargetTerm,
 			RelationType: sel.RelationType,
-			Context: sel.TextContext,
-			Domain: "manual",
-			CreatedAt: time.Now(),
+			Context:      sel.TextContext,
+			Domain:       "manual",
+			CreatedAt:    time.Now(),
 		}
 
 		// Set confidence: explicit override or default high confidence for manual curation
