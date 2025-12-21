@@ -15,6 +15,8 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
+
+	"esp-organizer/internal/logger"
 )
 
 func main() {
@@ -22,6 +24,13 @@ func main() {
 	if err := godotenv.Load(); err != nil {
 		log.Printf("No .env file found, using environment variables")
 	}
+
+	// Initialize structured logger early so all log outputs go through it
+	if err := logger.Init(""); err != nil {
+		log.Printf("Warning: failed to initialize structured logger: %v", err)
+	}
+	// route standard library log through logrus
+	log.SetOutput(logger.Writer())
 
 	// Initialize MVP Coach Service
 	coachService, err := coach.NewCoachServiceMVP() // Fixed: use mvpHandler package

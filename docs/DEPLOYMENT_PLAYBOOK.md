@@ -276,6 +276,10 @@ docker-compose logs
 
 Logs can grow over time and may fill disks. Install `logrotate` on your server and create a rotation config. An example file is provided at `scripts/logrotate.conf` in this repo — deploy it to `/etc/logrotate.d/esp-organizer` and adjust paths if your logs live elsewhere (for example `/opt/esp/logs/*.log` or `/var/log/esp/*.log`). Example rotation policy:
 
+## Log level (Useful for runtime control)
+
+The application respects a `LOG_LEVEL` environment variable which controls the verbosity of the structured logger. Supported values: `debug`, `info`, `warn`, `error` (default: `info`). Set `LOG_LEVEL=debug` on staging or local environments for verbose logs.
+
 - Rotate daily
 - Keep 14 rotations
 - Compress rotated files
