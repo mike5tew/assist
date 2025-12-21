@@ -6,13 +6,15 @@ RUN apk add --no-cache git make
 WORKDIR /build
 
 # Copy go module files
-COPY esp-organizer/go.mod esp-organizer/go.sum ./
+# Changed: Removed 'esp-organizer/' prefix since we are now inside that folder
+COPY go.mod go.sum ./
 
 # Download dependencies
 RUN go mod download
 
 # Copy source code
-COPY esp-organizer/ .
+# Changed: Removed 'esp-organizer/' prefix
+COPY . .
 
 # Build the application
 RUN CGO_ENABLED=0 GOOS=linux go build -o /app/server ./cmd/server

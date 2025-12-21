@@ -1,7 +1,7 @@
 # Action Plan: HumanOS Ecosystem Development
 
-**Last Updated**: 2025-01-XX  
-**Current Focus**: AI Tutor MVP → GCSE Tool → Skills Tree Rising
+**Last Updated**: 2025-03-14
+**Current Focus**: GCSE Revision Tool (First Revenue) → CHISG Enhancement → Skills Tree Rising
 
 ## Setup Complete ✅
 
@@ -29,62 +29,80 @@
 - Every service at 100% (diminishing returns)
 - Features beyond MVP (perfectionism trap)
 
-## Phase 1: Foundation & Income (Months 1-2)
-**Goal**: Get employed AND launch first product MVP  
-**Revenue Target**: $0 (employment) + $100-500/month (early adopters)
+## Phase 1: Foundation & First Revenue (Months 1-2)
+**Goal**: Launch GCSE Revision Tool MVP and acquire first paying subscribers.
+**Revenue Target**: $100-500/month from early adopters.
 
-### Week 1-2: HumanOS Core to 70%
-**Current**: 70% complete (core features are production-ready)
-**Target**: 80% complete (integrated with CHISG)
+### Priority 1: GCSE Revision Tool (Commercial MVP)
+**Current**: 10% complete (concept defined)
+**Target**: 80% complete (live product with payment)
 
-**Tasks**:
-- [x] Complete 5 barrier profile implementations ✅ DONE
-- [x] **Consolidate Go backend structure** ✅ DONE
-  - [x] Merged `/project/backend/` and `/backend/` into single structure
-  - [x] Extracted types from main.go into `/internal/etp/types.go`
-  - [x] Created proper package structure
-  - [x] Moved barrier detection to `/internal/barriers/`
-  
-- [x] **CRITICAL PRIORITY: Implement age-appropriate language adjustment** ✅ DONE
-  - [x] Created `age_appropriateness.json` schema in `/shared/schemas/`
-  - [x] Implemented `age_appropriate.go` in `/backend/internal/barriers/`
-  - [x] Built language filter implementation
-  - [x] Added developmental stage detection
-  - [x] Created response adjustment logic
-  - [x] Tested with sample responses across age groups
-  
-- [x] Build trauma detection with escalation ✅ DONE
-  - [x] Pattern matching (sexual content, violence, neglect)
-  - [x] Severity scoring (1-4)
-  - [x] Automatic logging + alerting
-  
-- [x] Create intervention selection engine ✅ DONE
-  - [x] Brain state assessment (primal/emotional/rational)
-  - [x] Voltage calculation
-  - [x] Intervention matching logic
+**Leverages Existing Work**:
+- CHISG (knowledge graph for content)
+- HumanOS Core (psychological frameworks for engagement)
 
-**Deliverable**: Clean Go backend with proper package structure, barrier detection, and age-appropriate responses
+**New Work Needed**:
+- [ ] **Week 1: Core Content Engine (Science Focus)**
+  - [ ] Load GCSE Science curriculum (lesson headings from syllabus).
+  - [ ] Implement "Lesson Overview" generation based on headings + CHISG context.
+  - [ ] Implement "Keyword Extraction" for glossaries.
+- [ ] **Week 2: Content Consumption Features**
+  - [ ] Implement "Spreeder" speed-reading UI for overviews.
+  - [ ] Implement "Question Practice" interface.
+- [ ] **Week 3: UI, Auth & Progress Tracking**
+  - [ ] Student dashboard with progress visualization.
+  - [ ] User authentication (can leverage existing JWT system).
+- [ ] **Week 4: Commercialization & Launch**
+  - [ ] Set up Stripe for subscription payments.
+  - [ ] Create landing page.
+  - [ ] Beta launch and feedback collection.
 
-### Week 3-4: CHISG Enhancement & Integration
-**Current**: 60% complete (separate project)
-**Target**: 80% complete (integrated with HumanOS via Go API)
+### Priority 2: Semantic Link Extraction Tool (Enabler)
+**Current**: 30% complete (spec & architecture designed)
+**Target**: 100% complete (live, integrated tool)
 
-**Tasks**:
-- [ ] **Priority 1: Define Shared Integration Types**
-  - [ ] Create `/internal/integration/chisg_types.go`.
-  - [ ] Move `KnowledgeQuery` and `KnowledgeResponse` from the client to this new shared file.
-  - [ ] Define `HumanOSResponse` and other bridge types.
-- [ ] **Priority 2: Implement HSG Query Service**
-  - [ ] Create `/internal/domain/hsg_query_service.go`.
-  - [ ] Implement `TraverseHierarchy(rootLinkID string)` to query Weaviate for related links.
-  - [ ] Keep traversal simple (2 levels) for the MVP.
-- [ ] **Priority 3: Implement CoachRespondHandler**
-  - [ ] Create the `/api/coach/respond` endpoint.
-  - [ ] Use the `HSGQueryService` to fetch context from the knowledge graph.
-  - [ ] Integrate with the existing `HumanOS Core` for barrier detection and intervention.
-- [ ] Expand subject ontologies (GCSE Science, Math, English).
-- [ ] Test latency < 200ms.
+**Purpose**: Integrated tool to rapidly populate the knowledge graph via the PDF extraction pipeline. Bridges PDF text extraction → semantic relationship curation → Weaviate storage.
 
+**Architecture**: React frontend + Go API (integrated with `esp-organizer` backend)
+
+**Implementation Plan (4-week sprint)**:
+
+**Week 1 (Backend foundation — 3 days)**
+- [ ] Add Go API endpoints to `esp-organizer`:
+  - `POST /api/semantic-links/extract` — accept selections and persist links
+  - `GET /api/semantic-links/search?term=X` — query by term
+  - `POST /api/semantic-links/validate` — trigger quality scoring
+- [ ] Implement `SemanticLink` model with provenance fields
+  - `source_term, target_term, relation_type`
+  - `document_id, page_number, sentence_id, text_context`
+  - `position_context` (char offsets), `confidence`, `hierarchy_level`, `quality_flags`
+- [ ] Wire Weaviate storage & index for full-text search
+- [ ] Wire PostgreSQL for audit and provenance logging
+
+**Week 2 (Frontend & UX — 4 days)**
+- [ ] Create React component `<SemanticLinkExtractor />`
+  - PDF viewer with selectable text overlay
+  - 3-click workflow: select source → select target → choose relation
+  - Visual highlighting and inline relation suggestions
+- [ ] Relation dropdown with domain-aware presets
+- [ ] Quick quality flags (High / Needs verification / Problematic)
+
+**Week 3 (Pipeline integration & inference — 3 days)**
+- [ ] Hook into PDF extraction pipeline: add "Extract Semantic Links" action to OCR results
+- [ ] Implement hierarchy inference (rule-based + thresholds)
+- [ ] Duplicate & contradiction detection (identical triples, similarity threshold)
+
+**Week 4 (Validation, batch, launch — 4 days)**
+- [ ] Vague relation rejection and speculative language detection
+- [ ] Batch processing mode for textbook patterns
+- [ ] E2E & performance testing (<10s/link), UAT with teachers/curators
+- [ ] Deploy to staging and production; document curator workflow
+
+**Acceptance Criteria / Success Metrics**
+- Extraction speed: < 10 seconds per semantic link
+- Accuracy: ≥ 95% of manual review calls extraction meaningful
+- Curator throughput: 50+ links/hour for experienced users
+- Data quality: < 5% vague relationships in final dataset
 
 ## Phase 2: Product Development & Initial Revenue (Months 3-4)
 **Goal**: Launch GCSE Tool + Skills Tree Rising beta  
@@ -100,22 +118,21 @@
 - Payment Infrastructure (basic version)
 
 **New Work Needed**:
-- [ ] Week 1: Content loading
-  - [ ] Load GCSE exam board specifications
-  - [ ] Import existing question bank
-  - [ ] Tag questions by topic, difficulty, question type
-- [ ] Week 2: User interface
-  - [ ] Design student dashboard (progress tracking, recommendations)
-  - [ ] Create practice test interface (adaptive learning)
-  - [ ] Implement reporting dashboard (performance insights)
-- [ ] Week 3: Payment integration
-  - [ ] Set up Stripe/PayPal for subscription payments
-  - [ ] Implement invoicing and receipts
-  - [ ] Test payment flow end-to-end
-- [ ] Week 4: Marketing + launch
-  - [ ] Create landing page + SEO optimization
-  - [ ] Launch social media campaigns (Facebook, Instagram)
-  - [ ] Reach out to schools/tutors for partnerships
+- [ ] **Week 1: Core Content Engine (Science Focus)**
+  - [ ] Load GCSE Science curriculum (lesson headings).
+  - [ ] Implement "Lesson Overview" generation based on headings.
+  - [ ] Implement "Question Generation" based on overviews.
+- [ ] **Week 2: Content Consumption Features**
+  - [ ] Implement "Spreeder" speed-reading UI for overviews.
+  - [ ] Implement "Downloadable Audio" feature (Text-to-Speech API integration).
+  - [ ] Implement "Keywords & Definitions" extraction and display.
+- [ ] **Week 3: UI & Progress Tracking**
+  - [ ] Design and implement the "Curriculum-Aware Study Planner" with progress tracking.
+  - [ ] Design a unified student dashboard to display all features.
+- [ ] **Week 4: Commercialization & Launch**
+  - [ ] Set up Stripe/PayPal for subscription payments.
+  - [ ] Create landing page + SEO optimization.
+  - [ ] Reach out to schools/tutors for partnerships.
 
 **Success Metrics**:
 - 100+ free tier signups
@@ -124,31 +141,27 @@
 - Avg 20 minutes/day engagement per active user
 
 ### Month 4: Skills Tree Rising
-**Current**: 0% leadership content, 80% base complete  
-**Target**: 90% complete (ready for collaborator launch)
+**Current**: 80% base complete (via `skills-map-platform` project)
+**Target**: 95% complete (integrated and refined for B2B launch)
 
 **Leverages Existing Work**:
-- Skills Map visualization (80% complete)
-- MS Graph OAuth (100% complete)
-- ESP Assist AI coaching (60% complete, improved in Phase 1)
+- **`skills-map-platform`**: Provides a 95% complete foundation, including backend, frontend, auth, and skills visualization.
 
-**New Work Needed**:
-- [ ] Week 1: Leadership skills taxonomy
-  - [ ] Work with collaborators to define skills
-  - [ ] Map to progression levels (Foundation → Advanced)
-  - [ ] Create assessment criteria per skill
-- [ ] Week 2: Progress reporting
-  - [ ] Generate PDF reports for trainers
-  - [ ] Visualize cohort progress
-  - [ ] Individual learner dashboards
-- [ ] Week 3: Certificate generation
-  - [ ] Automated certificate on skill completion
-  - [ ] Verifiable digital credentials
-  - [ ] LinkedIn integration for sharing
-- [ ] Week 4: Payment integration + trainer tools
-  - [ ] Revenue share model with collaborators
-  - [ ] Trainer dashboard (cohort management)
-  - [ ] Scheduling integration (MS Calendar)
+**New Work Needed (Integration & Refinement)**:
+- [ ] **Week 1: Architectural Integration Plan**
+  - [x] Decide on a unified database strategy (MySQL vs. MongoDB/Weaviate). **DECISION: Hybrid Model.**
+  - [ ] **Implement MySQL connector** in the `esp-organizer` backend.
+  - [ ] Plan the merge of the `skills-map-platform` Go backend features into the `esp-organizer` backend.
+  - [ ] Plan the integration of the `SkillsTree.tsx` component into the `assist` frontend.
+- [ ] **Week 2: Leadership Skills Taxonomy & Content**
+  - [ ] Work with collaborators to define skills and assessment criteria.
+- [ ] **Week 3: B2B Feature Polish**
+  - [ ] Implement PDF report generation for trainers.
+  - [ ] Refine cohort progress visualization.
+  - [ ] Implement certificate generation.
+- [ ] **Week 4: Payment & Trainer Tools**
+  - [ ] Implement revenue share model.
+  - [ ] Polish the trainer dashboard for cohort management.
 
 **Launch Strategy**:
 - [ ] Pilot with collaborators' existing clients
@@ -169,6 +182,7 @@
 ### Month 5: Scale AI Tutor & GCSE Tool
 **Tasks**:
 - [ ] AI Tutor improvements
+  - [ ] **Implement Curriculum Intelligence**: Use CHISG + LLM to analyze curriculum structure and provide insights.
   - [ ] Add voice interface (leveraging existing OpenAI APIs)
   - [ ] Multi-subject expansion (math, English, languages)
   - [ ] Parent/teacher dashboards

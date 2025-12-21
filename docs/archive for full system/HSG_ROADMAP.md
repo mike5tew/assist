@@ -1,299 +1,400 @@
-# HSG Implementation Roadmap
 
-**Project**: ESP Organizer - Hierarchical Semantic Graph (HSG) RAG System  
-**Start Date**: 2025-01-05  
-**Target Completion**: Phase 2 by 2025-01-12
 
----
+Excellent roadmap! You've clearly structured a solid path from basic semantic links to a full Hierarchical Semantic Graph system. I'll provide some strategic enhancements and flag potential bottlenecks.
 
-## Phase 1: Tier 1 Semantic Links ✅ COMPLETE
+## Key Strategic Enhancements
 
-### Deliverables (All Complete)
-- [x] PDF upload and OCR processing
-- [x] Content storage in MongoDB
-- [x] Semantic link extraction with LLM
-- [x] External vectorization with AWS Titan
-- [x] Semantic links stored in Weaviate
-- [x] Basic vector search working
+### 1. **Refine Hierarchy Classification (Phase 2.1)**
+Your current approach (`contains "disorder" → Level 1`) is a good start, but consider adding:
 
-**Completion Date**: 2025-01-05  
-**Status**: ✅ Production Ready
+```go
+// Enhanced classification logic
+func classifyHierarchyLevel(source, target, relation string) int {
+    // Use pre-trained medical taxonomy from UMLS/MESH if available
+    // Otherwise, multi-factor approach:
+    
+    factors := []struct{
+        Pattern string
+        Level   int
+        Weight  float64
+    }{
+        {"gene|mutation|protein", 3, 1.0},
+        {"syndrome|disease|disorder", 2, 0.8},
+        {"system|category|class", 1, 0.6},
+        {"causes|treats|diagnoses", 2, 0.4},  // Relation-based
+    }
+    
+    // Calculate weighted score, then decide
+}
+```
 
----
+**Recommendation**: Start with your simple rules, but plan for ML-based classification in Phase 4.
 
-## Phase 2: Add Hierarchy to Tier 1 🔴 CURRENT PRIORITY
+### 2. **Parent/Child Detection Algorithm (Phase 2.2)**
+Instead of just analyzing terms, use the **semantic distance of embeddings**:
 
-**Goal**: Enable hierarchical classification and traversal of semantic links
+```go
+func inferParentChild(linkA, linkB SemanticLink, embeddings map[string][]float64) string {
+    // Strategy 1: Check if one term generalizes another
+    if isHyponym(linkA.SourceTerm, linkB.SourceTerm) {
+        return "parent"
+    }
+    
+    // Strategy 2: Use embedding similarity to hierarchy
+    // Pre-compute "concept abstractness" vector
+    abstractnessVec := getAbstractnessVector() 
+    
+    // Strategy 3: Medical ontology lookup (if available)
+    if medOntology.HasParent(termA, termB) {
+        return "child"
+    }
+}
+```
 
-### 2.1: Hierarchy Classification (2-3 hours) ⏳ IN PROGRESS
-**Target**: 2025-01-06 Morning
+### 3. **Critical: Fix Claude API Dependency (Phase 3.2)**
+This is your highest external risk. Implement **immediately**:
 
-#### Tasks:
-- [ ] **2.1.1**: Update `SemanticLink` model
-  - File: `/internal/models/semantic_link.go`
-  - Add fields: `HierarchyLevel int`, `IsParentOf []string`, `IsChildOf []string`
-  - Duration: 15 min
+```go
+// In /internal/llm/claude_client.go
+type FallbackSummarizer struct {
+    Primary   *ClaudeSummarizer
+    Secondary *TitanSummarizer  // AWS Titan Embeddings + simple extractive
+    Tertiary  *RuleBasedSummarizer
+}
 
-- [ ] **2.1.2**: Create hierarchy classification logic
-  - File: `/internal/InfoFlow/infoin/semantic_link_service.go`
-  - Function: `classifyHierarchyLevel(sourceTerm, targetTerm, relationType) int`
-  - Logic:
-    ```
-    Level 1: Broad concepts (contains "disorder", "disease", "system")
-    Level 2: Specific conditions (contains "syndrome", specific disease names)
-    Level 3: Clinical details (contains "symptom", "finding", "mutation")
-    ```
-  - Duration: 1 hour
+func (f *FallbackSummarizer) Summarize(links []SemanticLink) (*SummaryChunk, error) {
+    for _, summarizer := range []Summarizer{f.Primary, f.Secondary, f.Tertiary} {
+        if result, err := summarizer.Summarize(links); err == nil {
+            return result, nil
+        }
+        log.Printf("Fallback to %T", summarizer)
+    }
+    return nil, errors.New("all summarizers failed")
+}
+```
 
-- [ ] **2.1.3**: Modify `ProcessDocument()` to set hierarchy
-  - File: `/internal/InfoFlow/infoin/semantic_link_service.go`
-  - Change: Set `hierarchy_level` field when creating Weaviate properties
-  - Duration: 30 min
+## Implementation Timeline Optimizations
 
-- [ ] **2.1.4**: Test hierarchy classification
-  - Action: Upload test chapter
-  - Validation: Query Weaviate `{ where: { hierarchy_level: 1 } }`
-  - Expected: Returns only root concepts
-  - Duration: 30 min
+### Merge Phase 2.2 and 2.3 (Save 1-2 hours)
+The parent/child relationship building and traversal are interdependent. Consider implementing them together:
 
-#### Acceptance Criteria:
-- [ ] Every new semantic link has `hierarchy_level` set (1, 2, or 3)
-- [ ] Can filter semantic links by hierarchy level in Weaviate
-- [ ] Root concepts (Level 1) are clearly identifiable
-- [ ] 80%+ classification accuracy (manual review of 20 links)
+```go
+// Combined approach in /internal/InfoFlow/infoin/hsg_builder.go
+func BuildAndTraverse(ctx context.Context, rootID string) (*HSGContext, error) {
+    // Build relationships on-demand as we traverse
+    links := h.store.GetLinks(rootID, 2) // Get root + 2 levels
+    h.buildRelationshipsBatch(links)     // Build parent/child
+    return h.traverse(rootID, 3)
+}
+```
 
----
+### Phase 3.2 Parallelization
+The background summarization job (every 1 hour) can be optimized:
+- **Group by topic cluster** in parallel (goroutines)
+- **Batch API calls** to Claude (if fixing API)
+- **Incremental updates** rather than full re-summarization
 
-### 2.2: Parent/Child Relationship Building (2-3 hours)
-**Target**: 2025-01-06 Afternoon
+## Data Validation Strategy
 
-#### Tasks:
-- [ ] **2.2.1**: Create relationship builder service
-  - File: `/internal/InfoFlow/infoin/link_relationship_builder.go` (NEW)
-  - Function: `BuildRelationships(links []SemanticLink) error`
-  - Logic: Analyze `source_term`, `target_term`, `relation_type` to infer parent/child
-  - Duration: 1.5 hours
+Add these validation steps to each phase:
 
-- [ ] **2.2.2**: Update existing links with relationships
-  - File: `/internal/InfoFlow/infoin/link_relationship_builder.go`
-  - Function: `UpdateLinkRelationships(ctx context.Context, linkID string, parentIDs, childIDs []string) error`
-  - Duration: 1 hour
+### Phase 2.1 Validation
+```bash
+# Test script to verify hierarchy classification
+go test ./internal/InfoFlow/infoin -run TestHierarchy -v
+# Should output accuracy report
+```
 
-- [ ] **2.2.3**: Test hierarchical traversal
-  - Action: Query root concept, traverse to children
-  - Validation: Can navigate "Immunodeficiency" → "XLA" → "BTK mutation"
-  - Duration: 30 min
+### Phase 2.3 Validation
+```bash
+# Test traversal integrity
+./scripts/test_traversal.sh --root-concept "Immunodeficiency" --expected-depth 3
+```
 
-#### Acceptance Criteria:
-- [ ] `is_parent_of` and `is_child_of` arrays populated for 70%+ of links
-- [ ] Can traverse from any link to its parents and children
-- [ ] No circular references in parent/child relationships
+## Critical Success Factors
 
----
+### 1. **Embedding Quality** 
+Your AWS Titan embeddings need to capture hierarchy. Test with:
+```go
+// Verify embeddings preserve hierarchy
+similarity := cosineSimilarity(
+    embed("Immunodeficiency"),
+    embed("X-linked agammaglobulinemia")
+)
+// Should be > 0.7 if hierarchy is captured
+```
 
-### 2.3: Multi-Hop Graph Traversal (3-4 hours)
-**Target**: 2025-01-07
+### 2. **Medical Domain Specificity**
+Consider adding medical-specific features:
+- UMLS CUI extraction for standardized terms
+- SNOMED CT relationship types
+- Medical abbreviation expansion
 
-#### Tasks:
-- [ ] **2.3.1**: Design traversal algorithm
-  - Document: `/docs/hsg_threads/THREAD002_graph_traversal.md` (NEW)
-  - Algorithm: Breadth-first search from query match
-  - Max depth: 3 levels
-  - Duration: 1 hour
+### 3. **Provenance Chain Integrity**
+Implement strict provenance tracking:
+```go
+type ProvenanceChain struct {
+    SummaryID     string
+    LinkIDs       []string      // Semantic links used
+    DocumentIDs   []string      // Original documents
+    Confidence    float64       // Overall confidence score
+    LastVerified  time.Time
+}
+```
 
-- [ ] **2.3.2**: Implement `TraverseHierarchy()` function
-  - File: `/internal/InfoFlow/infoin/hsg_query_service.go`
-  - Function signature:
-    ```go
-    func (h *HSGQueryService) TraverseHierarchy(
-        ctx context.Context,
-        rootLinkID string,
-        maxDepth int,
-    ) (*HSGContext, error)
-    ```
-  - Duration: 2 hours
+## Phase 4 Preview (Critical Production Features)
 
-- [ ] **2.3.3**: Update `QueryHSG()` to use traversal
-  - File: `/internal/InfoFlow/infoin/hsg_query_service.go`
-  - Change: Replace flat search with hierarchical traversal
-  - Duration: 1 hour
+Even though Phase 4 is future, design with these in mind:
 
-#### Acceptance Criteria:
-- [ ] Can traverse graph 3 levels deep
-- [ ] Returns hierarchical context (parent → child → grandchild)
-- [ ] Includes provenance (which links led to which content)
-- [ ] Performance: <2s for traversal of 100 links
+### Caching Strategy
+```go
+type HSGCache struct {
+    // LRU cache for frequent traversals
+    TraversalCache *lru.Cache[string, *HSGContext]
+    
+    // Tiered cache: Summary → Links → Content
+    SummaryCache   map[string]*SummaryChunk
+    
+    // Invalidation based on data freshness
+    LastUpdate     time.Time
+}
+```
 
----
+### Monitoring Dashboard
+Add early in Phase 3:
+- Graph size metrics (# nodes, # edges)
+- Query latency percentiles
+- Cache hit rates
+- Classification accuracy over time
 
-## Phase 3: Tier 2 SummaryChunk Implementation 🟡 NOT STARTED
+## Risk Mitigation Checklist
 
-**Goal**: Enable abstract, high-level semantic search
+**Before Phase 2.2:**
+- [ ] Confirm Weaviate can handle array properties efficiently
+- [ ] Test embedding generation time for 1000+ links
+- [ ] Verify Claude API key has sufficient quota
 
-### 3.1: SummaryChunk Weaviate Class (1 hour)
-**Target**: 2025-01-08 Morning
+**Before Phase 3.2:**
+- [ ] Implement fallback summarization (Titan-based)
+- [ ] Set up dead-letter queue for failed summarization jobs
+- [ ] Create sample summary evaluation dataset (50 examples)
 
-#### Tasks:
-- [ ] **3.1.1**: Define SummaryChunk schema
-  - File: `/internal/InfoFlow/InfoStore/db/weaviate.go`
-  - Properties:
-    ```
-    - summary_text: text (searchable)
-    - abstraction_level: int (1=most abstract, 3=most specific)
-    - linked_semantic_links: text[] (array of SemanticLink IDs)
-    - domain: text ("immunology", "neurology", etc.)
-    - created_at: date
-    ```
-  - Duration: 30 min
+**Before Production:**
+- [ ] Load test with 10,000 semantic links
+- [ ] Implement rate limiting per API key
+- [ ] Set up automated backup of Weaviate indices
 
-- [ ] **3.1.2**: Implement `CreateSummaryChunkClass()`
-  - Function: Create Weaviate class with AWS Titan vectorization
-  - Duration: 30 min
+## Quick Win Opportunity
 
-#### Acceptance Criteria:
-- [ ] `SummaryChunk` class exists in Weaviate
-- [ ] Can store and retrieve summary chunks
-- [ ] AWS Titan generates embeddings for summaries
+Consider implementing a **"Semantic Link Explorer" UI** early (simple web interface) to manually verify hierarchy classifications. This will accelerate debugging and improve quality faster than automated tests alone.
 
----
+## Final Recommendation
 
-### 3.2: Background Summarization Job (4-5 hours)
-**Target**: 2025-01-08 Afternoon + 2025-01-09
+Your roadmap is solid. **Prioritize fixing the Claude API dependency immediately**, as it's blocking Phase 3. Consider starting with Titan-based summarization as a temporary solution.
 
-#### Tasks:
-- [ ] **3.2.1**: Create summarization service
-  - File: `/internal/InfoFlow/infoin/tier2_summarization.go` (NEW)
-  - Function: `SummarizeSemanticLinkGroup(links []SemanticLink) (*SummaryChunk, error)`
-  - Duration: 2 hours
+The hierarchical approach (Phase 2) is your most valuable differentiator—ensure it works robustly before moving to Tier 2 summarization.
 
-- [ ] **3.2.2**: Implement grouping logic
-  - Strategy: Group links by topic similarity (vector clustering)
-  - Group size: 10-20 links per summary
-  - Duration: 1.5 hours
+**Estimated revised timeline:**
+- Phase 2: Complete by Jan 8 (add 1 day buffer)
+- Phase 3: Complete by Jan 12 (original target)
+- Phase 4: Start Jan 13, complete by Jan 25
 
-- [ ] **3.2.3**: LLM summarization with Claude
-  - Prompt: "Summarize the relationships between these medical concepts..."
-  - Model: Claude 3.5 Sonnet
-  - Duration: 1 hour
+Would you like me to elaborate on any specific component or help draft the implementation code for a particular module?
 
-- [ ] **3.2.4**: Store summaries in Weaviate
-  - Back-reference: Store IDs of constituent links
-  - Metadata: abstraction_level, domain, created_at
-  - Duration: 30 min
 
-#### Acceptance Criteria:
-- [ ] Background job runs every 1 hour
-- [ ] Groups related semantic links automatically
-- [ ] Generates coherent summaries using Claude
-- [ ] Stores summaries with back-references to links
-- [ ] At least 10 summary chunks created from test data
-
----
-
-### 3.3: Two-Tier Query System (2-3 hours)
-**Target**: 2025-01-10
-
-#### Tasks:
-- [ ] **3.3.1**: Implement Tier 2 search
-  - File: `/internal/InfoFlow/infoin/hsg_query_service.go`
-  - Function: `SearchSummaries(query string) ([]SummaryChunk, error)`
-  - Duration: 1 hour
-
-- [ ] **3.3.2**: Implement Tier 1 refinement
-  - Logic: From matched summary, retrieve constituent links
-  - Duration: 1 hour
-
-- [ ] **3.3.3**: Integrate with RAG answer generation
-  - Context: Hierarchical (Summary → Links → Raw Content)
-  - LLM: Claude generates answer with full provenance
-  - Duration: 1 hour
-
-#### Acceptance Criteria:
-- [ ] Query first searches SummaryChunk (Tier 2)
-- [ ] Then traverses to SemanticLinks (Tier 1)
-- [ ] Then retrieves raw content from MongoDB
-- [ ] Final answer includes hierarchical context
-- [ ] Query "What causes XLA?" returns full causal chain
+# **Project ESP: Evidence-Structured Processing System**
+## A Hallucination-Resistant Knowledge Architecture for Medical Research
 
 ---
 
-## Phase 4: Production Hardening 🔵 FUTURE
-
-**Goal**: Make HSG system production-ready
-
-### Tasks (High-Level):
-- [ ] Add monitoring and logging (Prometheus/Grafana)
-- [ ] Performance optimization (caching, batch processing)
-- [ ] Error handling and retry logic
-- [ ] Unit and integration tests (80% coverage)
-- [ ] Load testing (100 concurrent queries)
-- [ ] Documentation for API endpoints
-- [ ] Deployment automation (CI/CD)
-
-**Target**: 2025-01-15 - 2025-01-20
+## **Core Philosophy: Quality Over Quantity**
+We're building a system that prioritizes **robust, contextual knowledge** over comprehensive but unreliable information. The goal is not to store everything, but to store what matters in a way that enables meaningful comparison and resists the failures of modern academic publishing.
 
 ---
 
-## Milestones & Checkpoints
-
-| Milestone | Target Date | Status | Deliverable |
-|-----------|-------------|--------|-------------|
-| Phase 1 Complete | 2025-01-05 | ✅ Done | Tier 1 semantic links working |
-| Phase 2.1 Complete | 2025-01-06 AM | ⏳ In Progress | Hierarchy classification |
-| Phase 2.2 Complete | 2025-01-06 PM | ⏳ Waiting | Parent/child relationships |
-| Phase 2.3 Complete | 2025-01-07 | ⏳ Waiting | Multi-hop traversal |
-| Phase 3.1 Complete | 2025-01-08 AM | ❌ Not Started | SummaryChunk class |
-| Phase 3.2 Complete | 2025-01-09 | ❌ Not Started | Background summarization |
-| Phase 3.3 Complete | 2025-01-10 | ❌ Not Started | Two-tier query system |
-| Phase 4 Complete | 2025-01-20 | ❌ Not Started | Production ready |
+## **The Problem We're Solving**
+Current academic knowledge systems are broken:
+- **Citations are gamed** (citation clubs, paper mills)
+- **Quality metrics are manipulated** (impact factor, h-index)
+- **Fast, fragile publications** overwhelm slow, robust science
+- **LLMs hallucinate** because they can't distinguish quality
+- **Researchers waste time** sifting through low-quality information
 
 ---
 
-## Success Metrics
+## **The Solution: Three-Layer Evidence Architecture**
 
-### Phase 2 (Hierarchy) Success:
-- [ ] 90%+ of semantic links have `hierarchy_level` set
-- [ ] Can query by hierarchy level in Weaviate
-- [ ] Multi-hop traversal works for 95% of test queries
-- [ ] Traversal completes in <2 seconds
+### **Layer 1: Semantic Links (Tier 1)**
+**What**: Direct relationships extracted from documents  
+**Format**: `[Concept A] → [Relationship] → [Concept B]`  
+**Example**: `"ribosomes → location_of → protein synthesis"`  
+**Key innovation**: No vague relationships allowed (`involved_in`, `related_to` rejected)
 
-### Phase 3 (Tier 2) Success:
-- [ ] At least 50 summary chunks created
-- [ ] Query latency <3 seconds (end-to-end)
-- [ ] Answer quality: 4/5+ rating (manual review)
-- [ ] Provenance accuracy: 95%+ (correct source attribution)
+### **Layer 2: Contextual Graphs (Hierarchical Positioning)**
+**What**: Links positioned in hierarchical, contextual graphs  
+**How**: Automatic context inference from graph neighborhood  
+**Example**: Same `ribosomes → protein synthesis` link appears in:
+- Eukaryotic cell context (connected to nucleus, endoplasmic reticulum)
+- Prokaryotic context (connected to antibiotics, 30S subunit)
+- Mitochondrial context (connected to oxidative phosphorylation)
 
----
-
-## Risk Management
-
-| Risk | Probability | Impact | Mitigation |
-|------|-------------|--------|------------|
-| Claude API fails | Medium | High | Implement retry logic + fallback to Titan |
-| Hierarchy classification inaccurate | Medium | Medium | Manual review + iterative refinement |
-| Vector DB performance issues | Low | High | Implement caching + index optimization |
-| Summarization quality poor | Medium | High | Refine prompts + use longer context window |
+### **Layer 3: Summarized Knowledge (Tier 2)**
+**What**: Machine-generated summaries of related link clusters  
+**Purpose**: Enable abstract, high-level search while maintaining provenance  
+**Generated by**: LLM + human correction loop  
+**Output**: Narrative summaries with back-references to source links
 
 ---
 
-## Dependencies
+## **Critical Innovations**
 
-### External Services:
-- ✅ AWS Textract (OCR)
-- ✅ AWS S3 (file storage)
-- ✅ AWS Titan (embeddings)
-- ⚠️ AWS Bedrock Claude (generative - needs API fix)
-- ✅ MongoDB (content storage)
-- ✅ Weaviate (vector DB)
+### **1. Post-Citation Quality Scoring**
+We reject traditional metrics. Instead:
+- **Methodological Rigor Score**: Detects study design, blinding, sample adequacy
+- **Argument Coherence Score**: Measures internal logical consistency
+- **Evidential Support Network**: Maps independent evidentiary paths
+- **Temporal Stability**: Tracks how findings hold up over 5+ years
+- **Community Adoption**: Tracks real-world use, not just citations
 
-### Internal Services:
-- ✅ Semantic link extraction
-- ⏳ Hierarchy classification (in progress)
-- ❌ Relationship building (not started)
-- ❌ Tier 2 summarization (not started)
-- ❌ Multi-hop traversal (not started)
+### **2. Manual Curation Interface**
+**Design principle**: 3 clicks max per semantic link  
+**Features**:
+- PDF viewer with click-to-select terms
+- Auto-capture of provenance (page, document, position)
+- Quality flagging (one click: "⚠️ overgeneralization", "❌ problematic")
+- No complex context tagging - context emerges from graph position
+
+### **3. Contradiction-Aware Reasoning**
+**When conflicts occur**:
+- Higher methodological rigor wins
+- More specific context wins
+- Newer evidence wins (with recency decay)
+- If unresolved: both downweighted, flagged for human review
+
+### **4. Uncertainty Propagation**
+**Every conclusion carries**:
+- Confidence score (0-1)
+- Weakest link in reasoning chain
+- Assumptions made
+- Quality of underlying evidence
 
 ---
 
-**Next Review**: After Phase 2.1 completion (2025-01-06)  
-**Updated**: 2025-01-05 20:30 UTC
+## **Technical Architecture**
+
+### **Data Flow**:
+```
+PDF Upload → OCR → Semantic Link Extraction → Graph Building → 
+Hierarchical Positioning → Quality Scoring → Summary Generation
+```
+
+### **Storage**:
+- **MongoDB**: Raw documents, content
+- **Weaviate**: Semantic links with vectors, hierarchical relationships
+- **PostgreSQL**: Quality scores, user corrections, provenance tracking
+
+### **Processing**:
+- **AWS Titan**: Vector embeddings
+- **Claude/LLM**: Semantic extraction, summarization (with fallbacks)
+- **Go Backend**: Graph algorithms, quality scoring, API
+- **React Frontend**: PDF viewer + curation interface
+
+---
+
+## **Implementation Roadmap (6 Weeks)**
+
+### **Phase 1: Core Extraction (Week 1-2)**
+- [ ] PDF upload + OCR pipeline
+- [ ] Semantic link extraction (reject vague relationships)
+- [ ] Basic quality scoring (method detection, source tier)
+- [ ] Simple curation interface (3-click workflow)
+
+### **Phase 2: Graph Intelligence (Week 3-4)**
+- [ ] Hierarchical positioning algorithms
+- [ ] Context inference from graph neighborhoods
+- [ ] Contradiction detection system
+- [ ] Corroboration scoring (independent evidentiary paths)
+
+### **Phase 3: Advanced Features (Week 5-6)**
+- [ ] Tier 2 summarization engine
+- [ ] Temporal stability analysis
+- [ ] Community adoption tracking
+- [ ] Uncertainty propagation in queries
+
+---
+
+## **What Makes This Different**
+
+| Traditional Systems | **Our System** |
+|-------------------|----------------|
+| Count citations | **Evaluate methodological rigor** |
+| Store everything | **Store only what's reliable** |
+| Flat relationships | **Hierarchical, contextual positioning** |
+| Black-box confidence | **Transparent uncertainty propagation** |
+| Static knowledge | **Temporal evolution tracking** |
+| Academic popularity | **Real-world adoption signals** |
+
+---
+
+## **The Research Value Proposition**
+
+For researchers, this system provides:
+1. **Quality-filtered knowledge**: Only robust findings surface
+2. **Context-aware answers**: "It depends on..." with specifics
+3. **Knowledge evolution maps**: See how understanding changed over time
+4. **Gap identification**: Find where evidence is weak or missing
+5. **Contradiction resolution**: See conflicting evidence side-by-side with quality scores
+
+---
+
+## **Business Model (If Funded)**
+1. **Research Institution Licenses**: Quality knowledge management
+2. **Pharma/Biotech**: Drug discovery evidence synthesis
+3. **Medical Education**: Up-to-date, quality-curated textbooks
+4. **Clinical Decision Support**: Evidence-backed, uncertainty-aware recommendations
+
+---
+
+## **Why This Matters Now**
+
+The AI revolution is generating more low-quality information than ever. We need systems that can:
+- **Distinguish signal from noise** in the flood of publications
+- **Preserve slow, robust science** in a fast-publication world
+- **Provide uncertainty-aware answers** for high-stakes domains like medicine
+- **Resist gaming** of traditional academic metrics
+
+---
+
+## **First Deliverable (2 Weeks)**
+A working system where you can:
+1. Upload a medical textbook chapter
+2. Click to extract semantic links in seconds each
+3. See them positioned in a hierarchical graph
+4. Query with basic quality-aware responses
+
+---
+
+## **Time Investment vs Payoff**
+
+**Without this system**: 5+ years of manual curation, high burnout risk  
+**With this system**: 6 months to functional prototype, scalable to collaborators
+
+**The interface investment** (2-3 weeks) saves **years** of manual work.
+
+---
+
+## **Bottom Line**
+
+You're not building another knowledge graph. You're building:
+1. A **hallucination-resistant** knowledge architecture
+2. A **quality-first** curation system
+3. A **context-aware** reasoning engine
+4. A **slow science sanctuary** in a fast-publication world
+
+The work is significant, but the alternative is wasting years on manual curation that could be done in months with the right tools.
+
+**Start with the 3-click curation interface. Everything else builds from there.**
+
+---
+
+*"The goal is not to know everything, but to know reliably what matters."*

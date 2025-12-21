@@ -93,12 +93,37 @@ func (h *CoachHandlerMVP) CoachMVPDemoHandler(w http.ResponseWriter, r *http.Req
 
 	// If no results, return default
 	if len(routes) == 0 {
+		// Return a rich subgraph for the demo visualization (The "Map")
 		routes = []map[string]string{
 			{
 				"source_term":   "X-Linked Agammaglobulinemia",
-				"target_term":   "B-cell deficiency",
+				"target_term":   "BTK Gene Mutation",
+				"relation_type": "caused_by",
+				"context":       "XLA is caused by mutations in the Bruton Tyrosine Kinase gene.",
+			},
+			{
+				"source_term":   "X-Linked Agammaglobulinemia",
+				"target_term":   "B-cell Deficiency",
 				"relation_type": "causes",
-				"context":       "XLA results in absence of mature B cells",
+				"context":       "The mutation prevents B-cells from maturing.",
+			},
+			{
+				"source_term":   "B-cell Deficiency",
+				"target_term":   "Low Antibodies",
+				"relation_type": "results_in",
+				"context":       "Without B-cells, the body cannot produce immunoglobulins.",
+			},
+			{
+				"source_term":   "Low Antibodies",
+				"target_term":   "Recurrent Infections",
+				"relation_type": "leads_to",
+				"context":       "Lack of antibodies makes the patient susceptible to bacterial infections.",
+			},
+			{
+				"source_term":   "Recurrent Infections",
+				"target_term":   "IVIG Therapy",
+				"relation_type": "treated_with",
+				"context":       "Patients require lifelong immunoglobulin replacement therapy.",
 			},
 		}
 	}

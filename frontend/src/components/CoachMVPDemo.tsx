@@ -17,7 +17,8 @@ import {
   Send,
   SmartToy,
   Clear,
-  Info
+  Info,
+  ArrowForward // Added for map visualization
 } from '@mui/icons-material';
 import { apiClient } from '../config/api';
 
@@ -129,7 +130,7 @@ const CoachMVPDemo: React.FC = () => {
       <Box sx={{ mb: 4, textAlign: 'center' }}>
         <Typography variant="h3" gutterBottom sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, mb: 2 }}>
           <SmartToy sx={{ fontSize: 40, color: 'primary.main' }} />
-          MVP Coach Demo
+          MVP CHISG Demo
         </Typography>
         <Typography variant="subtitle1" color="text.secondary">
           Explore the knowledge graph using natural language queries
@@ -169,7 +170,7 @@ const CoachMVPDemo: React.FC = () => {
             placeholder="Ask a question about medical concepts, immunology, or learning..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            onKeyPress={handleKeyPress}
+            onKeyUp={handleKeyPress}
             disabled={loading}
             variant="outlined"
           />
@@ -214,7 +215,7 @@ const CoachMVPDemo: React.FC = () => {
 
             {/* Knowledge Graph Routes */}
             <Typography variant="h6" gutterBottom sx={{ mt: 3, mb: 2 }}>
-              Connected Concepts ({response.knowledge_graph_routes.length})
+              Knowledge Map ({response.knowledge_graph_routes.length} Connections)
             </Typography>
 
             {response.knowledge_graph_routes.length > 0 ? (
@@ -223,24 +224,38 @@ const CoachMVPDemo: React.FC = () => {
                   <Card
                     key={index}
                     variant="outlined"
-                    sx={{ mb: 2, p: 2, bgcolor: 'background.default' }}
+                    sx={{ 
+                      mb: 2, 
+                      p: 2, 
+                      bgcolor: 'background.default',
+                      borderLeft: '4px solid',
+                      borderLeftColor: 'primary.main'
+                    }}
                   >
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, flexWrap: 'wrap' }}>
                       <Chip
                         label={link.source_term}
                         color="primary"
                         variant="outlined"
+                        sx={{ fontWeight: 'bold' }}
                       />
-                      <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 'bold' }}>
-                        {link.relation_type}
-                      </Typography>
+                      
+                      {/* Visual Arrow for Relation */}
+                      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mx: 1, color: 'text.secondary' }}>
+                        <Typography variant="caption" sx={{ fontSize: '0.7rem', textTransform: 'uppercase', mb: -0.5 }}>
+                          {link.relation_type}
+                        </Typography>
+                        <ArrowForward fontSize="small" />
+                      </Box>
+
                       <Chip
                         label={link.target_term}
                         color="secondary"
                         variant="outlined"
+                        sx={{ fontWeight: 'bold' }}
                       />
                     </Box>
-                    <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                    <Typography variant="body2" color="text.secondary" sx={{ mt: 1, pl: 1, borderLeft: '2px solid #eee' }}>
                       <strong>Context:</strong> {link.context}
                     </Typography>
                   </Card>

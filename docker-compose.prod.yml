@@ -1,101 +1,119 @@
-version: '3.8'
+# Version: 2.0
+# This is the single source of truth for the production environment on Vultr.
+# It correctly maps variables from the .env file to the containers.
 
 services:
-  # MongoDB - Production (external service)
-  # In production, you typically use a managed service (MongoDB Atlas, AWS DocumentDB, etc.)
-  # This is optional if you use a managed MongoDB service
-  
-  # Weaviate Vector Database - Production
-  weaviate:
-    image: semitechnologies/weaviate:1.25.4
-    container_name: esp_weaviate_prod
-    ports:
-      - "8081:8080"
-      - "50051:50051"
+  # --- REVERSE PROXY ---
+  main-proxy:
+    image: mike5tew/main-proxy:latest
+    container_name: main-proxy
     restart: always
-    env_file:
-      - .env.production
-    environment:
-      # Strict authentication for production
-      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'false'
-      AUTHENTICATION_APIKEY_ENABLED: 'true'
-      AUTHENTICATION_APIKEY_ALLOWED_KEYS: ${WEAVIATE_API_KEY}
-      AUTHENTICATION_APIKEY_USERS: 'esp-organizer'
-      
-      # Vectorizer configuration
-      PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
-      DEFAULT_VECTORIZER_MODULE: 'text2vec-aws'
-      ENABLE_MODULES: 'text2vec-aws'
-      CLUSTER_HOSTNAME: 'node1'
-      
-      # AWS Bedrock configuration
-      TEXT2VEC_AWS_REGION: ${AWS_REGION}
-      AWS_REGION: ${AWS_REGION}
-      TEXT2VEC_AWS_MODEL_ID: 'amazon.titan-embed-text-v2:0'
-      AWS_BEDROCK_EMBEDDING_MODEL_ID: ${AWS_BEDROCK_EMBEDDING_MODEL_ID}
-      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
-      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
-    volumes:
-      - weaviate_data_prod:/var/lib/weaviate
-    networks:
-      - esp_organizer_network
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "http://localhost:8080/v1/.well-known/ready"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 60s
-
-  # API Service - Production
-  api:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile
-    container_name: esp_assist_api_prod
-    ports:
-      - "8080:8080"
-    env_file:
-      - .env.production
-    environment:
-      # Production MongoDB (typically managed service like MongoDB Atlas)
-      MONGODB_URI: ${MONGODB_URI}
-      WEAVIATE_URL: http://weaviate:8080
-      WEAVIATE_API_KEY: ${WEAVIATE_API_KEY}
-      # ...existing vars from .env.production...
-    depends_on:
-      weaviate:
-        condition: service_healthy
-    networks:
-      - esp_organizer_network
-    restart: always
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "http://localhost:8080/"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 60s
-
-  # Nginx Reverse Proxy - Production
-  nginx:
-    image: nginx:alpine
-    container_name: esp_nginx_prod
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - ./frontend/build:/usr/share/nginx/html
-      - ./frontend/nginx.conf:/etc/nginx/conf.d/default.conf
-      - /etc/letsencrypt:/etc/letsencrypt:ro  # SSL certificates
-    depends_on:
-      - api
+      - ./main-proxy/nginx.conf:/etc/nginx/conf.d/default.conf
     networks:
-      - esp_organizer_network
-    restart: always
+      - shared-network
 
-networks:
-  esp_organizer_network:
-    driver: bridge
+  # --- ASSIST APP ---
+  assist-frontend:
+    image: mike5tew/assist-frontend:latest
+    container_name: assist-frontend
+    restart: always
+    networks:
+      - shared-network
+
+  assist-api:
+    image: mike5tew/assist-api:latest
+    container_name: assist-api
+    restart: always
+    env_file: .env
+    expose:
+      - "8080"
+    depends_on:
+      - mongodb
+      - weaviate
+    networks:
+      - shared-network
+
+  # --- SKILLS MAP PLATFORM ---
+  skills-frontend:
+    image: mike5tew/skills-frontend:latest
+    container_name: skills-frontend
+    restart: always
+    networks:
+      - shared-network
+
+  skills-api:
+    image: mike5tew/skills-api:latest
+    container_name: skills-api
+    restart: always
+    env_file: .env # The api is coded to use DB_... vars directly
+    expose:
+      - "8080"
+    depends_on:
+      - skills-db
+    networks:
+      - shared-network
+
+  # --- DATABASES ---
+  skills-db:
+    image: mysql:8.0
+    container_name: skills-db
+    restart: always
+    env_file: .env
+    environment:
+      # This mapping is the critical fix.
+      # It takes DB_... from the .env file and provides them as MYSQL_... to the container.
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - skills_db_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - shared-network
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
+    env_file: .env
+    environment:
+      # This mapping is also required for the MongoDB container.
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - shared-network
+
+  weaviate:
+    image: semitechnologies/weaviate:1.24.10
+    container_name: weaviate
+    restart: always
+    ports:
+      - "8088:8080"
+    volumes:
+      - weaviate_data:/var/lib/weaviate
+    environment:
+      QUERY_DEFAULTS_LIMIT: 25
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'true'
+      PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
+      DEFAULT_VECTORIZER_MODULE: 'text2vec-aws'
+      ENABLE_MODULES: 'text2vec-aws'
+      AWS_REGION: 'us-east-1' # This can be any region, needed for the module to activate
+      CLUSTER_HOSTNAME: 'node1'
+    networks:
+      - shared-network
 
 volumes:
-  weaviate_data_prod:
-    driver: local
+  skills_db_data:
+  mongodb_data:
+  weaviate_data:
+
+networks:
+  shared-network:
+    driver: bridge

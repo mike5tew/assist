@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  main-proxy:
+    image: mike5tew/main-proxy:latest
+    container_name: main-proxy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - esp-net
+
+networks:
+  esp-net:
+    external: true
