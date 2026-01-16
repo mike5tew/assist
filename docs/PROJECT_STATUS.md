@@ -8,17 +8,22 @@
 
 ## 🚨 Current Sprint Status
 
-**Goal**: Launch the GCSE Revision Tool MVP to generate first revenue from paid subscribers.
+**Goal**: Launch the GCSE Revision Tool MVP and pilot the Integrated Insight Markbook.
 
 | Priority | Task | Status | Notes |
 |----------|------|--------|-------|
 | 1 | GCSE Revision Tool MVP | 🔄 IN PROGRESS | **Primary commercial focus** |
 | 2 | CHISG Manual Link Extractor | 🔄 IN PROGRESS | Tool to accelerate knowledge graph population |
-| 3 | Skills Tree Dashboard Fix | ⏳ PENDING | Race condition on first load after login |
+| 3 | Integrated Insight Markbook | � IN PROGRESS | Scaffolding complete; Backend models and Passive Pilot UI initialized. |
+| 4 | Skills Tree Dashboard Fix | ⏳ PENDING | Race condition on first load after login |
 
 ---
 
 ## 📜 Work History & Completed Milestones
+
+### Strategy & Business Development ✅
+- [x] **drb Ignite Business Case**: Drafted and submitted high-level pitch for Data & Insight Manager role, focusing on the "Safe Hands vs. Smart Minds" framework.
+- [x] **Sticker Album Framework**: Re-conceptualized the Skills Map UI as a "Sticker Album" to reduce complexity and improve teacher buy-in.
 
 ### Infrastructure & Deployment ✅
 - [x] Monorepo structure established (`/assist`)
@@ -52,19 +57,38 @@
 
 ### 2. Semantic Link Extraction Tool (Priority 1A - Critical Enabler)
 **Goal**: Integrated React + Go service to rapidly build the knowledge graph that powers all products.
-**Status**: 30% complete (spec ready; backend work in sprint)
+**Status**: 70% complete (backend + frontend DONE; validation + integration next)
 
-- [ ] Week 1: Backend API endpoints & Weaviate integration (IN PROGRESS)
-- [ ] Week 2: React frontend component (NOT STARTED)
-- [ ] Week 3: Pipeline integration & inference (NOT STARTED)
-- [ ] Week 4: Validation, batch processing, & launch (NOT STARTED)
+- [x] Week 1: Backend API endpoints & Weaviate integration ✅ COMPLETE
+  - [x] Go API endpoints (extract, search, validate)
+  - [x] SemanticLink model with hierarchy and provenance
+  - [x] SemanticLinkService with MongoDB + Weaviate integration
+  - [x] Nginx routing configured
+- [x] Week 2: React frontend component ✅ COMPLETE
+  - [x] `<SemanticLinkExtractor />` with 3-click workflow
+  - [x] PDF viewer with text selection
+  - [x] Term selection and relationship type UI
+  - [x] Service layer with API integration
+  - [x] Route added to main app
+- [ ] Week 3: Quality validation & hierarchy inference (IN PROGRESS NEXT)
+  - [ ] Implement `SemanticLinksValidateHandler` with LLM-as-judge
+  - [ ] Complete hierarchy inference logic
+  - [ ] Test E2E extraction flow
+- [ ] Week 4: Pipeline integration & batch processing (NOT STARTED)
 
 **Notes**: Blocks GCSE Tool until populated; connects to lesson_files, skills, and Weaviate.
 
-### 3. Skills Tree Dashboard Fix (Priority 3 - Bug)
+### 3. Skills Tree Dashboard Fix (Priority 4 - Bug)
 **Goal**: Fix the race condition where the Dashboard doesn't load skills on first visit.
 - [ ] Update `Dashboard.tsx` `useEffect` to depend on `token`.
 - [ ] Rebuild and redeploy `skills-frontend`.
+
+### 4. Integrated Insight Markbook (Priority 3 - Pilot)
+**Goal**: Rapidly develop a "Passive Pilot" UI for logging competency (Skills Map) and character (ETP Profile) data.
+- [ ] Design "Passive Pilot" interface (one-click logging).
+- [ ] Implement ETP Profile builder (tracking "Character Tells").
+- [ ] Integrate "Sticker Album" visual feedback.
+- [ ] Prepare proof-of-concept demonstration for drb Ignite.
 
 ---
 

@@ -272,6 +272,16 @@ const ImmunologyUpload: React.FC = () => {
           setPollingJobId(jobId);
           setPollingStatus('PENDING');
         }
+
+        // Add quick action: open semantic extractor with this upload as default source
+        // Use navigate with query params so extractor can prefill source
+        const encodedSource = encodeURIComponent(JSON.stringify({
+          source_id: result.book_source?.id || result.book_source?._id || '',
+          batch_id: result.batch_id || result.processing?.job_id || '',
+          title: result.book_source?.title || ''
+        }));
+        // Expose a convenience link via window.history state for manual opening, and also render button in UI below
+        window.localStorage.setItem('last_upload_source', encodedSource);
       }
     } catch (err: any) {
       console.error('Upload error:', err);
@@ -325,6 +335,34 @@ const ImmunologyUpload: React.FC = () => {
             <Alert severity="success" sx={{ mt: 2 }}>
               Selected: {selectedFile.name} ({(selectedFile.size / (1024 * 1024)).toFixed(2)} MB)
             </Alert>
+          )}
+
+          {uploadResult && (
+            <Box sx={{ mt: 2, display: 'flex', gap: 1, alignItems: 'center' }}>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  // Navigate to semantic extractor with source info stored in localStorage
+                  const encoded = window.localStorage.getItem('last_upload_source') || '';
+                  const url = `/esp-organizer/semantic-links/extract${encoded ? `?source=${encodeURIComponent(encoded)}` : ''}`;
+                  window.location.href = url;
+                }}
+              >
+                Open Semantic Extractor (use this source)
+              </Button>
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  // open the upload job status page or scroll to polling info
+                  if (uploadResult.processing?.job_id) {
+                    setPollingJobId(uploadResult.processing.job_id);
+                    setPollingStatus('PENDING');
+                  }
+                }}
+              >
+                View Processing Status
+              </Button>
+            </Box>
           )}
         </CardContent>
       </Card>

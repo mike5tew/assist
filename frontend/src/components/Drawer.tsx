@@ -96,8 +96,17 @@ const MiniDrawer = () => {
   }));
 
   const [menuName, setMenuName] = React.useState([
-    { EntName: 'Home', type: 'page', icon: <HomeIcon />, link: '/Home' },
-    { EntName: 'ContentLoader', type: 'page', icon: <UploadIcon />, link: '/ContentLoader' },
+    { EntName: 'Home', type: 'page', icon: <HomeIcon />, link: 'home' },
+    { EntName: 'ContentLoader', type: 'page', icon: <UploadIcon />, link: 'contentLoader' },
+    { EntName: 'Semantic Query', type: 'page', icon: <UploadIcon />, link: 'semantic-query' },
+    { EntName: 'AI Chat', type: 'page', icon: <UploadIcon />, link: 'ai-chat' },
+    { EntName: 'Coach MVP Demo', type: 'page', icon: <UploadIcon />, link: 'coach-mvp-demo' },
+    { EntName: 'Immunology', type: 'page', icon: <UploadIcon />, link: 'immunology' },
+    { EntName: 'Immunology Upload', type: 'page', icon: <UploadIcon />, link: 'immunology-upload' },
+    { EntName: 'GCSE Study Area', type: 'page', icon: <UploadIcon />, link: 'gcse' },
+    { EntName: 'Civil Engineering Study Area', type: 'page', icon: <UploadIcon />, link: 'civil-engineering' },
+    { EntName: 'Admin Panel', type: 'page', icon: <UploadIcon />, link: 'admin' },
+    { EntName: 'Back', type: 'navigation', icon: <ChevronLeftIcon />, link: 'back' },
    
   ]);
 

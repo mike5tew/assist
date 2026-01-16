@@ -4,6 +4,7 @@ import {
   Typography, Chip, FormControl, InputLabel, Checkbox, ListItemText 
 } from '@mui/material';
 import Grid from '@mui/material/Grid';
+import PDFViewer from './SemanticLinkExtractor/PDFViewer';
 import { useTranslation } from 'react-i18next';
 
 type UploadType = 'keywords' | 'semantic' | 'rawText' | 'documentCreator';
@@ -314,6 +315,55 @@ export const ContentLoader: React.FC = () => {
               style={{ marginBottom: 16 }}
               accept=".json,.csv,.txt,.pdf,.html,.md"
             />
+
+            {/* PDF Preview & Selection */}
+            {fileType === 'pdf' && file && (
+              <Box sx={{ mt: 2 }}>
+                <Typography variant="subtitle1" sx={{ mb: 1 }}>PDF Preview (select text below)</Typography>
+                <PDFViewer
+                  file={file}
+                  onTermSelected={(text) => {
+                    // If no source selected yet, set it; otherwise set target
+                    if (!sourceEntity) {
+                      setSourceEntity(text);
+                      setToast({ open: true, message: `Source term selected: ${text}`, severity: 'success' });
+                    } else if (!targetEntity) {
+                      setTargetEntity(text);
+                      setToast({ open: true, message: `Target term selected: ${text}`, severity: 'success' });
+                    } else {
+                      // both already set; default to replacing target
+                      setTargetEntity(text);
+                      setToast({ open: true, message: `Target term replaced: ${text}`, severity: 'success' });
+                    }
+                  }}
+                  isSelecting={true}
+                />
+
+                <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
+                  <Chip label={`Source: ${sourceEntity || 'none'}`} onDelete={() => setSourceEntity('')} />
+                  <Chip label={`Target: ${targetEntity || 'none'}`} onDelete={() => setTargetEntity('')} />
+                </Box>
+
+                <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
+                  <Button
+                    variant="outlined"
+                    onClick={() => {
+                      if (!sourceEntity || !targetEntity) {
+                        setToast({ open: true, message: 'Select both source and target terms first', severity: 'error' });
+                        return;
+                      }
+                      // Move to semantic tab and prefill fields
+                      setActiveTab('semantic');
+                    }}
+                  >
+                    Use selection to create semantic link
+                  </Button>
+                  <Button variant="text" onClick={() => { setSourceEntity(''); setTargetEntity(''); }}>
+                    Clear selections
+                  </Button>
+                </Box>
+              </Box>
+            )}
 
             <TextField
               label="Or paste text content"

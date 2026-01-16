@@ -1,0 +1,93 @@
+
+services:
+  # --- REVERSE PROXY ---
+  main-proxy:
+    image: nginx:alpine
+    container_name: main-proxy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./main-proxy/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - shared-network
+    depends_on:
+      - assist-frontend
+      - assist-api
+
+  assist-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        APP_VERSION: "dev-1.0.0"
+    container_name: assist-frontend
+    restart: always
+    ports:
+      - "3000:80"
+    networks:
+      - shared-network
+
+  assist-api:
+    build:
+      context: ./esp-organizer
+      dockerfile: Dockerfile
+    container_name: assist-api
+    restart: always
+    env_file: .env
+    environment:
+      MONGODB_URI: mongodb://admin:password123@mongodb:27017/esp_organizer?authSource=admin
+      MONGODB_URI_INTERNAL: mongodb://admin:password123@mongodb:27017/esp_organizer?authSource=admin
+      WEAVIATE_URL: http://weaviate:8080
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+      - weaviate
+    networks:
+      - shared-network
+
+  # --- DATABASES ---
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - shared-network
+
+  weaviate:
+    image: semitechnologies/weaviate:latest
+    container_name: weaviate
+    restart: always
+    ports:
+      - "8088:8080"
+    environment:
+      QUERY_DEFAULTS_LIMIT: 25
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'true'
+      PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
+      DEFAULT_VECTORIZER_MODULE: 'text2vec-aws'
+      ENABLE_MODULES: 'text2vec-aws'
+      AWS_REGION: 'eu-west-2'
+      AWS_ACCESS_KEY_ID: 'AWS_ACCESS_KEY_ID_REMOVED'
+      AWS_SECRET_ACCESS_KEY: 'AWS_SECRET_ACCESS_KEY_REMOVED'
+      CLUSTER_HOSTNAME: 'node1'
+    volumes:
+      - weaviate_data:/var/lib/weaviate
+    networks:
+      - shared-network
+
+volumes:
+  mongodb_data:
+  weaviate_data:
+
+networks:
+  shared-network:
+    driver: bridge

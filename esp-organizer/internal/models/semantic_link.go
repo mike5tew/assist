@@ -7,16 +7,24 @@ import (
 )
 
 // SemanticLink captures a single, atomic relationship between two concepts.
+// The Statement field contains the full, vectorizable fact (e.g., "XLA causes reduction in Ig").
+// Terms and relations provide structure for graph traversal and queries.
 type SemanticLink struct {
 	ID primitive.ObjectID `bson:"_id,omitempty" json:"id"`
 
-	CompositeKey string `bson:"composite_key" json:"composite_key"` // "source::target::relation"
+	CompositeKey string `bson:"composite_key" json:"composite_key"` // "source::target::forward_relation"
 
-	SourceID     primitive.ObjectID `bson:"source_id,omitempty" json:"source_id"`
-	TargetID     primitive.ObjectID `bson:"target_id,omitempty" json:"target_id"`
-	SourceTerm   string             `bson:"source_term" json:"source_term"` // Normalized
-	TargetTerm   string             `bson:"target_term" json:"target_term"` // Normalized
-	RelationType string             `bson:"relation_type" json:"relation_type"`
+	// The core statement - this is what gets vectorized for semantic search
+	Statement string `bson:"statement" json:"statement"` // Full fact: "XLA causes reduction in Ig"
+
+	// Bidirectional relationship structure
+	SourceID        primitive.ObjectID `bson:"source_id,omitempty" json:"source_id"`
+	TargetID        primitive.ObjectID `bson:"target_id,omitempty" json:"target_id"`
+	SourceTerm      string             `bson:"source_term" json:"source_term"`           // Normalized: "XLA"
+	TargetTerm      string             `bson:"target_term" json:"target_term"`           // Normalized: "Ig"
+	ForwardRelation string             `bson:"forward_relation" json:"forward_relation"` // "causes_reduction_in"
+	InverseRelation string             `bson:"inverse_relation" json:"inverse_relation"` // "is_reduced_by"
+	RelationType    string             `bson:"relation_type" json:"relation_type"`       // Deprecated: use ForwardRelation
 
 	// Relativistic Hierarchy Metrics
 	SourceTermGenerality float64 `bson:"source_term_generality" json:"source_term_generality"`
@@ -59,14 +67,33 @@ type SemanticLink struct {
 	ExtendedProperties   map[string]interface{} `bson:"extended_properties,omitempty" json:"extended_properties,omitempty"`
 	PsychologicalProfile *PsychologicalProfile  `bson:"psychological_profile,omitempty" json:"psychological_profile,omitempty"`
 	BatchID              string                 `bson:"batch_id,omitempty" json:"batch_id,omitempty"`
+
+	// Training Data Fields - critical for ML model training
+	Status      string    `bson:"status" json:"status"`                       // draft, validated, rejected
+	IsManual    bool      `bson:"is_manual" json:"is_manual"`                 // true = human-created, false = auto-extracted
+	Chapter     string    `bson:"chapter,omitempty" json:"chapter"`           // chapter/section reference
+	ExcerptText string    `bson:"excerpt_text,omitempty" json:"excerpt_text"` // source passage this was extracted from
+	ValidatedBy string    `bson:"validated_by,omitempty" json:"validated_by"`
+	ValidatedAt time.Time `bson:"validated_at,omitempty" json:"validated_at,omitempty"`
+	SourceTitle string    `bson:"source_title,omitempty" json:"source_title"` // denormalized for display
+	PageNumber  int       `bson:"page_number,omitempty" json:"page_number"`
+
+	// Quality scoring for training data curation
+	QualityScore  float64 `bson:"quality_score,omitempty" json:"quality_score"`   // 0.0-1.0 quality rating
+	QualityReason string  `bson:"quality_reason,omitempty" json:"quality_reason"` // explanation for score
+
+	// Context links - IDs of related semantic links that provide context
+	ContextLinkIDs []string `bson:"context_link_ids,omitempty" json:"context_link_ids,omitempty"`
 }
 
-// Condition represents a prerequisite for a relationship to be valid.
+// Condition represents a circumstance under which the relationship is valid.
+// Each condition is itself a bidirectional relationship to the primary link.
 type Condition struct {
-	ConditionType  string `bson:"condition_type" json:"condition_type"`
-	ConditionValue string `bson:"condition_value" json:"condition_value"`
-	Required       bool   `bson:"required" json:"required"`
-	Description    string `bson:"description,omitempty" json:"description,omitempty"`
+	Term            string `bson:"term" json:"term"`                         // "maternal antibody waning"
+	ForwardRelation string `bson:"forward_relation" json:"forward_relation"` // "occurs_when"
+	InverseRelation string `bson:"inverse_relation" json:"inverse_relation"` // "occurs_when" (symmetric)
+	Required        bool   `bson:"required" json:"required"`                 // Is this condition mandatory?
+	Description     string `bson:"description,omitempty" json:"description,omitempty"`
 }
 
 // Contrast explicitly states how a relationship differs from similar ones.

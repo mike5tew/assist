@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"esp-organizer/internal/constants"
 	"esp-organizer/internal/domain/extraction"
 	"esp-organizer/internal/domain/infoin"
 	"esp-organizer/internal/models"
@@ -423,8 +424,11 @@ func processImmunologyChapterWithText(ctx context.Context, batchID, extractedTex
 			"case_studies_count":  len(job.ExtractedData.CaseStudies),
 			"medical_terms_count": len(job.ExtractedData.MedicalTerms),
 			"raw_text_length":     len(job.ExtractedData.RawText),
+			"academic_level":      string(constants.LevelUndergraduate), // Content is graduate level
+			"difficulty":          string(constants.DifficultyMedium),
+			"content_type":        string(constants.ContentTypeChapter),
 		},
-		"tags":       []string{"immunology", "chapter"},
+		"tags":       []string{"immunology", "chapter", "revision"},
 		"created_at": time.Now(),
 		"updated_at": time.Now(),
 	}
@@ -444,13 +448,20 @@ func processImmunologyChapterWithText(ctx context.Context, batchID, extractedTex
 		chapterContent := models.SubjectContent{
 			ID:          insertedID,
 			Domain:      "immunology",
-			ContentType: "chapter",
+			ContentType: string(constants.ContentTypeChapter),
 			Title:       chapterInfo.ChapterTitle,
 			Content:     job.ExtractedData.ChapterContent,
 			Source:      sourceRef, // Use consistent source reference
-			Tags:        []string{"immunology", "chapter"},
-			CreatedAt:   time.Now(),
-			UpdatedAt:   time.Now(),
+			Tags:        []string{"immunology", "chapter", "revision"},
+			Metadata: map[string]interface{}{
+				"case_studies_count":  len(job.ExtractedData.CaseStudies),
+				"medical_terms_count": len(job.ExtractedData.MedicalTerms),
+				"academic_level":      string(constants.LevelUndergraduate),
+				"difficulty":          string(constants.DifficultyMedium),
+				"content_type":        string(constants.ContentTypeChapter),
+			},
+			CreatedAt: time.Now(),
+			UpdatedAt: time.Now(),
 		}
 		storedDocuments = append(storedDocuments, chapterContent)
 	}
@@ -459,15 +470,18 @@ func processImmunologyChapterWithText(ctx context.Context, batchID, extractedTex
 	for _, caseStudy := range job.ExtractedData.CaseStudies {
 		caseStudyDoc := bson.M{
 			"domain":       "immunology",
-			"content_type": "case_study",
+			"content_type": string(constants.ContentTypeCaseStudy),
 			"title":        fmt.Sprintf("Case %s: %s", caseStudy.CaseNumber, caseStudy.Title),
 			"content":      caseStudy.Content,
 			"source":       sourceRef, // Use consistent source reference
 			"metadata": bson.M{
 				"case_number":       caseStudy.CaseNumber,
 				"clinical_findings": caseStudy.ClinicalFindings,
+				"academic_level":    string(constants.LevelPostgraduate),
+				"difficulty":        string(constants.DifficultyHard),
+				"content_type":      string(constants.ContentTypeCaseStudy),
 			},
-			"tags":       append([]string{"immunology", "case_study"}, caseStudy.Tags...),
+			"tags":       append([]string{"immunology", "case_study", "exam_prep"}, caseStudy.Tags...),
 			"created_at": time.Now(),
 			"updated_at": time.Now(),
 		}
@@ -484,14 +498,17 @@ func processImmunologyChapterWithText(ctx context.Context, batchID, extractedTex
 			caseStudyContent := models.SubjectContent{
 				ID:          insertedID,
 				Domain:      "immunology",
-				ContentType: "case_study",
+				ContentType: string(constants.ContentTypeCaseStudy),
 				Title:       fmt.Sprintf("Case %s: %s", caseStudy.CaseNumber, caseStudy.Title),
 				Content:     caseStudy.Content,
 				Source:      sourceRef, // Use consistent source reference
-				Tags:        append([]string{"immunology", "case_study"}, caseStudy.Tags...),
+				Tags:        append([]string{"immunology", "case_study", "exam_prep"}, caseStudy.Tags...),
 				Metadata: map[string]interface{}{
 					"case_number":       caseStudy.CaseNumber,
 					"clinical_findings": caseStudy.ClinicalFindings,
+					"academic_level":    string(constants.LevelPostgraduate),
+					"difficulty":        string(constants.DifficultyHard),
+					"content_type":      string(constants.ContentTypeCaseStudy),
 				},
 				CreatedAt: time.Now(),
 				UpdatedAt: time.Now(),
@@ -646,7 +663,7 @@ func processImmunologyChapterInBackground(ctx context.Context, batchID string, f
 	// For chapter content:
 	chapterDoc := bson.M{
 		"domain":         "immunology",
-		"content_type":   "chapter",
+		"content_type":   string(constants.ContentTypeChapter),
 		"title":          chapterInfo.ChapterTitle,
 		"content":        job.ExtractedData.ChapterContent,
 		"chapter_number": chapterInfo.ChapterNumber,
@@ -655,8 +672,11 @@ func processImmunologyChapterInBackground(ctx context.Context, batchID string, f
 			"case_studies_count":  len(job.ExtractedData.CaseStudies),
 			"medical_terms_count": len(job.ExtractedData.MedicalTerms),
 			"raw_text_length":     len(job.ExtractedData.RawText),
+			"academic_level":      string(constants.LevelUndergraduate),
+			"difficulty":          string(constants.DifficultyMedium),
+			"content_type":        string(constants.ContentTypeChapter),
 		},
-		"tags":       []string{"immunology", "chapter"},
+		"tags":       []string{"immunology", "chapter", "exam_prep"},
 		"created_at": time.Now(),
 		"updated_at": time.Now(),
 	}
@@ -676,7 +696,7 @@ func processImmunologyChapterInBackground(ctx context.Context, batchID string, f
 		chapterContent := models.SubjectContent{
 			ID:          insertedID,
 			Domain:      "immunology",
-			ContentType: "chapter",
+			ContentType: string(constants.ContentTypeChapter),
 			Title:       chapterInfo.ChapterTitle,
 			Content:     job.ExtractedData.ChapterContent,
 			Source: models.SourceReference{
@@ -686,10 +706,13 @@ func processImmunologyChapterInBackground(ctx context.Context, batchID string, f
 				ChapterTitle:  chapterInfo.ChapterTitle,
 				UploadID:      batchID,
 			},
-			Tags: []string{"immunology", "chapter"},
+			Tags: []string{"immunology", "chapter", "exam_prep"},
 			Metadata: map[string]interface{}{
 				"case_studies_count":  len(job.ExtractedData.CaseStudies),
 				"medical_terms_count": len(job.ExtractedData.MedicalTerms),
+				"academic_level":      string(constants.LevelUndergraduate),
+				"difficulty":          string(constants.DifficultyMedium),
+				"content_type":        string(constants.ContentTypeChapter),
 			},
 			CreatedAt: time.Now(),
 			UpdatedAt: time.Now(),
@@ -700,7 +723,7 @@ func processImmunologyChapterInBackground(ctx context.Context, batchID string, f
 	for _, caseStudy := range job.ExtractedData.CaseStudies {
 		caseStudyDoc := bson.M{
 			"domain":       "immunology",
-			"content_type": "case_study",
+			"content_type": string(constants.ContentTypeCaseStudy),
 			"title":        fmt.Sprintf("Case %s: %s", caseStudy.CaseNumber, caseStudy.Title),
 			"content":      caseStudy.Content,
 			"source": bson.M{
@@ -714,8 +737,11 @@ func processImmunologyChapterInBackground(ctx context.Context, batchID string, f
 				"case_number":       caseStudy.CaseNumber,
 				"clinical_findings": caseStudy.ClinicalFindings,
 				"parent_chapter_id": chapterResult.InsertedID,
+				"academic_level":    string(constants.LevelPostgraduate),
+				"difficulty":        string(constants.DifficultyHard),
+				"content_type":      string(constants.ContentTypeCaseStudy),
 			},
-			"tags":       append([]string{"immunology", "case_study"}, caseStudy.Tags...),
+			"tags":       append([]string{"immunology", "case_study", "exam_prep"}, caseStudy.Tags...),
 			"created_at": time.Now(),
 			"updated_at": time.Now(),
 		}
@@ -767,7 +793,12 @@ func processImmunologyChapterInBackground(ctx context.Context, batchID string, f
 				"chapter_number": chapterInfo.ChapterNumber,
 				"upload_id":      batchID,
 			},
-			"tags":       append([]string{"immunology", "medical_term", term.Category}, term.Tags...),
+			"tags": append([]string{"immunology", "medical_term", "exam_prep", term.Category}, term.Tags...),
+			"metadata": bson.M{
+				"content_type":   string(constants.ContentTypeDefinition),
+				"academic_level": string(constants.LevelUndergraduate),
+				"difficulty":     string(constants.DifficultyMedium),
+			},
 			"created_at": time.Now(),
 			"updated_at": time.Now(),
 		}
@@ -783,7 +814,7 @@ func processImmunologyChapterInBackground(ctx context.Context, batchID string, f
 			termContent := models.SubjectContent{
 				ID:          termID,
 				Domain:      "immunology",
-				ContentType: "medical_term",
+				ContentType: string(constants.ContentTypeDefinition),
 				Title:       term.Term,
 				Content:     term.Definition,
 				Source: models.SourceReference{
@@ -792,10 +823,13 @@ func processImmunologyChapterInBackground(ctx context.Context, batchID string, f
 					ChapterNumber: chapterInfo.ChapterNumber,
 					UploadID:      batchID,
 				},
-				Tags: append([]string{"immunology", "medical_term", term.Category}, term.Tags...),
+				Tags: append([]string{"immunology", "medical_term", "exam_prep", term.Category}, term.Tags...),
 				Metadata: map[string]interface{}{
-					"term":     term.Term,
-					"category": term.Category,
+					"term":           term.Term,
+					"category":       term.Category,
+					"content_type":   string(constants.ContentTypeDefinition),
+					"academic_level": string(constants.LevelUndergraduate),
+					"difficulty":     string(constants.DifficultyMedium),
 				},
 				CreatedAt: time.Now(),
 				UpdatedAt: time.Now(),

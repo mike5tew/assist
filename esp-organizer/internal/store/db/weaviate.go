@@ -465,11 +465,16 @@ func CreateSemanticLinksClass(ctx context.Context) error {
 		Class:      "SemanticLinks",
 		Vectorizer: vectorizerName,
 		Properties: []*wvmodels.Property{
-			// 🔑 BOTH fields are indexed and searchable
+			// 🔑 PRIMARY VECTORIZATION FIELD - the complete, citable fact
+			{Name: "statement", DataType: []string{"text"}, IndexSearchable: boolPtr(true)},
+
+			// 🔑 GRAPH TRAVERSAL - terms and bidirectional relations
 			{Name: "source_term", DataType: []string{"text"}, IndexSearchable: boolPtr(true)},
 			{Name: "target_term", DataType: []string{"text"}, IndexSearchable: boolPtr(true)},
-			{Name: "relation_type", DataType: []string{"text"}, IndexFilterable: boolPtr(true)},
-			{Name: "context", DataType: []string{"text"}, IndexSearchable: boolPtr(true)},
+			{Name: "forward_relation", DataType: []string{"text"}, IndexFilterable: boolPtr(true)},
+			{Name: "inverse_relation", DataType: []string{"text"}, IndexFilterable: boolPtr(true)},
+			{Name: "relation_type", DataType: []string{"text"}, IndexFilterable: boolPtr(true)}, // Deprecated, kept for compatibility
+			{Name: "context", DataType: []string{"text"}, IndexSearchable: boolPtr(true)},       // Legacy field
 
 			// 🆕 RELATIVE ADDRESSING: Properties that enable dynamic hierarchy computation
 			{Name: "source_term_generality", DataType: []string{"number"}, IndexFilterable: boolPtr(true)}, // 0.0-1.0
@@ -481,8 +486,11 @@ func CreateSemanticLinksClass(ctx context.Context) error {
 			{Name: "is_parent_of", DataType: []string{"text[]"}, IndexFilterable: boolPtr(true)},
 			{Name: "is_child_of", DataType: []string{"text[]"}, IndexFilterable: boolPtr(true)},
 
-			{Name: "context", DataType: []string{"text"}, IndexSearchable: boolPtr(true)},
+			// Conditions stored as JSON string for flexibility
+			{Name: "conditions_json", DataType: []string{"text"}, IndexFilterable: boolPtr(false)},
+
 			{Name: "confidence", DataType: []string{"number"}, IndexFilterable: boolPtr(true)},
+			{Name: "domain", DataType: []string{"text"}, IndexFilterable: boolPtr(true)},
 			{Name: "created_at", DataType: []string{"date"}, IndexFilterable: boolPtr(true)},
 			{Name: "updated_at", DataType: []string{"date"}, IndexFilterable: boolPtr(true)},
 		},

@@ -91,5 +91,31 @@ export const apiClient = {
       console.error('API Response Error:', error);
       throw error;
     }
+  },
+
+  put: async <T>(endpoint: string, data: any): Promise<T> => {
+    const fullUrl = `${API_BASE}${endpoint}`;
+    logRequest(fullUrl);
+    
+    try {
+      const response = await axios.put<T>(fullUrl, data);
+      return response.data;
+    } catch (error: any) {
+      console.error('API Response Error:', error);
+      throw error;
+    }
+  },
+
+  delete: async <T>(endpoint: string): Promise<T> => {
+    const fullUrl = `${API_BASE}${endpoint}`;
+    logRequest(fullUrl);
+    
+    try {
+      const response = await axios.delete<T>(fullUrl);
+      return response.data;
+    } catch (error: any) {
+      console.error('API Response Error:', error);
+      throw error;
+    }
   }
 };

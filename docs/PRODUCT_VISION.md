@@ -82,6 +82,57 @@ A skill development and tracking tool designed for competency-based training and
 #### Related Internal Tool: The Skills Collector
 The content for Skills Tree Rising is managed via a dedicated internal authoring tool known as the **Skills Collector** (`skills-map-platform`). This application allows team members and curriculum designers to visually create skills, define relationships, build skill trees, and associate them with courses. It is the content management system (CMS) for our skills-based products.
 
+---
+
+### Skills Map Communication Strategy: The Sticker Album Analogy
+
+**The Problem:**
+When people see the Skills Map, they see a complex system and think: *"I have to understand and populate ALL of this?"* - and they shut down.
+
+**The Solution: Frame It As a Sticker Album**
+
+| Aspect | Sticker Album | Skills Map |
+|--------|---------------|------------|
+| **Entry point** | Buy a pack, stick what you get | Demonstrate skills as they come up |
+| **Awareness** | Empty spaces show what's missing | Framework shows gaps without demanding completion |
+| **Progress** | Celebrate what you've collected | Celebrate demonstrated competencies |
+| **Pressure** | None - it's a hobby | None - it's a developmental picture |
+| **Completionism** | Optional obsession, not requirement | Mastery emerges, isn't mandated |
+| **Structure** | Pages organise by team/category | Domains organise by competency area |
+
+**The Key Psychological Shift:**
+- **Complex system view**: "Here's everything you need to master" → **overwhelming**
+- **Sticker album view**: "Here's where your achievements go as you collect them" → **motivating**
+
+Same data structure. Completely different emotional response.
+
+**What Makes It Work:**
+1. **No empty-page shame** - A half-filled album is exciting ("look what I've got!"), not shameful ("look what's missing")
+2. **Rare stickers are special** - Advanced competencies become achievements to celebrate, not gaps to fill
+3. **Everyone's album is different** - Validates different learning paths
+4. **The structure reveals opportunity** - "Oh, I'm one sticker away from completing this page" = natural goal-setting
+
+**Usage Guidance:**
+- For formal education contexts, use "developmental portfolio" as the label with sticker album as the *explanatory metaphor*
+- Some audiences will resist anything that sounds like gamification of children
+- The analogy works best when explaining the system to parents, students, and teachers - not necessarily in the UI itself
+
+---
+
+### 2. The Insight Product (Integrated Markbook with Profile Builder)
+A psychological diagnostic tool that bridges the gap between raw data ("Safe Hands") and pedagogical insight ("Smart Minds").
+
+**Core Features**:
+-   **Passive Pilot UI**: A spatial seating-plan interface for "eyes-up" logging of student competency and character.
+    - **Temporal Markers**: High-speed recording of objective "Behavior Markers" (2 Positive / 2 Negative) to capture frequency and duration.
+    - **Profile Sliders**: 15 Sensitivity Spectrums for student calibration, requiring justification notes for downward shifts.
+    - **Rotational Sampling**: A focus-mode for tracking ~3 students per hour to manage teacher cognitive load.
+-   **Recursive Mastery Interface**: A logging system built on the premise that **"all skills have context and all emotions require skill to master."**
+-   **ETP Profile Builder**: Longitudinal mapping of behavioral "Tells" to specific Emotional Trigger Points (ETPs) like risk tolerance and social gravity.
+-   **CHISG Integrity Layer**: A knowledge graph that validates diagnostic claims, preventing AI hallucinations by mapping structural analogies between student behavior and pedagogical science.
+
+---
+
 ### 3. Teacher Development 2.0
 -   **Collaborative Skill Mapping**: Teachers use the same Skills Map as students to model their own professional growth, creating peer-led development communities.
 -   **Teachers as Innovators**: The platform provides tools for teachers to design and share their own effective learning exercises.

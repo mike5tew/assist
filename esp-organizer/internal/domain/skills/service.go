@@ -2,6 +2,7 @@ package skills
 
 import (
 	"context"
+	"encoding/json"
 	"esp-organizer/internal/aws/llm"
 	"esp-organizer/internal/domain/filters" // Add an import alias to avoid namespace collision
 	"esp-organizer/internal/models"
@@ -75,6 +76,7 @@ func (s *SkillService) CreateSemanticLink(ctx context.Context, link models.Seman
 }
 
 // StoreSemanticLinks vectorizes and stores a batch of semantic links.
+// Uses the statement field as the primary vectorization target.
 func (s *SkillService) StoreSemanticLinks(ctx context.Context, links []models.SemanticLink) error {
 	if s.weaviateClient == nil {
 		return fmt.Errorf("weaviate client not available")
@@ -84,9 +86,13 @@ func (s *SkillService) StoreSemanticLinks(ctx context.Context, links []models.Se
 	}
 
 	for _, link := range links {
-		// Vectorize the relationship
-		embeddingText := fmt.Sprintf("Relationship: %s is a %s of %s. Context: %s",
-			link.SourceTerm, link.RelationType, link.TargetTerm, link.Context)
+		// Build embedding text from statement (the full citable fact)
+		// If no statement provided, fall back to legacy format
+		embeddingText := link.Statement
+		if embeddingText == "" {
+			embeddingText = fmt.Sprintf("Relationship: %s %s %s. Context: %s",
+				link.SourceTerm, link.ForwardRelation, link.TargetTerm, link.Context)
+		}
 		vector, err := s.llmClient.GenerateEmbedding(embeddingText)
 		if err != nil {
 			log.Printf("Warning: failed to generate embedding for link '%s -> %s': %v",
@@ -94,16 +100,26 @@ func (s *SkillService) StoreSemanticLinks(ctx context.Context, links []models.Se
 			continue
 		}
 
-		// Prepare properties for Weaviate
+		// Serialize conditions to JSON for storage
+		conditionsJSON := "[]"
+		if len(link.Conditions) > 0 {
+			if jsonBytes, err := json.Marshal(link.Conditions); err == nil {
+				conditionsJSON = string(jsonBytes)
+			}
+		}
+
+		// Prepare properties for Weaviate - include new statement-centric fields
 		properties := map[string]interface{}{
-			"source_term":     link.SourceTerm,
-			"target_term":     link.TargetTerm,
-			"source_mongo_id": link.SourceID.Hex(),
-			"target_mongo_id": link.TargetID.Hex(),
-			"relation_type":   link.RelationType,
-			"context":         link.Context,
-			"confidence":      link.Confidence,
-			"domain":          link.Domain,
+			"statement":        link.Statement,
+			"source_term":      link.SourceTerm,
+			"target_term":      link.TargetTerm,
+			"forward_relation": link.ForwardRelation,
+			"inverse_relation": link.InverseRelation,
+			"relation_type":    link.RelationType, // Legacy compatibility
+			"context":          link.Context,
+			"conditions_json":  conditionsJSON,
+			"confidence":       link.Confidence,
+			"domain":           link.Domain,
 		}
 
 		// Store in Weaviate

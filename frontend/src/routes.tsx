@@ -9,8 +9,8 @@ import ErrorPage from './components/ErrorPage';
 import ImmunologyPage from './pages/ImmunologyPage';
 import ImmunologyUpload from './components/ImmunologyUpload';
 import SemanticQuery from './components/SemanticQuery';
+import SemanticLinkExtractor from './components/SemanticLinkExtractor';
 import AIChat from './components/AIChat';
-import StudyAreaSelector from './components/StudyAreas/StudyAreaSelector';
 import StudyAreaGCSEPage from './components/StudyAreas/StudyAreaGCSE';
 import StudyAreaCivilEngineeringPage from './components/StudyAreas/StudyAreaCivilEng';
 import AdminPanel from './components/AdminPanel';
@@ -33,6 +33,7 @@ const AppRoutes = () => {
         <Route path="immunology" element={<ImmunologyPage />} />
         <Route path="immunology-upload" element={<ImmunologyUpload />} />
         <Route path="gcse/*" element={<StudyAreaGCSEPage />} />
+        <Route path="GCSE-upload" element={<SemanticLinkExtractor />} />
         <Route path="civil-engineering/*" element={<StudyAreaCivilEngineeringPage />} />
 
         {/* Admin */}

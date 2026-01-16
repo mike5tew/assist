@@ -256,3 +256,14 @@ func (sn *SymbolNormalizer) CreateSearchVariants(term string) []string {
 
 	return result
 }
+
+// Exported convenience helpers for other packages
+// NormalizeText returns a normalized term using the SymbolNormalizer
+func NormalizeText(text string) string {
+	return NewSymbolNormalizer().NormalizeText(text)
+}
+
+// NormalizeForVectorization returns a lightly-normalized text suited for embedding generation
+func NormalizeForVectorization(text string) string {
+	return NewSymbolNormalizer().NormalizeForVectorization(text)
+}

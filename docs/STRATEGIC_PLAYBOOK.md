@@ -44,15 +44,24 @@
    - Built working prototypes that actually work
    - Understand teacher workflows, not idealized education
 
-2. **You Think in Systems**
-   - One coherent platform, not ten features
-   - Skills map connects everything
-   - Architecture that grows, not rigid
+2. **The Passive Pilot UI & AISA Methodology**
+   - High-speed objective marker logging for eyes-up teaching.
+   - AI Solutions Architecture (AISA) that bridges the pedagogical "Smart Minds" logic with administrative "Safe Hands" data.
+   - Built on CHISG—a universal Knowledge Graph that eliminates AI hallucinations by mapping structural analogies across domains.
+
+3. **HumanOS Integration**
+   - A psychological diagnostic engine that maps real-time stimuli to behavioral output.
+   - Moves beyond "tracking grades" to "mapping the mental model."
+   - Bridges the gap between social-emotional health and academic attainment.
 
 3. **You Translate Psychological Insight to Product**
    - Six frameworks embedded in system
    - Each feature serves human need, not technical novelty
    - Teachers feel superhuman, not replaced
+
+4. **Certified AI Solutions Architect (AISA Endorsement)**
+   - Formally endorsed by leading practitioners for "mastery of enterprise-grade AI solutions."
+   - Ability to bridge the gap between high-level educational strategy and robust technical implementation (orchestration, scalability, responsible AI).
 
 ---
 

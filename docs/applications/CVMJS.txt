@@ -1,0 +1,479 @@
+{
+  "CV": {
+    "personalDetails": {
+      "name": "Michael Stewart",
+      "address": "69 Dovecote Road, Brosgrove B61 7BP",
+      "phone": "07525 359661",
+      "email": "michael.stewart@espthinking.co.uk",
+      "dateOfBirth": "17/12/1973",
+      "nationality": "British",
+      "maritalStatus": "Divorced",
+      "drivingLicence": "Full UK",
+      "linkedin": "https://www.linkedin.com/in/michael-stewart-espthinking/",
+      "facebook": "https://www.facebook.com/ESPThinking"
+    },
+    "personalSummary": "Innovative AI Solutions Architect & Deep Tech Visionary.  A highly driven and uniquely skilled problem-solver with a proven track record of synthesizing complex scientific and business concepts into impactful solutions. My core strength lies in connecting disparate 'dots' to unlock breakthroughs, demonstrated by:  Deep Scientific Acumen: A Biochemistry BSc and Biophysics PhD research (with two Royal Society Fellows), leading to independent conceptualization of a novel cancer therapy and a CO2 sequestration method (biotechnology for carbon-negative fuels/food) – ideas that are now gaining traction in advanced research.  Strategic Business & EdTech Leadership: Scaled a company's turnover from £300,000 to £3 million in five years through strategic project development and process streamlining. Applied this same innovative methodology to found an EdTech venture, developing AI-powered learning systems to address skills gaps.  Emerging AI Expertise: Recently completed a rigorous AI Solutions Architecture program, earning an exceptional endorsement for mastery of AI fundamentals and innovative application (e.g., AI-powered teaching strategies).  I am now committed to leveraging this rare blend of scientific foresight, entrepreneurial drive, and AI architecture skills to make a transformative impact, particularly in areas requiring integrated, intelligent solutions.",
+    "houseHistory": [
+      {
+        "address": "69 Dovecote Road, Brosgrove B61 7BP",
+        "from": "10/15",
+        "to": ""
+      },
+      {
+        "address": "33 Buckleys Green Alvechurch B33 7NG",
+        "from": "2/12",
+        "to": "10/15"
+      },
+      {
+        "address": "Flat 15, Craft Court, Railway Walk, Bromsgrove B60 3GW",
+        "from": "",
+        "to": ""
+      },
+      {
+        "address": "Flat 5, Thornloe Place, Thorneloe Walk, Worcester WR1 3JY",
+        "from": "",
+        "to": ""
+      }
+    ],
+    "education": [
+      {
+        "course": "AI Solutions Architect",
+        "from": "Nov 2024",
+        "to": "Feb 2025",
+        "institution": "Elvtr",
+        "details": "Endorsement: I recently designed and led an AI Solutions Architecture program, that Michael enrolled for. He quickly stood out as one of the most thoughtful and capable practitioners that I’ve worked with.  Michael consistently demonstrated a strong grasp of AI architecture fundamentals, along with a highly effective, real-world approach to designing and delivering enterprise-grade AI solutions. He showed mastery of all key concepts in the program—from model evaluation and orchestration to scalability and responsible AI principles.  Additionally, I am deeply impressed with the innovative AI-powered teaching strategy and framework he developed prior-to and during the course. It’s an outstanding example of how AI can be applied not only to solve technical problems, but also to transform the way people learn. His approach is intuitive, adaptive, and insightful—providing personalized, efficient training that supports both advanced learners and those with unique challenges.  Michael brings together technical depth, creativity, and empathy in a way that’s rare. I’m confident he will make a significant impact in any AI or education-focused initiative he chooses to pursue."
+      },
+      {
+        "course": "Science Teacher GTP (inc QTS)",
+        "from": "Sep 2011",
+        "to": "Aug 2012",
+        "institution": "Titan Partnership, Birmingham",
+        "details": ""
+      },
+      {
+        "course": "Biophysics PhD",
+        "from": "Sep 1996",
+        "to": "Mar 2000",
+        "institution": "National Institute for Medical Research",
+        "details": "A three-year project studying the molecular mechanism of smooth muscle contraction under a fellow of the Royal Society.  Sadly, three years of the project were completed but the thesis was never finished due to financial issues."
+      },
+      {
+        "course": "Biochemistry BSc 2:1",
+        "from": "Sep 1993",
+        "to": "Aug 1996",
+        "institution": "University College London",
+        "details": "My final year project was in Bioinformatics"
+      },
+      {
+        "course": "A Levels - Chemistry(C), Physics(D), Maths(D)",
+        "from": "Sep 1990",
+        "to": "Jul 1992",
+        "institution": "Epsom and Ewell High School",
+        "details": ""
+      },
+      {
+        "course": "GCSE - English Lit, Lang A,B",
+        "from": "Aug 1988",
+        "to": "Jul 1990",
+        "institution": "Epsom and Ewell High School",
+        "details": ""
+      }
+    ],
+    "workExperience": [
+      {
+        "from": "Jan 2016",
+        "to": "Present",
+        "company": "ESP Thinking Ltd",
+        "address": "69 Dovecote Road, Brosgrove B61 7BP",
+        "role": "Director",
+        "details": "Founded and led an EdTech venture dedicated to solving core challenges in education through innovative system development. Designed and implemented two flagship applications: ESP Seating (optimizing timetables, seating, and registers for efficiency and security) and ESP Behaviour Lite (pioneering gamified behavior management). Applied a deep problem-solving methodology to develop AI-powered learning strategies and frameworks, aligning with current efforts to address the skills gap.",
+        "placements": [],
+        "Referee": [
+          {
+            "contact": {
+              "name": "Judy Thompson",
+              "position": "Founder, Thompson Language Centre, Ontario, Canada",
+              "relationship": "Collaborator",
+              "email": "judythompson@hotmail.com",
+              "phone": ""
+}
+          }
+        ]
+      },
+      {
+        "from": "09/24",
+        "to": "12/11/2025",
+        "company": "Sandunn Projects Ltd",
+        "address": "Plot 1 Meeting Ln, Brierley Hill DY5 3LB",
+        "role": "Electrical Labourer",
+        "details": "All aspects of electrical labouring including cable pulling, cable tray installation, trunking and conduit installation, and general site maintenance.",
+        "placements": [],
+        "Referee": [
+          {
+            "contact": {
+              "name": "Rob Sandall",
+              "position": "Managing Director",
+              "relationship": "Managing Director",
+              "email": "rob.sandall@sandunnprojects.co.uk",
+              "phone": "01384 77880"
+            }
+          }
+        ]
+      },
+      {
+        "from": "13/3/23",
+        "to": "31/1/24",
+        "company": "Birmingham University, Interactive Studies Unit",
+        "address": "90 Vincent drive, Edgbaston, Birmingham B15 2TT",
+        "role": "ISU Administrator",
+        "details": "This role was within the Interactive Skills Unit supported the use of role players in communication skill development across the ICS.  This can be in a class setting, exams or individual coaching.  I also provided support for the interprofessional education steering group.  This was a high-paced environment where I aimed to help the team in every aspect, including stepping in as a role player and a facilitator.",
+        "placements": [],
+        "Referee": [
+          {
+            "contact": {
+              "name": "Karen Reynolds",
+              "position": "Administrative Manager",
+              "relationship": "Line Manager",
+              "email": "k.reynolds@bham.ac.uk",
+              "phone": "+44 (0)121 414 7940"
+}
+          }
+        ]
+      },
+      {
+        "from": "11/22",
+        "to": "10/3/23",
+        "company": "Pertemps",
+        "address": "Bridge House, 22 Bromsgrove Road, Redditch, B98 0SD",
+        "role": "Temporary postal worker",
+        "details": "Temping work while I look for a change in career doing sorting and delivery work.",
+        "placements": [],
+        "Referee": [
+          {
+            "contact": {
+              "name": "Florentina Alexandru",
+              "position": "Placement Coordinator",
+              "relationship": "Manager",
+              "email": "florentina.alexandru@pertemps.co.uk",
+              "phone": "01527 68585"
+}
+          }
+        ]
+      },
+      {
+        "from": "04/22",
+        "to": "11/22",
+        "company": "Academics Ltd",
+        "address": "County House, St Mary's St, Worcester WR1 1HB",
+        "role": "Cover teacher",
+        "details": "Short-term cover contracts in the Redditch and Kidderminster areas teaching key stages 3-5.",
+        "placements": [],
+        "Referee": [
+          {
+            "contact": {
+              "name": "Claire Gill",
+              "position": "Placement Coordinator",
+              "relationship": "Manager",
+              "email": "clairegill883@icloud.com",
+              "phone": "01905 20600"
+}
+          }
+        ]
+      },
+      {
+        "from": "28/07/22",
+        "to": "9/9/22",
+        "company": "Pertemps Ltd",
+        "address": "Bridge House, 22 Bromsgrove Road, Redditch, B98 0SD",
+        "role": "Warehouse operator",
+        "details": "",
+        "placements": [],
+        "Referee": [
+          {
+            "contact": {
+              "name": "Florentina Alexandru",
+              "position": "Placement Coordinator",
+              "relationship": "Manager",
+              "email": "",
+              "phone": "01527 68585"
+}
+          }
+        ]
+      },
+      {
+        "from": "04/22",
+        "to": "07/22",
+        "company": "Ridgeway Secondary School",
+        "address": "Evesham Rd, Astwood Bank, Redditch B96 6BD",
+        "role": "Science teacher",
+        "details": "Science KS3-4 covering long terms sickness",
+        "placements": [],
+        "Referee": [
+          {
+            "contact": {
+              "name": "Tracy Dodd",
+              "position": "Head of key stage",
+              "relationship": "Line Manager",
+              "email": "   ",
+              "phone": "01527 892867"
+}
+          }
+        ]
+      },
+      {
+        "from": "11/21",
+        "to": "04/22",
+        "company": "Pioneer People Ltd",
+        "address": "26 High St, Bromsgrove B61 8HQ",
+        "role": "Cover Teacher (Walkwood Agency)",
+        "details": "",
+        "placements": [],
+        "Referee": [
+          {
+            "contact": {
+              "name": "James Whelton",
+              "position": "Placement Coordinator",
+              "relationship": "Manager",
+              "email": "",
+              "phone": "0121 798 0008"
+}
+          }
+        ]
+      },
+      {
+        "from": "11/21",
+        "to": "04/22",
+        "company": "Walkwood Middle School",
+        "address": "Feckenham Rd, Headless Cross, Redditch B97 5AQ",
+        "role": "Science and Humanities Teacher",
+        "details": "Covering long term sickness",
+        "placements": [],
+        "Referee": [
+          {
+            "contact": {
+              "name": "Paul Jenkin",
+              "position": "Head of Science",
+              "relationship": "Line Manager",
+              "email": "    ",
+              "phone": "01527 543361"
+}
+          }
+        ]
+      },
+      {
+        "from": "01/19",
+        "to": "12/19",
+        "company": "The Education Network",
+        "address": "40, Vicarage Rd, Birmingham B15 3EZ",
+        "role": "Cover Teacher",
+        "details": "",
+        "placements": [],
+        "Referee": [
+          {
+            "contact": {
+              "name": "Harry Chase",
+              "position": "Placement Coordinator",
+              "relationship": "Manager",
+              "email": "    ",
+              "phone": "0121 423 8000"
+}
+          }
+        ]
+      },
+      {
+        "from": "09/19",
+        "to": "12/19",
+        "company": "Eden Boys East",
+        "address": "441 Alum Rock Rd, Birmingham B8 3DT",
+        "role": "Science/PE Teacher",
+        "details": "Short-term cover work at an Islamic faith School.  Another lovely learning experience with a great bunch of enthusiastic lads.  Privileged enough to be presented with a signed set of boxing gloves on leaving.",
+        "placements": [],
+        "Referee": [
+          {
+            "contact": {
+              "name": "Luke Reeves",
+              "position": "Head of Science",
+              "relationship": "Line Manager",
+              "email": "    ",
+              "phone": "    "
+}
+          }
+        ]
+      },
+      {
+        "from": "Jan 2019",
+        "to": "Jul 2019",
+        "company": "Brimingham Ormiston Academy",
+        "address": "1 Grosvenor Street, Birmingham, B4 7QD",
+        "role": "Science Teacher",
+        "details": "Teaching key stage four Science in a performing arts school.  Definitely, a position where you have to be adaptable and think outside the box.  Besides writing scripts to learn parts of the curriculum, I also wrote a piece to be able to learn organic chemistry to the sound of music.",
+        "placements": [],
+        "Referee": [
+          {
+            "contact": {
+              "name": "John Reilly",
+              "position": "Head of Science",
+              "relationship": "Line Manager",
+              "email": "    ",
+              "phone": "0121 359 9300"
+}
+          }
+        ]
+      },
+      {
+        "from": "01/2015",
+        "to": "04/2016",
+        "company": "Tudor Grange Academy",
+        "address": "Dingle Lane, Solihull B91 3PD",
+        "role": "Science Teacher",
+        "details": "Teaching keystages 3-4.  Predominantly part-time while working on applications.  Received a commendation for my teaching standards.",
+        "placements": [],
+        "Referee": [
+          {
+            "contact": {
+              "name": "D Turner",
+              "position": "Head of School",
+              "relationship": "Line Manager",
+              "email": "    ",
+              "phone": "0121 705 5100"
+}
+          }
+        ]
+      },
+      {
+        "from": "09/2013",
+        "to": "12/2014",
+        "company": "Lordswood Boys School",
+        "address": "Hagley Road • Harborne • Birmingham • B17 8BJ",
+        "role": "Science Teacher",
+        "details": "Teaching science KS3-4 and Physics to KS5 in an inner-city,  These were a great bunch of students to teach and you had to work hard to get their respect and attention.",
+        "placements": [],
+        "Referee": [
+          {
+            "contact": {
+              "name": "Rupinder Kaur",
+              "position": "Head of Science",
+              "relationship": "Line Manager",
+              "email": "r.kaur@lordswoodtrust.co.uk",
+              "phone": ""
+}
+
+          }
+        ]
+      },
+      {
+        "from": "Sep 2012",
+        "to": "Aug 2013",
+        "company": "Kenilworth School",
+        "address": "Leyes Lane, Kenilworth, Warwickshire, CV8 2DA",
+        "role": "Science Teacher",
+        "details": "NQT Year teaching key stage 3-4 science in an OFSTED outstanding rated school.  I was working in the chemistry department which was amazing and from which I learned a great deal.",
+        "placements": [],
+        "Referee": [
+          {
+            "contact": {
+              "name": "Robert Oldcorn",
+              "position": "Head of Chemistry",
+              "relationship": "Line Manager",
+              "email": "robbioldcorn@yahoo.co.uk",
+              "phone": ""
+}
+          }
+        ]
+      },
+      {
+        "from": "Sep 2010",
+        "to": "Aug 2012",
+        "company": "St Georges School, Edgbaston",
+        "address": "31 Calthorpe Rd, Birmingham B15 1RX",
+        "role": "Science Teacher",
+        "details": "Taught science from key stage 2 right through to A-level physics in key stage 5.  This gave me a real overview of the education system and science from which I learned a huge amount.",
+        "placements": [],
+        "Referee": [
+          {
+            "contact": {
+              "name": "Jane Thomas",
+              "position": "Head of Science",
+              "relationship": "Line Manager",
+              "email": "thomasj@sgse.co.uk",
+              "phone": ""
+}
+          }
+        ]
+      },
+      {
+        "from": "Jul 2000",
+        "to": "Aug 2010",
+        "company": "David Manners Limited",
+        "address": "10 High Street, Oldbury, West Midlands, B69 4DA",
+        "role": "Director",
+        "details": "Started at the company on various small projects (David Manners is a classic car parts supplier based in the West Midlands).  Took on a management position in when one of the companies (Abingdon MG Parts Ltd) looked like it was going to close as it was losing money on a turnover of around 230K.  We subsequently managed to get this up to around £3 million in five years.  The group consisted of five companies and has over 50 employees. I was a director of two of these (Abingdon MG and SFT MX5 Parts) for over five years.  When SFT was first purchased I had the whole stock (around £90K at cost and over 300 part lines) booked in, warehoused, and suppliers set up within the first week. Catalogues and a new website were created within the first month.",
+        "placements": [],
+        "Referee": [
+          {
+            "contact": {
+              "name": "David Manners",
+              "position": "CEO",
+              "relationship": "Line Manager",
+              "email": "dmanners@davidmanners.co.uk",
+              "phone": ""
+}
+          }
+        ]
+      },
+      {
+        "from": "Jan 2000",
+        "to": "July 2000",
+        "company": "Harvey Project",
+        "address": "Wayne State University, Detroit",
+        "role": "Content Producer",
+        "details": "This role involved producing animations and distance learning material for an online physiology resource called the Harvey project. This was really a very early version of Wikipedia in that material was put online which was open to anyone for feedback and improvement. Unfortunately, the funding for this project dried up soon after my joining it but I did get the opportunity to give a presentation to a group of professors from across the U.S. at Stanford University on the teaching of Physiology on the web.",
+        "placements": [],
+        "Referee": [
+          {
+            "contact": {
+              "name": "Prof. Robert S. Stephenson",
+              "position": "Project Manager",
+              "relationship": "Line Manager",
+              "email": "",
+              "phone": ""
+}
+          }
+        ]
+      }
+    ],
+    "dbsCert": {
+      "updateDate": "26/10/2021",
+      "certNumber": "001755820981",
+      "qtsNumber": "10/82800"
+    },
+    "Publications": [
+      {
+        "title": "Domain assignment for protein structures using a consensus approach: Characterization and analysis",
+        "date": "February 1998",
+        "journal": "Protein Science",
+        "volume": "7(2)",
+        "details": "The assignment of domains in protein structures is an important step in the analysis of protein function. We have developed a consensus approach to domain assignment that uses a combination of sequence and structure comparison methods. The method has been applied to a set of 100 protein structures and the results are presented here. The method is shown to be robust and reliable, and the results are consistent with those of other methods. The method is also shown to be sensitive to the choice of parameters, and the results are presented here. The method is shown to be robust and reliable, and the results are consistent with those of other methods.",
+        "pages": "233-242",
+        "authors": "Susan Jones, Michael Stewart, Alex Michie, Mark B. Swindells, Chirstine Orengo, Janet M. Thornton"
+      }
+    ]
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

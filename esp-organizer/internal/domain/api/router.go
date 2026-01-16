@@ -53,11 +53,18 @@ func RegisterRoutes(r *mux.Router, coachService coach.CoachServiceMVP) {
 	apiRouter.HandleFunc("/skills/semantic-query", SemanticQueryHandler).Methods("POST", "OPTIONS")
 	log.Println("✅ Semantic query endpoint registered")
 
-	// Semantic Links API (extract/search/validate)
+	// Semantic Links API (extract/search/validate/export)
 	apiRouter.HandleFunc("/semantic-links/extract", SemanticLinksExtractHandler).Methods("POST", "OPTIONS")
 	apiRouter.HandleFunc("/semantic-links/search", SemanticLinksSearchHandler).Methods("GET", "POST", "OPTIONS")
 	apiRouter.HandleFunc("/semantic-links/validate", SemanticLinksValidateHandler).Methods("POST", "OPTIONS")
-	log.Println("✅ Semantic-links endpoints registered")
+	apiRouter.HandleFunc("/semantic-links/export", SemanticLinksExportHandler).Methods("GET", "OPTIONS")
+	log.Println("✅ Semantic-links endpoints registered (extract/search/validate/export)")
+
+	// Link Types API (vocabulary for relationships)
+	apiRouter.HandleFunc("/link-types", LinkTypesListHandler).Methods("GET", "OPTIONS")
+	apiRouter.HandleFunc("/link-types", LinkTypesCreateHandler).Methods("POST", "OPTIONS")
+	apiRouter.HandleFunc("/link-types/seed", LinkTypesSeedHandler).Methods("POST", "OPTIONS")
+	log.Println("✅ Link-types endpoints registered (list/create/seed)")
 
 	// Existing routes (keep all your current routes)
 	apiRouter.HandleFunc("/sources", GetSourcesHandler).Methods("GET")

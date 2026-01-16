@@ -5,6 +5,13 @@ start:
 	@echo "🚀 Starting React frontend..."
 	npm start
 
+endf:
+# Command to stop the frontend
+endf:
+	@echo "🛑 Stopping React frontend...
+	@lsof -ti:3000 | xargs kill -9 2>/dev/null || echo "No React process found"
+	@echo "🚀 React frontend has stopped."
+
 # Fix connection refused errors
 fix-connection-refused:
 	@echo "🔧 Fixing Connection Refused Errors (Frontend)"

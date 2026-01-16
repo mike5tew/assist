@@ -8,6 +8,7 @@ import DiagnosticViewer from './components/DiagnosticViewer';
 import ImmunologyUpload from './components/ImmunologyUpload';
 import Home from './components/Home';
 import CoachMVPDemo from './components/CoachMVPDemo';
+import SemanticLinkExtractor from './components/SemanticLinkExtractor';
 
 const theme = createTheme({
   palette: {
@@ -16,15 +17,17 @@ const theme = createTheme({
 });
 
 export default function App() {
+  // App is served under '/esp-organizer' inside the main proxy — use basename so direct URLs work
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Router>
+      <Router basename="/esp-organizer">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/upload/immunology" element={<ImmunologyUpload />} />
           <Route path="/diagnostics" element={<DiagnosticViewer />} />
           <Route path="/coach-mvp-demo" element={<CoachMVPDemo />} />
+          <Route path="/semantic-links/extract" element={<SemanticLinkExtractor />} />
           <Route path="/*" element={<AppRoutes />} />
         </Routes>
       </Router>

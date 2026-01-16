@@ -104,6 +104,29 @@
 - Curator throughput: 50+ links/hour for experienced users
 - Data quality: < 5% vague relationships in final dataset
 
+### Priority 3: Integrated Insight Markbook (Skills Map + ETP Profile Builder)
+**Strategic Context**: Sprung from the drb Ignite business case (Jan 2026). A tool that combines "Safe Hands" (attainment data) with "Smart Minds" (pedagogical logic) using the AISA methodology.
+
+**Core Vision**:
+- **Skills Markbook (The Compass)**: Real-time "Sticker Album" tracking of competencies. 
+- **HumanOS Engine (The Map)**: Using "Recursive Mastery" logic (Stimulus → ETP → Skill → Behaviour) to explain *why* students succeed or fail in specific contexts.
+- **Goal**: Workload displacement (5x faster than marking) while providing headteacher-level strategic insights through CHISG Knowledge Graph integrity.
+
+**Implementation Plan (4-week sprint)**:
+- [ ] **Week 1: Unified Logic Architecture**
+  - [ ] Implement "Recursive Mastery" schema: Link Skills to the ETPs they master.
+  - [ ] Map the "Behavioral Pipeline" (Stimulus -> Mechanism -> ETP -> Response) into the MySQL backend.
+- [ ] **Week 2: Profile Builder & Passive Pilot UI**
+  - [ ] Implement the "2 Positive / 2 Negative" Temporal Marker system for objective behavior logging.
+  - [ ] Build the 15-spectrum Sensitivity Profile sliders with mandatory justification notes for downward shifts.
+  - [ ] Implement spatial memory (seating plan) interface for high-speed logging.
+- [ ] **Week 3: CHISG Integrity Layer**
+  - [ ] Create the CHISG validation layer to prevent AI diagnostic "hallucinations."
+  - [ ] Cross-link teacher observations with the CHISG Knowledge Graph.
+- [ ] **Week 4: Strategic Analytics (MAT Dashboard)**
+  - [ ] Develop longitudinal profile visualization (Heatmaps of Social Gravity & Voltage).
+  - [ ] Design "Safe Hands" automated reporting engine.
+
 ## Phase 2: Product Development & Initial Revenue (Months 3-4)
 **Goal**: Launch GCSE Tool + Skills Tree Rising beta  
 **Revenue Target**: $500-2000/month (combined)
@@ -284,6 +307,46 @@
   - [ ] Demo at AI in Education conferences
   - [ ] Network with EdTech researchers
   - [ ] Explore research partnerships
+
+### Future: University-Level Knowledge Visualization
+**Context**: Unlike GCSE's hierarchical curriculum (Subject → Module → Topic → Lesson), university knowledge is web-structured with cross-cutting dependencies. Treemaps break down because concepts don't fit neatly in boxes - "linear algebra" appears in physics, CS, economics, pure maths simultaneously.
+
+**Capability**: Force-directed semantic map of student understanding
+
+**Visualization Approach**:
+- **Position**: t-SNE/UMAP projection of concept embeddings (nearby = semantically related)
+- **Color**: Student mastery level (red → yellow → green)
+- **Edges**: `requires_understanding_of` prerequisite links from CHISG
+- **Insight**: Reveals blocking concepts - "You can't understand thermodynamics because you're missing partial derivatives"
+
+**Technical Requirements**:
+- [ ] Student concept mastery tracking (per CHISG node, not per curriculum item)
+- [ ] Concept embeddings from CHISG definitions
+- [ ] t-SNE/UMAP projection to 2D
+- [ ] Force-directed graph layout with prerequisite edges
+- [ ] Interactive visualization (zoom, pan, click for details)
+
+**Data Model**:
+```sql
+student_concept_mastery:
+  - student_id
+  - concept_id (CHISG node)
+  - mastery_level (0.0-1.0)
+  - last_assessed (timestamp)
+  - evidence[] (quiz results, assignments, self-assessment)
+```
+
+**CHISG Integration**:
+- Uses existing `requires_understanding_of` / `enables_understanding_of` links
+- Cross-domain pattern detection highlights "same concept, different course" opportunities
+- Gap detection: find unmastered concepts blocking downstream understanding
+
+**Use Cases**:
+- Student self-assessment: "Where are my knowledge gaps?"
+- Advisor tool: "This student should take X before Y"
+- Course recommendation: "Based on your graph, these modules will fill structural holes"
+
+**Prerequisite**: CHISG graph with sufficient university-level content and prerequisite links.
 
 ## Phase 5: Federated Learning & Long-term Vision (Months 10-12)
 **Goal**: Build collective intelligence system  

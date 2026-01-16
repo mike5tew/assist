@@ -96,11 +96,11 @@ The long-term goal is to merge these two concepts into a single, unified graph t
 
 ## Data Storage Architecture
 
-The project uses a hybrid data store model, using the right database for the right job.
+The project uses a hybrid data store model, using the right database for the right job. For a detailed breakdown of the semantic logic layer, see the [CHISG System Manifest](CHISG_SYSTEM_MANIFEST.md).
 
--   **Weaviate**: Stores `SemanticLink` vectors. Used for fast, semantic-based queries to find related concepts. The "what" and "how" of knowledge.
+-   **Weaviate**: Stores `SemanticLink` vectors. Used for fast, semantic-based queries to find related concepts. The "what" and "how" of knowledge (The "Smart Minds" layer).
 -   **MongoDB**: Stores raw `Document` content, `SummaryChunks`, `ExtractionJobs`, and other application metadata. The "source of truth" for content.
--   **MySQL**: Stores structured, relational data for the `skills-map-platform`, including `individuals` (users), `courses`, and `skill_link` relationships. The "who" and "where" of the learning structure.
+-   **MySQL**: Stores structured, relational data for the `skills-map-platform`, including `individuals` (users), `courses`, and `skill_link` relationships. The "who" and "where" of the learning structure (The "Safe Hands" layer).
 
 ---
 
