@@ -119,17 +119,18 @@ Same data structure. Completely different emotional response.
 
 ---
 
-### 2. The Insight Product (Integrated Markbook with Profile Builder)
-A psychological diagnostic tool that bridges the gap between raw data ("Safe Hands") and pedagogical insight ("Smart Minds").
+### 2. The Insight Product (Skills Markbook Mobile)
+A dedicated mobile interface for primary school teachers to log competency and character in real-time.
 
-**Core Features**:
--   **Passive Pilot UI**: A spatial seating-plan interface for "eyes-up" logging of student competency and character.
-    - **Temporal Markers**: High-speed recording of objective "Behavior Markers" (2 Positive / 2 Negative) to capture frequency and duration.
-    - **Profile Sliders**: 15 Sensitivity Spectrums for student calibration, requiring justification notes for downward shifts.
-    - **Rotational Sampling**: A focus-mode for tracking ~3 students per hour to manage teacher cognitive load.
--   **Recursive Mastery Interface**: A logging system built on the premise that **"all skills have context and all emotions require skill to master."**
--   **ETP Profile Builder**: Longitudinal mapping of behavioral "Tells" to specific Emotional Trigger Points (ETPs) like risk tolerance and social gravity.
--   **CHISG Integrity Layer**: A knowledge graph that validates diagnostic claims, preventing AI hallucinations by mapping structural analogies between student behavior and pedagogical science.
+**Core Modes**:
+- **Action Recorder**: High-speed selection of 4 "Behavior Markers" (2+/2-) based on frequency and duration.
+- **Profile Sliders**: 15 Sensitivity Spectrums for student calibration, requiring justification for downward shifts.
+- **Skills Markbook**: Detailed proficiency tracking (1-5) against the 131 CHISG Core Skills.
+
+**Strategic Context**: This app pushes data to the **ESP Platform API** for high-level strategic visualization.
+
+### 3. ESP Platform (Parent Enterprise Layer)
+The overarching system that manages students, groups, and work assignments. It incorporates the CHISG Knowledge Graph as its "Smart Minds" reasoning layer.
 
 ---
 
