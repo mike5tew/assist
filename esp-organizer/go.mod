@@ -94,3 +94,6 @@ require (
 )
 
 replace github.com/weaviate/weaviate-go-client/v4 => github.com/weaviate/weaviate-go-client/v4 v4.11.0
+
+// Local development - use local shared-schemas
+replace github.com/michaelstewart/shared-schemas => ../shared-schemas

@@ -11,6 +11,7 @@ dist/
 
 # Dependencies
 vendor/
+**/node_modules/
 
 # Go workspace
 go.work.sum

@@ -1,0 +1,22 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "CHISG — SemanticLink (component)",
+    "version": "2026-01-23",
+    "description": "OpenAPI component for the CHISG SemanticLink element. Component references the canonical JSON Schema."
+  },
+  "components": {
+    "schemas": {
+      "SemanticLink": {
+        "$ref": "./semantic_link.schema.json#"
+      },
+      "SemanticLinkList": {
+        "type": "object",
+        "properties": {
+          "items": { "type": "array", "items": { "$ref": "#/components/schemas/SemanticLink" } },
+          "total": { "type": "integer" }
+        }
+      }
+    }
+  }
+}

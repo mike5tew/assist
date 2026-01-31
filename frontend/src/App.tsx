@@ -17,11 +17,14 @@ const theme = createTheme({
 });
 
 export default function App() {
-  // App is served under '/esp-organizer' inside the main proxy — use basename so direct URLs work
+  // App is served under '/esp-organizer' inside the main proxy — use basename so direct URLs work.
+  // Make basename configurable via REACT_APP_BASENAME, and auto-detect when running locally without the proxy.
+  const routerBasename = process.env.REACT_APP_BASENAME || (window.location.pathname.startsWith('/esp-organizer') ? '/esp-organizer' : '/');
+  console.log('Router basename:', routerBasename);
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Router basename="/esp-organizer">
+      <Router basename={routerBasename}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/upload/immunology" element={<ImmunologyUpload />} />

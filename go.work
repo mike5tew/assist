@@ -1,5 +1,9 @@
-go 1.24
+go 1.25.0
 
 use (
 	./esp-organizer
+	./tools/student-weaviate/import-barriers
+	./tools/student-weaviate/import-teaching-patterns
+	./tools/student-weaviate/migrate-chisg-skills
+	./tools/student-weaviate/setup-student-schema
 )

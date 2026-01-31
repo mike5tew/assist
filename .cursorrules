@@ -1,0 +1,34 @@
+# CHISG Context Layer: Skills Tree (Primary & Trust Management)
+
+## 0. DOCUMENTATION SEARCH (Weaviate Knowledge Base)
+*   **CAPABILITY**: All project documentation, CVs, job applications, and corporate docs are indexed in Weaviate.
+*   **HOW TO SEARCH**: Run from `/Users/michaelstewart/Coding/humanOS/scripts/`:
+    ```bash
+    source .venv/bin/activate && python search_docs.py "your query" -c
+    ```
+*   **INTERACTIVE MODE**: `python search_docs.py -i` for continuous searching
+*   **FILTER BY PROJECT**: `python search_docs.py "query" -p assist`
+*   **DATABASE**: Weaviate on localhost:8081, class `Documentation`
+*   **RE-INGEST**: Run `python ingest_docs.py` to refresh after adding new docs
+
+## 1. IDENTITY GATE (The "Safe Hands")
+*   **PROJECT**: Skills Map / Skills Tree
+*   **DOMAIN**: Primary School Development (K-6) & MAT Strategic Operations
+*   **AUDIENCE**: Primary School Teachers, Students, and Trust Executives
+*   **CORE TECH**: React/TypeScript (Web), Material UI, Weaviate (Vector DB), Go Backend
+*   **PARENT ARCHITECTURE**: CHISG (Knowledge Claim logic)
+
+## 2. BOUNDARY CONSTRAINTS (Hallucination Prevention)
+*   **NO GCSE CONTENT**: Do not import GCSE Science curriculum, exam board logic, or secondary revision modes (like Speed Reader) into this directory.
+*   **DOMAIN FOCUS**: This is for the "Integrated Insight Markbook" and "Sticker Album" artifacts.
+
+## 3. MICROSERVICES & OVERLAP (The "Smart Minds" Bridge)
+*   **SHARED UTILITIES**: This project provides the **Strategic Core** for:
+    - Centralized Skill Definitions (MySQL)
+    - Vectorized Semantic Links (Weaviate)
+    - MAT-level Business Analytics (Finance/HR/Estates)
+*   **MICROSERVICE GOAL**: Shared student IDs and progression data will eventually flow from here to `/LAOMobile`.
+*   **ANALOGY RULE**: Before porting code, verify if the component is "Visual/Stylistic" (Primary-specific UX) or "Logical/Data" (Shared Microservice).
+
+## 4. GROUNDING SOURCE
+*   Always use [assist/docs/chisg/CHISG_KNOWLEDGE_GRAPH_ARCHITECTURE.md](../../assist/docs/chisg/CHISG_KNOWLEDGE_GRAPH_ARCHITECTURE.md) to verify if a change follows the architectural manifest.

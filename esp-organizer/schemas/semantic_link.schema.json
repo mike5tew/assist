@@ -1,0 +1,154 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://example.org/schemas/semantic_link.schema.json",
+  "title": "SemanticLink",
+  "description": "Canonical CHISG SemanticLink — atomic, vectorizable assertion connecting two normalized terms with relation, hierarchy metrics, qualifiers and provenance metadata. (Derived from assist/esp-organizer/internal/models/semantic_link.go)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "statement",
+    "source_term",
+    "target_term",
+    "forward_relation"
+  ],
+  "properties": {
+    "id": { "type": "string", "description": "Mongo/DB id (objectId string)" },
+    "composite_key": { "type": "string", "description": "Derived key: source::target::forward_relation" },
+    "statement": { "type": "string", "description": "Full, vectorizable statement (primary text)" },
+
+    "source_id": { "type": "string", "description": "Reference id for source term" },
+    "target_id": { "type": "string", "description": "Reference id for target term" },
+    "source_term": { "type": "string", "description": "Normalized source term" },
+    "target_term": { "type": "string", "description": "Normalized target term" },
+    "source_term_original": { "type": "string", "description": "Original source term from the source text" },
+    "target_term_original": { "type": "string", "description": "Original target term from the source text" },
+
+    "forward_relation": { "type": "string", "description": "Typed forward relation (e.g. causes_reduction_in)" },
+    "inverse_relation": { "type": "string", "description": "Inverse of the forward relation" },
+    "relation_type": { "type": "string", "description": "Relation ontology label (deprecated - use forward_relation)" },
+
+    "source_term_generality": { "type": "number", "minimum": 0, "maximum": 1, "description": "Breadth of source term (0 specific → 1 general)" },
+    "target_term_generality": { "type": "number", "minimum": 0, "maximum": 1 },
+    "semantic_distance": { "type": "number", "minimum": 0, "maximum": 1, "description": "0=definitional, 1=distant" },
+    "relationship_strength": { "type": "number", "minimum": 0, "maximum": 1 },
+
+    "context": { "type": "string" },
+    "context_original": { "type": "string" },
+    "context_link_ids": { "type": "array", "items": { "type": "string" } },
+
+    "is_parent_of": { "type": "array", "items": { "type": "string" } },
+    "is_child_of": { "type": "array", "items": { "type": "string" } },
+
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1, "description": "Extractor/LLM confidence (0-1)" },
+    "domain": { "type": "string" },
+    "subject": { "type": "string" },
+    "vector": { "type": "array", "items": { "type": "number" }, "description": "Embedding vector (float32 array)" },
+
+    "created_at": { "type": "string", "format": "date-time" },
+    "batch_id": { "type": "string" },
+
+    "metadata": { "type": "object", "description": "Free-form metadata map", "additionalProperties": true },
+
+    "temporal_qualifier": { "type": "string" },
+    "spatial_qualifier": { "type": "string" },
+    "functional_state": { "type": "string" },
+    "lifecycle_stage": { "type": "string" },
+
+    "conditions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["term","forward_relation"],
+        "properties": {
+          "term": { "type": "string" },
+          "forward_relation": { "type": "string" },
+          "inverse_relation": { "type": "string" },
+          "required": { "type": "boolean" },
+          "description": { "type": "string" }
+        }
+      }
+    },
+
+    "contrasts_with": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "term": { "type": "string" },
+          "difference": { "type": "string" },
+          "rationale": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+
+    "related_link_ids": { "type": "array", "items": { "type": "string" } },
+    "is_case_specific": { "type": "boolean" },
+    "case_study_id": { "type": "string" },
+
+    "patient_metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "patient_name": { "type": "string" },
+        "patient_initials": { "type": "string" },
+        "disease_category": { "type": "string" },
+        "case_number": { "type": "integer" },
+        "chapter_reference": { "type": "string" }
+      }
+    },
+
+    "student_metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "student_id": { "type": "string" },
+        "student_name": { "type": "string" },
+        "age": { "type": "integer" },
+        "year_group": { "type": "string" },
+        "special_needs": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "psychological_profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "learning_style": { "type": "string" },
+        "attention_span": { "type": "integer" },
+        "motivation_factors": { "type": "array", "items": { "type": "string" } },
+        "anxiety_triggers": { "type": "array", "items": { "type": "string" } },
+        "strengths": { "type": "array", "items": { "type": "string" } },
+        "challenges": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "extended_properties": { "type": "object", "additionalProperties": true },
+
+    "status": { "type": "string", "description": "draft|validated|rejected" },
+    "is_manual": { "type": "boolean" },
+    "chapter": { "type": "string" },
+    "excerpt_text": { "type": "string" },
+    "validated_by": { "type": "string" },
+    "validated_at": { "type": "string", "format": "date-time" },
+    "source_title": { "type": "string" },
+    "page_number": { "type": "integer" },
+
+    "quality_score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "quality_reason": { "type": "string" }
+  },
+
+  "examples": [
+    {
+      "statement": "Child notices that adding weight makes the tower fall",
+      "source_term": "adding weight",
+      "target_term": "tower stability",
+      "forward_relation": "reduces_stability_of",
+      "semantic_distance": 0.1,
+      "confidence": 0.92,
+      "source_title": "Observation activity handout",
+      "created_at": "2026-01-23T10:12:00Z"
+    }
+  ]
+}

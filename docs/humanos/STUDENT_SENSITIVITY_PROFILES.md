@@ -24,6 +24,8 @@ These indicators are not labels; they are **Sensitivity Mappings**. Each spectru
 | **Patient — Impatient** | The time-constant between stimulus and response. | **Impulse/Reflection Gap**. The decay rate of the initial emotional spike. |
 | **Fragile — Resilient** | The system's "Self-Righting" speed after stress. | **Response to Failure**. How quickly the DMN (Default Mode Network) restarts after a crash. |
 | **Risk-Averse — Risk-Seeking** | Threshold for entering uncertain states. | **Academic Risk Tolerance**. The Dopamine-Risk loop calibration. |
+| **Sceptical — Optimistic** | Default expectation of outcomes. | **Anticipation Bias**. Sceptical requires evidence before commitment; Optimistic assumes positive outcomes, enabling faster action but risking disappointment. |
+| **Oblivious — Hyperaware** | Degree of environmental and internal noticing. | **Presence Sensitivity**. Oblivious misses subtle cues; Hyperaware notices everything, risking overstimulation and analysis paralysis. |
 
 ## 3. Authority & Operational Spectrums
 

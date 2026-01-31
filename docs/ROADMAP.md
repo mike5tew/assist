@@ -29,25 +29,35 @@
 - Every service at 100% (diminishing returns)
 - Features beyond MVP (perfectionism trap)
 
-## Phase 1: Foundation & First Revenue (Months 1-2)
-**Goal**: Launch GCSE Revision Tool MVP and acquire first paying subscribers.
-**Revenue Target**: $100-500/month from early adopters.
+## Phase 1: Foundation & First Revenue (Commercial Pilot) ✅
+**Goal**: Launch GCSE Revision Tool MVP and acquire first pilot users.
 
-### Priority 1: GCSE Revision Tool (Commercial MVP)
-**Current**: 10% complete (concept defined)
-**Target**: 80% complete (live product with payment)
+### Priority 1: LittleAndOften (GCSE Revision Tool) ✅
+**Current**: 95% complete (Pilot Ready)
+**Target**: 100% complete (Global Release)
 
-**Leverages Existing Work**:
-- CHISG (knowledge graph for content)
-- HumanOS Core (psychological frameworks for engagement)
+**Completed**:
+- [x] **Core Content Engine**: Restored relational SQLite architecture with full curriculum support.
+- [x] **Dynamic Summaries**: File-based Markdown rendering for all lesson content.
+- [x] **Study Reward Logic**: Implemented Daily Effort and Activity Completion trackers.
+- [x] **Mobile UX**: Standardized headers, navigation, and activity modes (Audio, Speed Reader, Card).
+- [x] **Deployment**: Successful EAS build submission to TestFlight.
 
-**New Work Needed**:
-- [ ] **Week 1: Core Content Engine (Science Focus)**
-  - [ ] Load GCSE Science curriculum (lesson headings from syllabus).
-  - [ ] Implement "Lesson Overview" generation based on headings + CHISG context.
-  - [ ] Implement "Keyword Extraction" for glossaries.
-- [ ] **Week 2: Content Consumption Features**
-  - [ ] Implement "Spreeder" speed-reading UI for overviews.
+**Next Work Needed**:
+- [ ] **Content Expansion**: Populate remaining summaries for all 25 modules.
+- [ ] **Multi-Subject Tuning**: Polish the subject selection flow for broader appeal.
+- [ ] **AI Question Gen**: Prototype auto-generated quiz questions from Markdown summaries.
+
+### Priority 2: Skills Tree Rising (Primary Schools)
+**Goal**: Launch the Sticker Album extension and high-fidelity dashboard.
+
+**Next Work Needed**:
+- [ ] **Physical-Digital Loop**: Implement the [Sticker Album Extension](../../assist/docs/STICKER_ALBUM_EXTENSION.md) logic (rewarding physical stamps for digital effort).
+- [ ] **Strategic Portfolio**: Refine the "Non-School Functions" dashboard for Finance, HR, and Estates.
+
+---
+
+## Phase 2: CHISG Enhancement & Sticker Album Integration (Current Focus)
   - [ ] Implement "Question Practice" interface.
 - [ ] **Week 3: UI, Auth & Progress Tracking**
   - [ ] Student dashboard with progress visualization.
@@ -510,6 +520,205 @@ func (fc *FederatedCoordinator) SubmitPattern(pattern AnonymousPattern) error {
 - [ ] Adjust timeline if needed
 - [ ] Update revenue projections
 - [ ] Reassess priorities based on results
+
+---
+
+## 🎯 SkillsMarkBook Extension: Sticker Album Feature
+
+**Strategic Context**: Build a printable, physical component of the Skills Markbook that makes skill mastery tangible and rewarding. Teachers award physical stickers corresponding to skills demonstrated; students collect them in an A5 album, creating a motivational artifact.
+
+**Core Vision**:
+Transform abstract skill tracking into a *collectible experience* - where the Skills Map becomes a physical album filled with custom stickers, each representing a demonstrated competency area. This combines the motivation of gamification with the permanence of a physical portfolio.
+
+### Design Principles
+
+1. **A5 Page Format**: Each skill area fits cleanly on a single A5 page (~148×210mm)
+2. **Paired Explainer Page**: Opposite side explains the skill area in simple, student-friendly language
+3. **One Sticker Per Award**: Teacher/assessor prints a sticker when skillsmark is awarded
+4. **Progressive Narrative**: As students fill the album, they see growth and mastery emerge organically
+5. **Physical + Digital Bridge**: Album has QR codes linking to detailed digital profile
+
+### Phase 1 Implementation Plan (2-3 weeks)
+
+#### Week 1: Design & Content Structure
+
+**Deliverables**:
+- [ ] Define 8-12 core skill areas for MVP (e.g., "Communication", "Problem Solving", "Creativity", "Resilience", "Collaboration", "Leadership", "Research", "Critical Thinking")
+- [ ] Create A5 page templates:
+  - **Front side**: Space for 5-6 stickers + skill area title + visual theme (icon/color coding)
+  - **Back side**: 100-150 word explanation of the skill area, what it means, and how to demonstrate it
+- [ ] Design custom sticker art (5cm × 5cm) for each skill area with:
+  - Skill area name
+  - Achievement tier (if multi-level, e.g., Bronze/Silver/Gold)
+  - Unique visual identifier (animal, icon, color scheme)
+- [ ] Create album cover template (A4 folded to A5) with:
+  - Student name + class + year
+  - QR code to digital profile
+  - Simple instruction: "Collect stickers as you demonstrate skills"
+
+**Database Schema Updates** (MySQL):
+```sql
+-- New tables
+CREATE TABLE skill_areas (
+  SkillAreaID INT PRIMARY KEY AUTO_INCREMENT,
+  AreaName VARCHAR(50) NOT NULL,
+  Description TEXT NOT NULL,
+  IconID INT,
+  ColorCode VARCHAR(7),
+  Order INT,
+  Active BOOLEAN DEFAULT TRUE
+);
+
+CREATE TABLE skill_area_stickers (
+  StickerID INT PRIMARY KEY AUTO_INCREMENT,
+  SkillAreaID INT NOT NULL,
+  TierLevel INT (1-3 for Bronze/Silver/Gold),
+  StickerDesignURL VARCHAR(255),
+  DateCreated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (SkillAreaID) REFERENCES skill_areas(SkillAreaID)
+);
+
+CREATE TABLE student_sticker_awards (
+  AwardID INT PRIMARY KEY AUTO_INCREMENT,
+  StudentID INT NOT NULL,
+  StickerID INT NOT NULL,
+  AwardedByTeacherID INT NOT NULL,
+  AwardedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  ObservationNotes TEXT,
+  FOREIGN KEY (StudentID) REFERENCES students(StudentID),
+  FOREIGN KEY (StickerID) REFERENCES skill_area_stickers(StickerID),
+  FOREIGN KEY (AwardedByTeacherID) REFERENCES users(UserID)
+);
+
+CREATE TABLE student_album_progress (
+  ProgressID INT PRIMARY KEY AUTO_INCREMENT,
+  StudentID INT NOT NULL,
+  TotalStickersAwarded INT DEFAULT 0,
+  SkillAreaCompletionStatus JSON,
+  LastUpdated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (StudentID) REFERENCES students(StudentID)
+);
+```
+
+#### Week 2: Teacher & Student Interfaces
+
+**Teacher Interface (Skills Markbook Mobile + Web)**:
+- [ ] "Award Sticker" button in the Skills Markbook marking interface
+- [ ] Quick action: Select skill area → select student(s) → confirm award
+- [ ] Bulk print interface: Generate PDF with selected stickers for printing
+- [ ] Dashboard showing:
+  - Total stickers awarded by skill area
+  - Student engagement metrics (who has more stickers)
+  - "Ready to Print" sticker queue
+
+**Student Facing** (Skills Markbook Mobile + Web):
+- [ ] "My Album" tab in Skills Markbook showing:
+  - Visual preview of album pages (A5 grid layout)
+  - Number of stickers collected in each area
+  - "Next sticker" motivation display
+  - QR code to digital profile details
+- [ ] Celebrate notifications when new sticker earned
+- [ ] Historical view: timeline of earned stickers with dates
+
+**Print & Export Features**:
+- [ ] Generate PDF: 
+  - Single album (all pages + stickers earned so far)
+  - Batch print job (selected students' albums)
+  - Sticker sheet (printable 5cm×5cm stickers for manual insertion)
+- [ ] QR code generation linking to:
+  - Student's digital profile
+  - Detailed skill descriptions
+  - Evidence/observations from teachers
+- [ ] Export as image: album preview for sharing with parents
+
+#### Week 3: Integration & MVP Launch
+
+**Backend API Endpoints**:
+- [ ] `POST /api/student-awards/sticker` - Award sticker to student
+- [ ] `GET /api/student-album/{studentID}` - Get album progress + stickers
+- [ ] `GET /api/skill-areas` - List all skill areas and their designs
+- [ ] `POST /api/album/export-pdf` - Generate printable PDF album
+- [ ] `POST /api/album/export-stickers` - Generate sticker sheet PDF
+- [ ] `GET /api/statistics/sticker-awards` - Aggregate stats by skill area, teacher, class
+
+**Mobile UI Components**:
+- [ ] `<StickerAlbumView />` - Grid display of A5 pages with stickers
+- [ ] `<AwardStickerModal />` - Quick-action modal for awarding stickers
+- [ ] `<SkillAreaCard />` - Shows skill explanation + stickers earned + next milestone
+- [ ] `<AlbumExportMenu />` - Export options (PDF, print, share)
+
+**QA & Testing**:
+- [ ] Sticker design renders correctly at 5cm×5cm
+- [ ] PDF generation is clean and printable
+- [ ] QR codes resolve correctly to student profiles
+- [ ] Mobile responsiveness for A5 preview
+- [ ] Data integrity: one sticker award = one print-ready sticker
+
+### Phase 2 (Later): Advanced Features
+
+**Tier System** (Bronze/Silver/Gold):
+- [ ] Students earn multiple stickers in the same skill area as they progress
+- [ ] Visual ranking: upgrade sticker color/design with each tier
+- [ ] Teacher can award "Bronze" for first demonstration, "Silver" for consistent application, "Gold" for mastery
+- [ ] Album automatically fills in visual tiers
+
+**Badges & Milestones**:
+- [ ] "Skill Master" badge when student collects all stickers in an area (optional achievement)
+- [ ] "Album Keeper" badge for consistency (weekly sticker awards)
+- [ ] "Growth Mindset" badge for progressing through tier levels
+
+**Parent Integration**:
+- [ ] Share student album with parents via secure link
+- [ ] Parents can print a copy to display at home
+- [ ] Optional: parents can leave encouraging comments on student profiles
+
+**Customization**:
+- [ ] School can create custom skill areas and sticker designs
+- [ ] Teachers can set "house rules" (e.g., max 1 sticker/skill/week to prevent saturation)
+- [ ] Different designs for different year groups (primary vs. secondary)
+
+**Analytics & Reporting**:
+- [ ] Heatmap: which skills are being demonstrated most frequently?
+- [ ] Equity check: are all students receiving stickers fairly?
+- [ ] Trend analysis: which students are accelerating vs. plateauing?
+- [ ] Export for Ofsted/assessment: evidence of skill development over time
+
+### Physical Production Workflow
+
+1. **Teacher Awards in App** → System generates print job queue
+2. **Print Stickers** → Batch print at school (color sticker labels)
+3. **Manual or Automatic Distribution**:
+   - Manual: Teacher gives sticker to student to place in album
+   - Automatic: School prints full albums monthly/termly
+4. **Student Keeps Album** → Portable portfolio of demonstrated skills
+5. **End of Year** → Album becomes keepsake; export digital copy for records
+
+### Success Metrics
+
+- **Engagement**: 90%+ of students have at least 1 sticker within first 2 weeks
+- **Teacher Adoption**: 80%+ of teachers use award function weekly
+- **Printing**: <30 seconds per album PDF generation
+- **Motivation**: Student survey: "I feel proud of my sticker album" (target: 85% agree)
+- **Data Quality**: Sticker awards track to actual skill improvements in digital profile
+
+### Budget & Resources
+
+- **Design**: 40 hours (sticker art + album templates)
+- **Development**: 80 hours (backend API + mobile UI + PDF generation)
+- **QA & Integration**: 20 hours
+- **Physical Production**: School provides color printer + sticker label sheets (~£0.50/student/album)
+
+### Risks & Mitigations
+
+| Risk | Impact | Mitigation |
+|------|--------|-----------|
+| Sticker printing becomes tedious | Teachers abandon feature | Pre-print batches; provide bulk sticker sheets |
+| Sticker inflation (too easy to earn) | Loses motivational value | Define clear rubrics; teacher training on consistency |
+| Students lose/damage album | Demotivates | Digital backup; print replacement albums on demand |
+| Sticker design prints poorly | Quality perception | Test designs at actual print size; provide high-res files |
+| Doesn't improve behavior | ROI question | Track correlation between stickers and progress in other metrics |
+
+---
 
 ## Final Notes
 

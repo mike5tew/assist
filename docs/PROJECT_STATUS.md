@@ -1,29 +1,48 @@
 # HumanOS Ecosystem - Project Status
 
-**Last Updated**: 2025-03-14
-**Current Phase**: Phase 1 - Foundation & First Revenue
-**Primary Focus**: GCSE Revision Tool (First Commercial Product)
+**Last Updated**: 2026-01-21
+**Current Phase**: Phase 1 - Foundation & First Revenue (Commercial Pilot)
+**Primary Focus**: LittleAndOften (LAO) - GCSE Revision Tool
 
 ---
 
 ## 🚨 Current Sprint Status
 
-**Goal**: Launch the GCSE Revision Tool MVP and pilot the Integrated Insight Markbook.
+**Goal**: Complete LAO Mobile MVP for TestFlight Distribution.
 
 | Priority | Task | Status | Notes |
 |----------|------|--------|-------|
-| 1 | GCSE Revision Tool MVP | 🔄 IN PROGRESS | **Primary commercial focus** |
-| 2 | CHISG Manual Link Extractor | 🔄 IN PROGRESS | Tool to accelerate knowledge graph population |
-| 3 | Integrated Insight Markbook | � IN PROGRESS | Scaffolding complete; Backend models and Passive Pilot UI initialized. |
-| 4 | Skills Tree Dashboard Fix | ⏳ PENDING | Race condition on first load after login |
+| 1 | LAO Mobile (GCSE Revision Tool) | ✅ Pilot Ready | Pushed build 20260121.1 to TestFlight |
+| 2 | Relational Data Migration | ✅ COMPLETE | Restored SQLite architecture from JSON |
+| 3 | Study Tracking & Rewards | ✅ COMPLETE | Activities completed + Daily Effort stats |
+| 4 | UI Standardization | 🔄 REFINING | Standardized "Title Card" headers across screens |
 
 ---
 
 ## 📜 Work History & Completed Milestones
 
+### LittleAndOften (LAO) Mobile ✅
+- [x] **Relational Restoration**: Successfully moved from problematic JSON storage back to `expo-sqlite` (Relational).
+- [x] **Content Linking**: Linked 25+ modules and 3 subjects to Markdown lesson summaries.
+- [x] **Motivational Features**:
+    - [x] Global `StudyTimerContext` tracking active study time.
+    - [x] "Activities Completed" tracking (Daily count stored in AsyncStorage).
+    - [x] Dashboard cards for "Daily Effort" and "Activity Count".
+    - [x] Toast notifications for activity start/completion milestones.
+- [x] **Activity Modes**:
+    - [x] **Audio Summaries**: Linked to TTS with manual playback and auto-timer pausing.
+    - [x] **Speed Reader**: word-by-word reading mode with scoring fixed.
+    - [x] **Flashcards**: Spaced repetition logic active.
+- [x] **Deployment**: Automated EAS build and TestFlight submission pipeline enabled.
+
 ### Strategy & Business Development ✅
-- [x] **drb Ignite Business Case**: Drafted and submitted high-level pitch for Data & Insight Manager role, focusing on the "Safe Hands vs. Smart Minds" framework.
-- [x] **Sticker Album Framework**: Re-conceptualized the Skills Map UI as a "Sticker Album" to reduce complexity and improve teacher buy-in.
+- [x] **Strategic Prototype**: Created high-fidelity "Non-School Functions" dashboard for Finance, HR, and Estates (Skills Map Portfolio).
+- [x] **Financial & Estates Concept**: Defined a non-accountancy monitoring system for trust-level operational health (See [FINANCIAL_ESTATES_SYSTEM.md](FINANCIAL_ESTATES_SYSTEM.md)).
+- [x] **drb Ignite Business Case**: Drafted and submitted high-level pitch for Data & Insight Manager role.
+
+### Skills Tree Rising (Primary Schools) ✅
+- [x] **Sticker Album Framework**: Re-conceptualized the UI as a "Sticker Album" to reduce complexity (See [STICKER_ALBUM_EXTENSION.md](STICKER_ALBUM_EXTENSION.md)).
+- [x] Full backend API (Go) and Frontend (React + TS) active.
 
 ### Infrastructure & Deployment ✅
 - [x] Monorepo structure established (`/assist`)
@@ -43,6 +62,15 @@
 - [x] JWT Authentication
 - [x] Production deployment
 
+### SkillsMarkBook Sticker Album (Conceptual Design) ✅
+- [x] **Full feature specification**: See [STICKER_ALBUM_EXTENSION.md](STICKER_ALBUM_EXTENSION.md)
+- [x] **Physical design**: A5 album format, 8 skill areas, 5cm×5cm stickers
+- [x] **Implementation roadmap**: 3-phase rollout (MVP 1-3 weeks, Enhancement 4-6 weeks)
+- [x] **Database schema**: Complete SQL schema for awards, progress tracking, print jobs
+- [x] **API specification**: 15+ endpoints for awards, export, statistics
+- [x] **Success metrics**: 12 KPIs defined (adoption, engagement, equity, cost)
+- [ ] **Design assets**: Sticker art + album templates (Next: outsource or commission)
+
 ---
 
 ## 🔄 IN PROGRESS
@@ -54,6 +82,29 @@
 - [ ] Integrate with CHISG for content generation.
 - [ ] Set up Stripe for subscription payments.
 - [ ] Launch beta and acquire first paying subscribers.
+
+### 1B. SkillsMarkBook Extension: Sticker Album (Priority 3 - Engagement)
+**Goal**: Transform abstract skill tracking into a tangible, collectible physical artifact with A5 albums and printed stickers.
+**Status**: Conceptual (Full specification complete; ready for implementation phase 1)
+
+**Completed**:
+- [x] Full feature specification document
+- [x] Physical design (A5 album, 8 skill areas, sticker format)
+- [x] 3-phase implementation roadmap
+- [x] Database schema (7 tables: skill_areas, awards, progress, print_jobs, etc.)
+- [x] 15+ API endpoints specified
+- [x] 12 success metrics defined
+- [x] Risk analysis + mitigation
+
+**Next** (Phase 1 - Weeks 1-3):
+- [ ] Create/commission sticker art (40 hours)
+- [ ] Finalize A5 album templates (20 hours)
+- [ ] Implement database schema
+- [ ] Build core API endpoints (award, export, PDF generation)
+- [ ] Develop mobile UI components
+- [ ] Set up print queue system
+
+**Related Doc**: [STICKER_ALBUM_EXTENSION.md](STICKER_ALBUM_EXTENSION.md) - Full implementation guide
 
 ### 2. Semantic Link Extraction Tool (Priority 1A - Critical Enabler)
 **Goal**: Integrated React + Go service to rapidly build the knowledge graph that powers all products.

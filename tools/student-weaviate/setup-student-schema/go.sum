@@ -1,0 +1,4 @@
+github.com/weaviate/weaviate v1.35.6 h1:1XRV3p71M1S+kFnIWU04Q2wbi6EYg+f+zVQks5141R4=
+github.com/weaviate/weaviate v1.35.6/go.mod h1:22J145rU2HOQh2mUw2L+o6uYPPGSqMFgm0dz7rpZvuk=
+github.com/weaviate/weaviate-go-client/v4 v4.16.1 h1:jkDYuRCYly6zG2ngqTpv6z8azzbqiMUXcmaJHJmAV0Q=
+github.com/weaviate/weaviate-go-client/v4 v4.16.1/go.mod h1:XmoRpzNpWrTW5/TE07dUtxy5kMZbG3uAG/3b69nuwFk=

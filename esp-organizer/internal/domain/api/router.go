@@ -83,6 +83,7 @@ func RegisterRoutes(r *mux.Router, coachService coach.CoachServiceMVP) {
 	apiRouter.HandleFunc("/civil-engineering/search", CivilEngineeringSearchHandler).Methods("GET", "POST")
 	apiRouter.HandleFunc("/ai/chat", AIChatHandler).Methods("POST")
 	apiRouter.HandleFunc("/batches", GetProcessingBatchesHandler).Methods("GET")
+	apiRouter.HandleFunc("/actionplan", ActionPlanHandler).Methods("POST", "OPTIONS")
 	apiRouter.HandleFunc("/diagnostics/config", DiagnosticsConfigHandler).Methods("GET")
 	apiRouter.HandleFunc("/diagnostics/document", DiagnosticsDocumentHandler).Methods("GET")
 	apiRouter.HandleFunc("/diagnostics/collections", DiagnosticsCollectionsHandler).Methods("GET")

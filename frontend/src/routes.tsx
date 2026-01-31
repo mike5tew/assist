@@ -6,6 +6,7 @@ import MiniDrawer from './components/Drawer';
 import Home from './components/Home';
 import { ContentLoader } from './components/contentLoader';
 import ErrorPage from './components/ErrorPage';
+import ETPProfilePage from './pages/ETPProfilePage';
 import ImmunologyPage from './pages/ImmunologyPage';
 import ImmunologyUpload from './components/ImmunologyUpload';
 import SemanticQuery from './components/SemanticQuery';
@@ -28,6 +29,7 @@ const AppRoutes = () => {
         <Route path="semantic-query" element={<SemanticQuery />} />
         <Route path="ai-chat" element={<AIChat />} />
         <Route path="coach-mvp-demo" element={<CoachMVPDemo />} />
+        <Route path="etp-profile" element={<ETPProfilePage />} />
 
         {/* Study areas */}
         <Route path="immunology" element={<ImmunologyPage />} />

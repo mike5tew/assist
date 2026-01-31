@@ -2,6 +2,8 @@
 
 import axios from 'axios';
 
+console.log('🔄 Frontend Version: 1.1.0');
+
 export async function post(url: string, data: any) {
 	try {
 		const response = await axios.post(url, data);

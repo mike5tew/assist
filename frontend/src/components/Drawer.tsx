@@ -18,6 +18,7 @@ import ListItemButton from '@mui/material/ListItemButton'; // Import ListItemBut
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import HomeIcon from '@mui/icons-material/Home';
+import PsychologyIcon from '@mui/icons-material/Psychology';
 import { Outlet, useNavigate } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 
@@ -97,6 +98,7 @@ const MiniDrawer = () => {
 
   const [menuName, setMenuName] = React.useState([
     { EntName: 'Home', type: 'page', icon: <HomeIcon />, link: 'home' },
+    { EntName: 'ETP Profile', type: 'page', icon: <PsychologyIcon />, link: 'etp-profile' },
     { EntName: 'ContentLoader', type: 'page', icon: <UploadIcon />, link: 'contentLoader' },
     { EntName: 'Semantic Query', type: 'page', icon: <UploadIcon />, link: 'semantic-query' },
     { EntName: 'AI Chat', type: 'page', icon: <UploadIcon />, link: 'ai-chat' },
