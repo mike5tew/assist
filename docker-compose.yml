@@ -75,9 +75,9 @@ services:
       PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
       DEFAULT_VECTORIZER_MODULE: 'text2vec-aws'
       ENABLE_MODULES: 'text2vec-aws'
-      AWS_REGION: 'eu-west-2'
-      AWS_ACCESS_KEY_ID: 'AWS_ACCESS_KEY_ID_REMOVED'
-      AWS_SECRET_ACCESS_KEY: 'AWS_SECRET_ACCESS_KEY_REMOVED'
+      AWS_REGION: ${AWS_REGION:-eu-west-2}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
       CLUSTER_HOSTNAME: 'node1'
     volumes:
       - weaviate_data:/var/lib/weaviate
