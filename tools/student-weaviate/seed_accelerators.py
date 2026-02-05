@@ -27,7 +27,33 @@ def load_json(path):
         return json.load(f)
 
 
-def build_properties(accel):
+import re
+
+
+def normalize_chisg_id(raw_id, name_fallback=None):
+    """Normalize an accelerator id/name into a safe CHISG chisg_id.
+
+    - Removes leading 'accel_' if present
+    - Replaces non-alphanumeric characters with underscores
+    - Uppercases and prefixes with 'ACCEL_'
+    """
+    s = ''
+    if raw_id:
+        s = str(raw_id).strip()
+    elif name_fallback:
+        s = str(name_fallback).strip()
+
+    # remove leading accel_ if present (case-insensitive)
+    s = re.sub(r'(?i)^accel_', '', s)
+    # replace whitespace and non-alphanum with underscore
+    s = re.sub(r'[^A-Za-z0-9]+', '_', s)
+    s = s.strip('_')
+    if not s:
+        s = 'UNKNOWN'
+    return f"ACCEL_{s.upper()}"
+
+
+def build_properties(accel, normalized_chisg_id=None):
     # Map accelerator entry into CHISGElement properties
     props = {
         "name": accel.get("name"),
@@ -36,7 +62,7 @@ def build_properties(accel):
         "domain": accel.get("domain"),
         "layer": "Accelerator",
         # deterministic chisg_id for traceability
-        "chisg_id": f"ACCEL_{accel.get('id','').upper()}",
+        "chisg_id": normalized_chisg_id or f"ACCEL_{accel.get('id','').upper()}",
         "suggested_years": accel.get("suggested_years", ""),
         # ETP suggestions mapped to existing ETP properties where possible
         "etp_spectrum_id": accel.get("suggested_etp", {}).get("spectrum", ""),
@@ -45,6 +71,29 @@ def build_properties(accel):
         "source": "PRIMARY_SCHOOL_ACCELERATORS",
     }
     return props
+
+
+def exists_object(weaviate_url, chisg_id):
+    """Check whether a CHISGElement with the given chisg_id already exists.
+
+    Returns (exists: bool, existing_record: dict|None)
+    """
+    query_body = json.dumps({
+        "query": f"{{ Get {{ CHISGElement(where:{{path:[\"chisg_id\"], operator:Equal, valueString:\"{chisg_id}\"}}) {{ _additional {{ id }} name chisg_id }} }} }}"
+    }).encode('utf-8')
+    url = weaviate_url.rstrip('/') + '/v1/graphql'
+    req = request.Request(url, data=query_body, headers={"Content-Type": "application/json"}, method='POST')
+    try:
+        with request.urlopen(req) as resp:
+            j = json.loads(resp.read().decode('utf-8'))
+            items = j.get('data', {}).get('Get', {}).get('CHISGElement', [])
+            if items:
+                return True, items[0]
+            return False, None
+    except Exception as e:
+        # don't hard-fail on existence checks; warn and treat as not exists
+        print(f"Warning: existence check failed for {chisg_id}: {e}")
+        return False, None
 
 
 def post_object(weaviate_url, obj):
@@ -81,11 +130,21 @@ def main():
     successes = []
 
     for a in accels:
-        props = build_properties(a)
+        # Normalise chisg_id (prevents ACCEL_ACCEL_ duplication) and build properties
+        normalized = normalize_chisg_id(a.get('id'), a.get('name'))
+        props = build_properties(a, normalized_chisg_id=normalized)
         obj = {
             "class": "CHISGElement",
             "properties": props
         }
+
+        # Check if object already exists by chisg_id to make seeding idempotent
+        exists, existing = exists_object(args.weaviate, normalized)
+        if exists:
+            existing_id = existing.get('_additional', {}).get('id') if existing else None
+            print(f"⏭️ SKIP (exists): {a.get('name')} -> chisg_id={normalized} (weaviate id={existing_id})")
+            successes.append((a.get('id'), 'skipped', existing_id))
+            continue
 
         if args.dry_run:
             print("--- DRY RUN ---")
@@ -94,8 +153,9 @@ def main():
 
         ok, res = post_object(args.weaviate, obj)
         if ok:
-            print(f"✅ Created: {a.get('name')} -> id {res.get('id')}")
-            successes.append((a.get('id'), res.get('id')))
+            created_id = res.get('id')
+            print(f"✅ Created: {a.get('name')} -> chisg_id={normalized} id={created_id}")
+            successes.append((a.get('id'), 'created', created_id))
         else:
             print(f"❌ Failed: {a.get('name')} -> {res}")
             failures.append((a.get('id'), res))
