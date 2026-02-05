@@ -1,0 +1,107 @@
+{
+  "meta": {
+    "version": "1.0",
+    "created_by": "assist-team",
+    "created_at": "2026-02-05",
+    "description": "Canonical accelerator skill list for Primary School Years. Small set of skills to act as course→ETP anchors for seeding and UI workflows."
+  },
+  "accelerators": [
+    {
+      "id": "accel_focused_attention",
+      "name": "Focused Attention",
+      "short_description": "Sustain attention on a single task for increasing intervals.",
+      "domain": "FOCUS & TOOLS",
+      "suggested_years": "5-7",
+      "suggested_etp": { "spectrum": "impulse_gap", "vector": "toward_reflective", "energy_cost": "medium" }
+    },
+    {
+      "id": "accel_working_memory",
+      "name": "Working Memory",
+      "short_description": "Hold and manipulate small amounts of information in mind (2–5 items).",
+      "domain": "FOUNDATIONAL",
+      "suggested_years": "5-11",
+      "suggested_etp": { "spectrum": "voltage_sensitivity", "vector": "toward_steady", "energy_cost": "high" }
+    },
+    {
+      "id": "accel_phonemic_awareness",
+      "name": "Phonemic Awareness",
+      "short_description": "Hear, segment and blend sounds in spoken words (pre-literacy).",
+      "domain": "LITERACY",
+      "suggested_years": "5-7",
+      "suggested_etp": { "spectrum": "presence_sensitivity", "vector": "toward_attuned", "energy_cost": "medium" }
+    },
+    {
+      "id": "accel_number_sense",
+      "name": "Number Sense",
+      "short_description": "Internalise small quantities, simple comparisons and number relationships.",
+      "domain": "NUMBERS",
+      "suggested_years": "5-9",
+      "suggested_etp": { "spectrum": "anticipation_bias", "vector": "toward_optimistic", "energy_cost": "medium" }
+    },
+    {
+      "id": "accel_social_cooperation",
+      "name": "Social Cooperation",
+      "short_description": "Share, take turns and collaborate effectively in small groups.",
+      "domain": "PEOPLE",
+      "suggested_years": "5-11",
+      "suggested_etp": { "spectrum": "social_gravity", "vector": "toward_cohesive", "energy_cost": "low" }
+    },
+    {
+      "id": "accel_self_regulation",
+      "name": "Self-Regulation",
+      "short_description": "Manage impulses, calm down after frustration and follow multi-step instructions.",
+      "domain": "SELF",
+      "suggested_years": "5-11",
+      "suggested_etp": { "spectrum": "impulse_gap", "vector": "toward_reflective", "energy_cost": "high" }
+    },
+    {
+      "id": "accel_fine_motor_control",
+      "name": "Fine Motor Control",
+      "short_description": "Control small hand movements for writing, cutting and drawing.",
+      "domain": "PHYSICAL",
+      "suggested_years": "5-7",
+      "suggested_etp": { "spectrum": "voltage_sensitivity", "vector": "toward_insulated", "energy_cost": "low" }
+    },
+    {
+      "id": "accel_problem_solving_starter",
+      "name": "Problem-Solving Starter",
+      "short_description": "Approach simple puzzles and problems using trial, reason and explanation.",
+      "domain": "PROBLEM SOLVING",
+      "suggested_years": "7-11",
+      "suggested_etp": { "spectrum": "anticipation_bias", "vector": "toward_optimistic", "energy_cost": "medium" }
+    },
+    {
+      "id": "accel_verbal_reasoning",
+      "name": "Verbal Reasoning",
+      "short_description": "Interpret spoken instructions and explain reasoning using sentences.",
+      "domain": "COGNITION",
+      "suggested_years": "7-11",
+      "suggested_etp": { "spectrum": "emotional_transparency", "vector": "toward_positive", "energy_cost": "medium" }
+    },
+    {
+      "id": "accel_digital_literacy",
+      "name": "Digital Literacy",
+      "short_description": "Basic, safe use of educational devices and simple tools (typing, searching).",
+      "domain": "TECHNOLOGY",
+      "suggested_years": "7-11",
+      "suggested_etp": { "spectrum": "resource_allocation", "vector": "toward_sharing", "energy_cost": "low" }
+    },
+    {
+      "id": "accel_executive_function",
+      "name": "Executive Function",
+      "short_description": "Plan, start and complete short multi-step tasks; monitor outcomes.",
+      "domain": "EXECUTIVE",
+      "suggested_years": "7-11",
+      "suggested_etp": { "spectrum": "agency_threshold", "vector": "toward_active", "energy_cost": "high" }
+    },
+    {
+      "id": "accel_emotional_awareness",
+      "name": "Emotional Awareness",
+      "short_description": "Recognise and label basic emotions in self and others.",
+      "domain": "SOCIAL-EMOTIONAL",
+      "suggested_years": "5-11",
+      "suggested_etp": { "spectrum": "emotional_transparency", "vector": "toward_positive", "energy_cost": "medium" }
+    }
+  ],
+  "notes": "Use these accelerator skills as small canonical seeds. Each item includes suggested ETP links that should be validated by domain experts before bulk seeding. Keep the set intentionally small to make course→ETP anchoring lightweight."
+}
