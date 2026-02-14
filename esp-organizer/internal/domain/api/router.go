@@ -60,6 +60,12 @@ func RegisterRoutes(r *mux.Router, coachService coach.CoachServiceMVP) {
 	// Public contact endpoint (frontend submits a recaptcha token + message)
 	apiRouter.HandleFunc("/contact", ContactHandler).Methods("POST", "OPTIONS")
 
+	// Analytics (visitor tracking — no cookies, no personal data)
+	apiRouter.HandleFunc("/analytics/pageview", AnalyticsPageViewHandler).Methods("POST", "OPTIONS")
+	apiRouter.HandleFunc("/analytics/event", AnalyticsEventHandler).Methods("POST", "OPTIONS")
+	apiRouter.HandleFunc("/analytics/stats", AnalyticsStatsHandler).Methods("GET", "OPTIONS")
+	log.Println("✅ Analytics endpoints registered (pageview/event/stats)")
+
 	// Semantic Links API (extract/search/validate/export)
 	apiRouter.HandleFunc("/semantic-links/extract", SemanticLinksExtractHandler).Methods("POST", "OPTIONS")
 	apiRouter.HandleFunc("/semantic-links/search", SemanticLinksSearchHandler).Methods("GET", "POST", "OPTIONS")

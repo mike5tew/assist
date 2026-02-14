@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Typography, Box, IconButton, Tooltip } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { trackEvent } from '../hooks/useAnalytics';
 
 interface Props {
   email: string;
@@ -45,6 +46,7 @@ const ContactReveal: React.FC<Props> = ({ email, label = 'Contact' }) => {
   const tryUnlock = () => {
     if (parseInt(input || '0', 10) === challenge.answer) {
       setUnlocked(true);
+      trackEvent('contact_unlocked', window.location.pathname, { label });
     } else {
       // new challenge on failure to slow bots
       setChallenge(generateChallenge());
@@ -78,6 +80,7 @@ const ContactReveal: React.FC<Props> = ({ email, label = 'Contact' }) => {
         body: JSON.stringify({ name, email: senderEmail, message, recaptchaToken }),
       });
       if (resp.ok) {
+        trackEvent('contact_sent', window.location.pathname, { label });
         setSentOk(true);
       } else {
         setSentOk(false);

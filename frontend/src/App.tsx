@@ -27,6 +27,8 @@ import LessonPlanningDemo from './pages/ESPWorld/LessonPlanningDemo';
 import PrimaryOSLanding from './pages/PrimaryOS';
 import CHISGLanding from './pages/CHISG/CHISGLanding';
 import CareerOSLanding from './pages/careerOS';
+import useAnalytics from './hooks/useAnalytics';
+import AnalyticsDashboard from './pages/AnalyticsDashboard';
 
 const theme = createTheme({
   palette: {
@@ -80,9 +82,10 @@ const SkillsTreeRedirect: React.FC = () => {
   return <Box sx={{ p: 4, textAlign: 'center' }}>Redirecting to Skills Map...</Box>;
 };
 
-// Scroll to top on route change
+// Scroll to top on route change + page view tracking
 const ScrollToTop: React.FC = () => {
   const { pathname } = useLocation();
+  useAnalytics(); // auto-tracks page views on route change
 
   React.useEffect(() => {
     window.scrollTo(0, 0);
@@ -144,6 +147,7 @@ export default function App() {
             <Route path="/diagnostics" element={<DiagnosticViewer />} />
             <Route path="/upload/immunology" element={<ImmunologyUpload />} />
             <Route path="/semantic-links/extract" element={<SemanticLinkExtractor />} />
+            <Route path="/analytics" element={<AnalyticsDashboard />} />
             
             {/* Fallback */}
             <Route path="*" element={<ErrorPage />} />
