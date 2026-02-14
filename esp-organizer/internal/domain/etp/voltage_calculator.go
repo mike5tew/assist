@@ -35,6 +35,25 @@ type VoltageImpact struct {
 }
 
 // spectrumActivityAlignment maps each spectrum to which activities align with negative/positive settings
+// TODO(etp-9-migration): This entire map uses the OLD 17-spectrum IDs and must be rebuilt for 9-spectrum model.
+// Current mapping (old ID → old name → new status):
+//
+//	1→social_gravity (keep, ID 1)    2→guilt_response (removed, downstream of integrity_logic)
+//	3→emotional_transparency (removed, skill for voltage_sensitivity)  4→energy_directionality (keep, ID 2)
+//	5→mirror_neuron_tuning (keep, ID 8)  6→resource_allocation (removed, skill for care_response)
+//	7→voltage_sensitivity (keep, ID 3)   8→impulse_gap (removed, now pilot_strength moderator)
+//	9→self_righting_speed (removed, derived)  10→risk_tolerance (keep, ID 6)
+//	11→anticipation_bias (removed, downstream of risk_tolerance)  12→presence_sensitivity (removed, skill)
+//	13→agency_threshold (removed, skill for threat_response)  14→authority_response (removed, skill)
+//	15→ambiguity_tolerance (removed, skill for risk_tolerance)  16→status_sensitivity (removed, skill)
+//	17→integrity_logic (keep, ID 7)
+//
+// New map should be keyed 1-9 with entries for: social_gravity, energy_directionality,
+// voltage_sensitivity, threat_response, care_response, risk_tolerance, integrity_logic,
+// mirror_neuron_tuning, orderliness
+// Key design question: What activity types align with orderliness?
+//
+//	Suggested: negative(flexible)→{Creative, Risky}, positive(ordered)→{Structured, Cognitive}
 var spectrumActivityAlignment = map[int]struct {
 	negativeActivities []ActivityType // Activities that reduce voltage for negative settings
 	positiveActivities []ActivityType // Activities that reduce voltage for positive settings
@@ -143,7 +162,8 @@ func (vc *VoltageCalculator) CalculateVoltageImpact(spectrumID int, setting floa
 	}
 }
 
-// ETPProfile represents a student's full ETP profile (17 spectra)
+// ETPProfile represents a student's full ETP profile (9 spectra + 2 moderators)
+// TODO(etp-9-migration): Consider if this struct should be shared with moral_neutrality.go CreateDashboard
 type ETPProfile struct {
 	StudentID string          `json:"student_id"`
 	Settings  map[int]float64 `json:"settings"` // spectrumID -> setting (-2 to +2)

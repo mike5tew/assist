@@ -190,6 +190,24 @@ var ETPSpectra = []ETPSpectrum{
 			"compassionate_witnessing",    // Feeling without fixing
 		},
 	},
+	{
+		ID:              9,
+		Name:            "orderliness",
+		NegativeLabel:   "Flexible",
+		PositiveLabel:   "Ordered",
+		NegativeEffect:  "Structure creates CONSTRICTION voltage (feels caged)",
+		PositiveEffect:  "Disorder creates ANXIETY voltage (feels chaotic)",
+		ConflictPattern: "Flexible seems chaotic, Ordered seems controlling",
+		SolutionName:    "Structure Voltage Gradients",
+		Skills: []string{
+			"routine_building",      // Skill for flexible to establish useful structure
+			"spontaneity_tolerance", // Skill for ordered to handle disruption
+			"task_sequencing",       // Breaking work into manageable ordered steps
+			"workspace_management",  // Physical environment organisation
+			"transition_handling",   // Moving between activities without dysregulation
+			"flexible_planning",     // Creating structure that bends without breaking
+		},
+	},
 }
 
 // SpectrumSkills defines all trainable skills organized by spectrum
@@ -262,11 +280,20 @@ var SpectrumSkills = map[int][]SpectrumSkill{
 		{ID: "emotional_contagion_control", Name: "Emotional Contagion Control", SpectrumID: 8, Direction: "negative", Description: "Not catching unwanted emotions", Exercises: "Pre-exposure preparation, mid-exposure check, post-exposure clearing"},
 		{ID: "compassionate_witnessing", Name: "Compassionate Witnessing", SpectrumID: 8, Direction: "both", Description: "Feeling with without fixing", Exercises: "Presence without advice, holding space, just listening"},
 	},
+	// Orderliness Skills
+	9: {
+		{ID: "routine_building", Name: "Routine Building", SpectrumID: 9, Direction: "positive", Description: "Establishing useful daily structure", Exercises: "Morning routine design, checklist creation, habit stacking"},
+		{ID: "spontaneity_tolerance", Name: "Spontaneity Tolerance", SpectrumID: 9, Direction: "negative", Description: "Handling disruption to plans without dysregulation", Exercises: "Planned surprises, flexible scheduling, improvisation games"},
+		{ID: "task_sequencing", Name: "Task Sequencing", SpectrumID: 9, Direction: "positive", Description: "Breaking work into manageable ordered steps", Exercises: "Task lists, workflow mapping, priority matrices"},
+		{ID: "workspace_management", Name: "Workspace Management", SpectrumID: 9, Direction: "positive", Description: "Organising physical and digital environments", Exercises: "Desk resets, folder organisation, tool placement rituals"},
+		{ID: "transition_handling", Name: "Transition Handling", SpectrumID: 9, Direction: "both", Description: "Moving between activities without dysregulation", Exercises: "Transition warnings, bridging rituals, closure practices"},
+		{ID: "flexible_planning", Name: "Flexible Planning", SpectrumID: 9, Direction: "negative", Description: "Creating structure that bends without breaking", Exercises: "Plan B thinking, loose scheduling, outcome vs process focus"},
+	},
 }
 
-// GetSpectrumByID returns the spectrum for a given ID (1-8)
+// GetSpectrumByID returns the spectrum for a given ID (1-9)
 func GetSpectrumByID(id int) *ETPSpectrum {
-	if id < 1 || id > 8 {
+	if id < 1 || id > len(ETPSpectra) {
 		return nil
 	}
 	return &ETPSpectra[id-1]

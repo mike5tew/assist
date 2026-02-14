@@ -10,35 +10,131 @@ interface ETPSpectrum {
     id: string;
     label: string;
     description: string;
-    example?: string;
-    category: "Social" | "Emotional" | "Authority";
+    negativeEffect: string;
+    positiveEffect: string;
+    conflictPattern: string;
     leftLabel: string;
     rightLabel: string;
 }
 
+interface GlobalModerator {
+    id: string;
+    label: string;
+    description: string;
+    lowEffect: string;
+    highEffect: string;
+}
+
+// 8 Core biological spectra - innate, morally neutral, orthogonal
 const spectra: ETPSpectrum[] = [
-    // Social
-    { id: "social_gravity", label: "Social Gravity", description: "Tendency to align with group social pull versus independence.", example: "E.g., prefers group consensus over going solo on tasks.", category: "Social", leftLabel: "Independent", rightLabel: "Cohesive" },
-    { id: "guilt_response", label: "Guilt Response", description: "How quickly guilt is internalized versus externalized in social interactions.", example: "E.g., feels guilty quickly after a perceived social misstep.", category: "Social", leftLabel: "Internalized", rightLabel: "Externalized" },
-    { id: "emotional_transparency", label: "Emotional Transparency", description: "Openness in expressing emotional state to others.", example: "E.g., openly shares worry vs keeping feelings private.", category: "Social", leftLabel: "Opaque", rightLabel: "Transparent" },
-    { id: "energy_directionality", label: "Energy Directionality", description: "Whether energy is directed inward (reflective) or outward (expressive).", example: "E.g., energizes others in group vs prefers quiet reflection.", category: "Social", leftLabel: "Inward (Intro)", rightLabel: "Outward (Extro)" },
-    { id: "mirror_neuron_tuning", label: "Mirror Neuron Tuning", description: "Sensitivity to others' actions and emotions leading to mirroring behavior.", example: "E.g., unconsciously mirrors colleagues' body language.", category: "Social", leftLabel: "Selective", rightLabel: "Absorbent" },
-    { id: "resource_allocation", label: "Resource Allocation", description: "Tendency to hoard versus share social and material resources.", example: "E.g., keeps learning materials private vs shares freely.", category: "Social", leftLabel: "Hoarding", rightLabel: "Sharing" },
+    {
+        id: "social_gravity",
+        label: "Social Gravity",
+        description: "How social interaction affects your energy voltage.",
+        negativeEffect: "Social interaction DRAINS voltage",
+        positiveEffect: "Social interaction CHARGES voltage",
+        conflictPattern: "Independent feels overwhelmed, Cohesive feels lonely",
+        leftLabel: "Independent",
+        rightLabel: "Cohesive"
+    },
+    {
+        id: "energy_directionality",
+        label: "Energy Directionality",
+        description: "Where your energy naturally flows - inward or outward.",
+        negativeEffect: "External stimulation OVERLOADS system",
+        positiveEffect: "Internal energy NEEDS external outlet",
+        conflictPattern: "Introverts drain, Extroverts starve",
+        leftLabel: "Inward",
+        rightLabel: "Outward"
+    },
+    {
+        id: "voltage_sensitivity",
+        label: "Voltage Sensitivity",
+        description: "How much emotional insulation you need.",
+        negativeEffect: "Needs thick emotional insulation",
+        positiveEffect: "Thrives on emotional current",
+        conflictPattern: "Insulated seems numb, Conductive seems dramatic",
+        leftLabel: "Insulated",
+        rightLabel: "Conductive"
+    },
+    {
+        id: "threat_response",
+        label: "Threat Response",
+        description: "How you respond when threats are detected.",
+        negativeEffect: "Threats trigger AVOIDANCE voltage (freeze/flee)",
+        positiveEffect: "Threats trigger CONFRONTATION voltage (fight)",
+        conflictPattern: "Passive seen as cowardly, Aggressive seen as dangerous",
+        leftLabel: "Passive",
+        rightLabel: "Aggressive"
+    },
+    {
+        id: "care_response",
+        label: "Care Response",
+        description: "How you respond to vulnerability in others.",
+        negativeEffect: "Vulnerability triggers DISTANCE voltage (self-protection)",
+        positiveEffect: "Vulnerability triggers CARE voltage (other-protection)",
+        conflictPattern: "Detached seen as cold, Nurturing seen as smothering",
+        leftLabel: "Detached",
+        rightLabel: "Nurturing"
+    },
+    {
+        id: "risk_tolerance",
+        label: "Risk Tolerance",
+        description: "How risk affects your emotional state.",
+        negativeEffect: "Risk creates ANXIETY voltage",
+        positiveEffect: "Risk creates EXCITEMENT voltage",
+        conflictPattern: "Averse holds back, Seeking pushes forward",
+        leftLabel: "Averse",
+        rightLabel: "Seeking"
+    },
+    {
+        id: "integrity_logic",
+        label: "Integrity Logic",
+        description: "How you process moral and ethical decisions.",
+        negativeEffect: "Absolutes create CONSTRICTION voltage",
+        positiveEffect: "Relativity creates CHAOS voltage",
+        conflictPattern: "Relativistic seems unprincipled, Absolutist seems rigid",
+        leftLabel: "Relativistic",
+        rightLabel: "Absolutist"
+    },
+    {
+        id: "mirror_neuron_tuning",
+        label: "Mirror Neuron Tuning",
+        description: "How much you absorb others' emotional states.",
+        negativeEffect: "Others' emotions are DISTINCT signals",
+        positiveEffect: "Others' emotions are SHARED experience",
+        conflictPattern: "Selective seems uncaring, Absorbent seems overwhelmed",
+        leftLabel: "Selective",
+        rightLabel: "Absorbent"
+    },
+    {
+        id: "orderliness",
+        label: "Orderliness",
+        description: "Your preference for predictable structure versus spontaneous flexibility.",
+        negativeEffect: "Structure creates CONSTRICTION voltage (feels caged)",
+        positiveEffect: "Disorder creates ANXIETY voltage (feels chaotic)",
+        conflictPattern: "Flexible seems chaotic, Ordered seems controlling",
+        leftLabel: "Flexible",
+        rightLabel: "Ordered"
+    },
+];
 
-    // Emotional
-    { id: "voltage_sensitivity", label: "Voltage Sensitivity", description: "Emotional reactivity to small inputs—how easily one is affected.", example: "E.g., small criticisms either deeply unsettle or are shrugged off.", category: "Emotional", leftLabel: "Insulated", rightLabel: "Conductive" },
-    { id: "impulse_gap", label: "Impulse Gap", description: "Ability to pause and reflect before acting versus reacting immediately.", example: "E.g., takes a breath before replying vs answers instantly.", category: "Emotional", leftLabel: "Reactive", rightLabel: "Reflective" },
-    { id: "self_righting_speed", label: "Self-Righting Speed", description: "Speed at which emotional state returns to baseline after disturbance.", example: "E.g., recovers quickly after setbacks vs dwelling for days.", category: "Emotional", leftLabel: "Slow", rightLabel: "Rapid" },
-    { id: "risk_tolerance", label: "Risk Tolerance", description: "Comfort with uncertainty and willingness to take risks.", example: "E.g., volunteers for ambitious projects vs prefers safe options.", category: "Emotional", leftLabel: "Averse", rightLabel: "Seeking" },
-    { id: "anticipation_bias", label: "Anticipation Bias", description: "Lean towards optimistic or pessimistic anticipation of outcomes.", example: "E.g., expects success vs prepares for problems.", category: "Emotional", leftLabel: "Pessimistic", rightLabel: "Optimistic" },
-    { id: "presence_sensitivity", label: "Presence Sensitivity", description: "Degree of attunement to the present moment and surroundings.", example: "E.g., notices subtle cues in conversation vs seems distracted.", category: "Emotional", leftLabel: "Detached", rightLabel: "Attuned" },
-
-    // Authority
-    { id: "agency_threshold", label: "Agency Threshold", description: "Threshold for taking action versus waiting for direction.", example: "E.g., starts tasks proactively vs waits for instructions.", category: "Authority", leftLabel: "Passive", rightLabel: "Active" },
-    { id: "authority_response", label: "Authority Response", description: "Disposition towards compliance or challenging authority.", example: "E.g., follows instructions strictly vs questions policies.", category: "Authority", leftLabel: "Compliant", rightLabel: "Challenging" },
-    { id: "ambiguity_tolerance", label: "Ambiguity Tolerance", description: "Comfort operating under unclear or incomplete information.", example: "E.g., works well with open-ended tasks vs needs clear specs.", category: "Authority", leftLabel: "Rigid", rightLabel: "Fluid" },
-    { id: "status_sensitivity", label: "Status Sensitivity", description: "Degree to which social status affects decisions and behavior.", example: "E.g., defers to seniority vs treats everyone equally.", category: "Authority", leftLabel: "Indifferent", rightLabel: "Concerned" },
-    { id: "integrity_logic", label: "Integrity Logic", description: "Preference for relativistic versus absolutist moral reasoning.", example: "E.g., balances context in decisions vs applies strict rules.", category: "Authority", leftLabel: "Relativistic", rightLabel: "Absolutist" },
+// Global moderators affect ALL spectra
+const globalModerators: GlobalModerator[] = [
+    {
+        id: "pilot_strength",
+        label: "Pilot Strength",
+        description: "Executive function capacity - the hand on ALL sliders.",
+        lowEffect: "Sliders move reactively; triggers control positioning",
+        highEffect: "Sliders move deliberately; conscious choice of positioning"
+    },
+    {
+        id: "current_load",
+        label: "Current Load",
+        description: "Stress/depletion level - narrows range of motion on all spectra.",
+        lowEffect: "Full range of motion available on all spectra",
+        highEffect: "Range contracts toward comfort zone; less flexibility"
+    },
 ];
 
 const MAX_HISTORY = 50;
@@ -46,6 +142,7 @@ const MAX_HISTORY = 50;
 const ETPProfilePage: React.FC = () => {
     const initialValues: Record<string, number> = {};
     spectra.forEach(s => (initialValues[s.id] = 0));
+    globalModerators.forEach(m => (initialValues[m.id] = 0));
 
     const [values, setValues] = useState<Record<string, number>>(initialValues);
     const [history, setHistory] = useState<Record<string, number>[]>([initialValues]);
@@ -159,10 +256,13 @@ const ETPProfilePage: React.FC = () => {
                 <DialogTitle id="profile-help-title">About Emotional Trigger Points (ETP)</DialogTitle>
                 <DialogContent>
                     <DialogContentText sx={{ mb: 2 }}>
-                        ETP stands for Emotional Trigger Points. This system maps learner approaches across Social, Emotional, and Authority domains.
+                        ETP maps 8 core biological spectra that describe how your nervous system responds to different situations. These are innate, morally neutral, and independent of each other.
+                    </DialogContentText>
+                    <DialogContentText sx={{ mb: 2 }}>
+                        Each spectrum has a natural "comfort zone" - neither end is better than the other. The goal is to expand your range of motion on each spectrum through targeted skills practice.
                     </DialogContentText>
                     <DialogContentText sx={{ mb: 1 }}>
-                        This page displays the logic and approaches of the system using 17 modulation spectra. The focus is on visualising behavioural balances and identifying qualitative patterns, rather than generating numerical scores.
+                        Two global moderators affect ALL spectra: <strong>Pilot Strength</strong> (your executive function capacity) and <strong>Current Load</strong> (stress level that narrows your range).
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -170,7 +270,35 @@ const ETPProfilePage: React.FC = () => {
                 </DialogActions>
             </Dialog>
 
+            {/* Global Moderators */}
+            <Paper sx={{ width: '100%', mb: 3, p: 2, bgcolor: 'grey.50' }}>
+                <Typography variant="h6" sx={{ mb: 2 }}>Global Moderators</Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                    These affect your capacity across ALL spectra
+                </Typography>
+                <Grid container spacing={2}>
+                    {globalModerators.map((m) => (
+                        <Grid key={m.id} item xs={12} sm={6}>
+                            <Box sx={{ p: 1 }}>
+                                <SpectrumSlider
+                                    id={m.id}
+                                    title={m.label}
+                                    description={m.description}
+                                    value={values[m.id] || 0}
+                                    onChange={(val) => handleValueChange(m.id, val)}
+                                    onCommit={(id, val) => handleCommit(id, val)}
+                                    leftLabel="Low"
+                                    rightLabel="High"
+                                />
+                            </Box>
+                        </Grid>
+                    ))}
+                </Grid>
+            </Paper>
+
+            {/* 8 Core Spectra */}
             <Paper sx={{ width: '100%', mb: 4, p: 2 }}>
+                <Typography variant="h6" sx={{ mb: 2 }}>8 Core Spectra</Typography>
                 <Grid container spacing={2}>
                     {spectra.map((s) => (
                         <Grid key={s.id} item xs={12} sm={6} md={4}>
@@ -179,7 +307,6 @@ const ETPProfilePage: React.FC = () => {
                                     id={s.id}
                                     title={s.label}
                                     description={s.description}
-                                    example={s.example}
                                     value={values[s.id]}
                                     onChange={(val) => handleValueChange(s.id, val)}
                                     onCommit={(id, val) => handleCommit(id, val)}

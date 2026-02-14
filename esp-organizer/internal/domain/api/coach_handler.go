@@ -3,15 +3,19 @@ package api
 import (
 	"context"
 	"encoding/json"
+	"esp-organizer/internal/domain/skills"
 	"esp-organizer/internal/integration"
+	"esp-organizer/internal/models"
 	"esp-organizer/internal/store/db"
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 	"time"
 
+	"github.com/weaviate/weaviate-go-client/v4/weaviate/graphql"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -1316,41 +1320,362 @@ func extractKeywords(text string) []string {
 	return removeDuplicates(keywords)
 }
 
-// SemanticQueryHandler is a stub for the skills semantic query endpoint
+// SemanticQueryHandler performs a lightweight skill search:
+// - MongoDB exact-ish matches (name search)
+// - Weaviate semantic matches (nearVector)
 func SemanticQueryHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	var req struct {
+	// Request contract kept minimal for the current frontend.
+	// Supports optional fields for future extension.
+	type semanticQueryRequest struct {
 		Query string `json:"query"`
+		Limit int    `json:"limit,omitempty"`
+		Class string `json:"class,omitempty"`
 	}
 
+	var req semanticQueryRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Invalid request", http.StatusBadRequest)
 		return
 	}
-
-	// Stub response for MVP
-	response := map[string]interface{}{
-		"query": req.Query,
-		"results_summary": map[string]int{
-			"total_exact_matches":    0,
-			"total_semantic_matches": 2,
-			"total_related_skills":   3,
-		},
-		"exact_matches":    []interface{}{},
-		"semantic_matches": []interface{}{},
-		"related_skills":   []interface{}{},
-		"llm_synthesis":    "This is a stub response. Full semantic search coming soon.",
-		"semantic_insights": map[string]interface{}{
-			"query_complexity": "medium",
-			"confidence_levels": map[string]int{
-				"high_confidence":   1,
-				"medium_confidence": 1,
-				"low_confidence":    0,
-			},
-		},
-		"timestamp": time.Now(),
+	queryText := strings.TrimSpace(req.Query)
+	if queryText == "" {
+		http.Error(w, "Query text cannot be empty", http.StatusBadRequest)
+		return
+	}
+	limit := req.Limit
+	if limit <= 0 {
+		limit = 10
+	}
+	if limit > 50 {
+		limit = 50
 	}
 
-	json.NewEncoder(w).Encode(response)
+	ctx := r.Context()
+
+	// --- Mongo exact matches (name regex) ---
+	mongoDb, err := db.NewFromEnv()
+	if err != nil {
+		http.Error(w, "Database connection failed", http.StatusInternalServerError)
+		return
+	}
+	defer mongoDb.Client.Disconnect(ctx)
+
+	skillsCollectionName := os.Getenv("SKILLS_COLLECTION")
+	if skillsCollectionName == "" {
+		skillsCollectionName = "skills"
+	}
+	skillSvc := skills.NewSkillService(mongoDb.Database.Collection(skillsCollectionName), nil, nil)
+
+	exactSkills, err := skillSvc.FindSkillsByName(ctx, queryText)
+	if err != nil {
+		log.Printf("SemanticQueryHandler: Mongo exact search failed: %v", err)
+		exactSkills = []models.Skill{}
+	}
+
+	// --- Related skills (parents of exact matches) ---
+	parentIDs := make([]primitive.ObjectID, 0, 32)
+	seen := make(map[primitive.ObjectID]struct{})
+	for _, s := range exactSkills {
+		for _, pid := range s.ParentSkillIDs {
+			if _, ok := seen[pid]; ok {
+				continue
+			}
+			seen[pid] = struct{}{}
+			parentIDs = append(parentIDs, pid)
+		}
+	}
+
+	relatedSkills, err := skillSvc.FindSkillsByIDs(ctx, parentIDs)
+	if err != nil {
+		log.Printf("SemanticQueryHandler: related skills lookup failed: %v", err)
+		relatedSkills = []models.Skill{}
+	}
+
+	// --- Weaviate semantic matches (NearVector) ---
+	weaviateClient := db.GetWeaviateClient()
+	semanticMatches := make([]map[string]interface{}, 0)
+
+	classToUse := strings.TrimSpace(req.Class)
+	if classToUse == "" {
+		// Choose the most “skill-like” class available.
+		// NOTE: In the humanOS Weaviate instance, the skills class is typically CHISGElement.
+		candidates := []string{"CHISGElement", "CHISGSkill", "EducationalSkills", "SemanticLinks", "Documentation"}
+		for _, candidate := range candidates {
+			exists, existsErr := db.WeaviateCollectionExists(ctx, candidate)
+			if existsErr != nil {
+				log.Printf("SemanticQueryHandler: failed to check Weaviate schema for %s: %v", candidate, existsErr)
+				continue
+			}
+			if exists {
+				classToUse = candidate
+				break
+			}
+		}
+	}
+
+	if weaviateClient == nil {
+		log.Printf("SemanticQueryHandler: Weaviate client not available")
+	} else if classToUse != "" {
+		// Some Weaviate instances (like the humanOS one) do not support nearText, so we use nearVector.
+		embedClient := getEmbeddingClient()
+		queryVector, err := embedClient.GenerateEmbedding(queryText)
+		if err != nil {
+			log.Printf("SemanticQueryHandler: embedding generation failed: %v", err)
+			queryVector = nil
+		}
+
+		// Best-effort: infer vector dimension from Weaviate and resize the query vector if needed.
+		if queryVector != nil {
+			expectedDim := 0
+			dimResp, dimErr := weaviateClient.GraphQL().Get().
+				WithClassName(classToUse).
+				WithFields(graphql.Field{Name: "_additional", Fields: []graphql.Field{{Name: "vector"}}}).
+				WithLimit(1).
+				Do(ctx)
+			if dimErr == nil && dimResp != nil && dimResp.Errors == nil {
+				if getBlock, ok := dimResp.Data["Get"].(map[string]interface{}); ok {
+					if itemsAny, ok := getBlock[classToUse].([]interface{}); ok && len(itemsAny) > 0 {
+						if item, ok := itemsAny[0].(map[string]interface{}); ok {
+							if add, ok := item["_additional"].(map[string]interface{}); ok {
+								switch v := add["vector"].(type) {
+								case []interface{}:
+									expectedDim = len(v)
+								case []float64:
+									expectedDim = len(v)
+								}
+							}
+						}
+					}
+				}
+			}
+			if expectedDim > 0 && len(queryVector) != expectedDim {
+				resized := make([]float32, expectedDim)
+				copy(resized, queryVector)
+				queryVector = resized
+			}
+		}
+
+		if queryVector == nil {
+			log.Printf("SemanticQueryHandler: no query vector available; skipping Weaviate semantic search")
+		} else {
+			nearVector := weaviateClient.GraphQL().NearVectorArgBuilder().WithVector(queryVector)
+
+			additional := graphql.Field{Name: "_additional", Fields: []graphql.Field{{Name: "certainty"}, {Name: "distance"}, {Name: "id"}}}
+			var fields []graphql.Field
+			switch classToUse {
+			case "CHISGElement":
+				fields = []graphql.Field{{Name: "name"}, {Name: "description"}, {Name: "domain"}, {Name: "layer"}, {Name: "chisg_id"}, {Name: "source"}, {Name: "suggested_years"}, additional}
+			case "CHISGSkill":
+				fields = []graphql.Field{{Name: "name"}, {Name: "description"}, {Name: "domain"}, {Name: "layer"}, {Name: "chisgId"}, additional}
+			case "EducationalSkills":
+				fields = []graphql.Field{{Name: "name"}, {Name: "description"}, {Name: "skill_type"}, {Name: "development_age"}, {Name: "mongo_id"}, additional}
+			case "SemanticLinks":
+				fields = []graphql.Field{{Name: "statement"}, {Name: "source_term"}, {Name: "target_term"}, {Name: "forward_relation"}, {Name: "relation_type"}, {Name: "context"}, {Name: "confidence"}, {Name: "domain"}, additional}
+			default:
+				fields = []graphql.Field{{Name: "name"}, {Name: "description"}, additional}
+			}
+
+			resp, werr := weaviateClient.GraphQL().Get().
+				WithClassName(classToUse).
+				WithFields(fields...).
+				WithNearVector(nearVector).
+				WithLimit(limit).
+				Do(ctx)
+			if werr != nil {
+				log.Printf("SemanticQueryHandler: Weaviate query failed: %v", werr)
+			} else if resp != nil && resp.Errors != nil {
+				log.Printf("SemanticQueryHandler: Weaviate returned errors: %v", resp.Errors)
+			} else {
+				getBlock, ok := resp.Data["Get"].(map[string]interface{})
+				if ok {
+					itemsAny, ok := getBlock[classToUse].([]interface{})
+					if ok {
+						for _, raw := range itemsAny {
+							item, ok := raw.(map[string]interface{})
+							if !ok {
+								continue
+							}
+
+							// Map Weaviate object -> frontend semantic match shape
+							match := map[string]interface{}{}
+							var name, desc, skillType string
+
+							switch classToUse {
+							case "CHISGElement":
+								name, _ = item["name"].(string)
+								desc, _ = item["description"].(string)
+								domain, _ := item["domain"].(string)
+								layer, _ := item["layer"].(string)
+								skillType = strings.TrimSpace(strings.Trim(strings.Join([]string{domain, layer}, " • "), " • "))
+							case "CHISGSkill":
+								name, _ = item["name"].(string)
+								desc, _ = item["description"].(string)
+								domain, _ := item["domain"].(string)
+								layer, _ := item["layer"].(string)
+								skillType = strings.TrimSpace(strings.Trim(strings.Join([]string{domain, layer}, " • "), " • "))
+							case "EducationalSkills":
+								name, _ = item["name"].(string)
+								desc, _ = item["description"].(string)
+								skillType, _ = item["skill_type"].(string)
+							case "SemanticLinks":
+								stmt, _ := item["statement"].(string)
+								sourceTerm, _ := item["source_term"].(string)
+								targetTerm, _ := item["target_term"].(string)
+								rel, _ := item["forward_relation"].(string)
+								if rel == "" {
+									rel, _ = item["relation_type"].(string)
+								}
+								if stmt != "" {
+									name = stmt
+								} else {
+									name = strings.TrimSpace(strings.Join([]string{sourceTerm, rel, targetTerm}, " "))
+								}
+								desc, _ = item["context"].(string)
+								skillType, _ = item["domain"].(string)
+							default:
+								name, _ = item["name"].(string)
+								desc, _ = item["description"].(string)
+							}
+
+							match["skill_name"] = name
+							match["description"] = desc
+							match["skill_type"] = skillType
+
+							// certainty preferred; fall back to 1-distance.
+							semanticRelevance := 0.0
+							if add, ok := item["_additional"].(map[string]interface{}); ok {
+								if c, ok := add["certainty"].(float64); ok {
+									semanticRelevance = c
+								} else if d, ok := add["distance"].(float64); ok {
+									semanticRelevance = 1.0 - d
+								}
+							}
+							if semanticRelevance < 0 {
+								semanticRelevance = 0
+							}
+							if semanticRelevance > 1 {
+								semanticRelevance = 1
+							}
+							match["semantic_relevance"] = semanticRelevance
+
+							semanticMatches = append(semanticMatches, match)
+						}
+					}
+				}
+			}
+		}
+	} else {
+		log.Printf("SemanticQueryHandler: no suitable Weaviate class found for semantic search")
+	}
+
+	// --- Response mapping to frontend contract ---
+	mapSkill := func(s models.Skill) map[string]interface{} {
+		criteria := make([]string, 0, len(s.SkillCriteria))
+		for _, c := range s.SkillCriteria {
+			criteria = append(criteria, fmt.Sprintf("Level %d: %s", c.Level, c.Description))
+		}
+
+		out := map[string]interface{}{
+			"skill_name":      s.Name,
+			"description":     s.Description,
+			"skill_type":      s.Category,
+			"development_age": s.DevelopmentAge,
+			"criteria_levels": len(criteria),
+			"criteria":        criteria,
+		}
+
+		if s.SourceTitle != "" || s.SourceType != "" || s.ExtractionMethod != "" || s.ChapterTitle != "" {
+			out["source_info"] = map[string]interface{}{
+				"title":             s.SourceTitle,
+				"type":              s.SourceType,
+				"chapter_title":     s.ChapterTitle,
+				"extraction_method": s.ExtractionMethod,
+			}
+		}
+
+		return out
+	}
+
+	exactOut := make([]map[string]interface{}, 0, len(exactSkills))
+	for _, s := range exactSkills {
+		exactOut = append(exactOut, mapSkill(s))
+	}
+
+	relatedOut := make([]map[string]interface{}, 0, len(relatedSkills))
+	for _, s := range relatedSkills {
+		relatedOut = append(relatedOut, mapSkill(s))
+	}
+
+	// --- Basic insights (no hand-wavy LLM claims) ---
+	wordCount := len(strings.Fields(queryText))
+	complexity := "medium"
+	if wordCount <= 2 {
+		complexity = "low"
+	} else if wordCount >= 7 {
+		complexity = "high"
+	}
+
+	high, medium, low := 0, 0, 0
+	for _, m := range semanticMatches {
+		v, _ := m["semantic_relevance"].(float64)
+		switch {
+		case v >= 0.75:
+			high++
+		case v >= 0.5:
+			medium++
+		default:
+			low++
+		}
+	}
+
+	synthesis := fmt.Sprintf(
+		"Found %d exact match(es) in MongoDB and %d semantic match(es) in Weaviate%s.",
+		len(exactOut),
+		len(semanticMatches),
+		func() string {
+			if classToUse == "" {
+				return ""
+			}
+			return fmt.Sprintf(" (class: %s)", classToUse)
+		}(),
+	)
+
+	if len(semanticMatches) == 0 && len(exactOut) == 0 {
+		synthesis = "No matches found. Try a broader skill phrase (e.g., 'working memory' or 'executive function')."
+	}
+
+	response := map[string]interface{}{
+		"query":     queryText,
+		"timestamp": time.Now(),
+		"results_summary": map[string]int{
+			"total_exact_matches":    len(exactOut),
+			"total_semantic_matches": len(semanticMatches),
+			"total_related_skills":   len(relatedOut),
+		},
+		"exact_matches":    exactOut,
+		"semantic_matches": semanticMatches,
+		"related_skills":   relatedOut,
+		"llm_synthesis":    synthesis,
+		"semantic_insights": map[string]interface{}{
+			"query_complexity": complexity,
+			"confidence_levels": map[string]int{
+				"high_confidence":   high,
+				"medium_confidence": medium,
+				"low_confidence":    low,
+			},
+		},
+	}
+
+	// If the handler is being called but Weaviate isn't reachable/configured, surface it clearly.
+	if weaviateClient == nil {
+		response["semantic_error"] = "Weaviate client not available (check WEAVIATE_URL and container health)"
+	}
+
+	if err := json.NewEncoder(w).Encode(response); err != nil {
+		// At this point headers are likely written; just log.
+		log.Printf("SemanticQueryHandler: failed to encode response: %v", err)
+		return
+	}
 }

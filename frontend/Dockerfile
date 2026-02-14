@@ -17,15 +17,19 @@ RUN npm cache clean --force && \
 
 COPY . .
 
-# Declare a build argument for the version
+# Declare build arguments
 ARG APP_VERSION=unknown
-# Set the React environment variable from the build argument
+ARG REACT_APP_RECAPTCHA_SITE_KEY=""
+
+# Set the React environment variables from the build arguments
 ENV REACT_APP_VERSION=$APP_VERSION
+ENV REACT_APP_RECAPTCHA_SITE_KEY=$REACT_APP_RECAPTCHA_SITE_KEY
 
 ENV GENERATE_SOURCEMAP=false
 ENV NODE_ENV=production
-# Set the public URL so the app knows its assets are served from /esp-organizer/
-ENV PUBLIC_URL=/esp-organizer
+# Portfolio-first: serve at root. Override with --build-arg PUBLIC_URL=/esp-organizer for legacy.
+ARG PUBLIC_URL=/
+ENV PUBLIC_URL=$PUBLIC_URL
 
 RUN npm run build
 

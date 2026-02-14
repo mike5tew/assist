@@ -65,10 +65,15 @@ func ActionPlanHandler(w http.ResponseWriter, r *http.Request) {
 	// The schema has "spectrumVector" as number[]
 	// I need to order the values correctly to make a vector.
 	// I'll define a canonical order.
+	// TODO: This legacy order preserves backward compatibility with old 17-spectrum vectors.
+	// New canonical order is the 9 core spectra defined in etp.ETPSpectra.
+	// Once all stored vectors are migrated, replace with:
+	//   etp.SpectrumNames() + "orderliness"
 	order := []string{
 		"social_gravity", "guilt_response", "emotional_transparency", "energy_directionality", "mirror_neuron_tuning", "resource_allocation",
 		"voltage_sensitivity", "impulse_gap", "self_righting_speed", "risk_tolerance", "anticipation_bias", "presence_sensitivity",
 		"agency_threshold", "authority_response", "ambiguity_tolerance", "status_sensitivity", "integrity_logic",
+		"orderliness",
 	}
 
 	vector := make([]float32, len(order))

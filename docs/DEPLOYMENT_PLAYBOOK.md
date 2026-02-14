@@ -12,6 +12,38 @@
 
 ---
 
+## Secrets: Docker Swarm (recommended)
+
+Sensitive credentials (SMTP passwords, API keys, certificates) must not be stored in the repository or plain `.env` files for production. Use Docker Swarm secrets (or a managed secret store) instead.
+
+Local dev options
+
+- During development you may keep `./secrets/*` files (these are gitignored). The compose file will mount them into `/run/secrets/` for containers.
+- Do NOT commit `secrets/` to git.
+
+Production / swarm workflow
+
+1. Initialize or use an existing Swarm manager:
+   - `docker swarm init`  # run on the manager
+
+2. Create secrets on the manager (example for SMTP):
+   - `docker secret create smtp_user ./secrets/smtp_user`
+   - `docker secret create smtp_pass ./secrets/smtp_pass`
+
+3. Confirm secrets exist:
+   - `docker secret ls`
+
+4. Deploy the stack (compose references the secrets as `external: true`):
+   - `docker stack deploy -c docker-compose.prod.yml assist`
+
+5. Remove local dev secret files once swarm secrets are created and validated:
+   - `rm -f ./secrets/smtp_user ./secrets/smtp_pass`
+
+If you cannot create swarm secrets on your local machine, keep the `./secrets/` files for development and run the `docker secret create` commands on the target Swarm manager (production host).
+
+Security note: preferred production secret stores are Docker Swarm secrets, AWS Secrets Manager, HashiCorp Vault, or similar.
+
+
 ## Scenario 1: Initial Full Deployment (Wipe & Replace)
 
 Use this scenario when setting up the server for the first time or when a major architectural change requires a clean slate.

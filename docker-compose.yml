@@ -9,12 +9,16 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./main-proxy/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./main-proxy/nginx-vultr-portfolio.conf:/etc/nginx/conf.d/default.conf:ro
     networks:
       - shared-network
     depends_on:
       - assist-frontend
       - assist-api
+      - skills-frontend
+      - skills-api
+      - drb-frontend
+      - drb-api
 
   assist-frontend:
     build:
@@ -22,6 +26,7 @@ services:
       dockerfile: Dockerfile
       args:
         APP_VERSION: "dev-1.0.0"
+        REACT_APP_RECAPTCHA_SITE_KEY: "6LcR-GgsAAAAAFaidZ-xyeDvosBghfQ_MI1EQ7U4"
     container_name: assist-frontend
     restart: always
     ports:
@@ -39,12 +44,73 @@ services:
     environment:
       MONGODB_URI: mongodb://admin:password123@mongodb:27017/esp_organizer?authSource=admin
       MONGODB_URI_INTERNAL: mongodb://admin:password123@mongodb:27017/esp_organizer?authSource=admin
-      WEAVIATE_URL: http://weaviate:8080
+      # Use the humanOS Weaviate instance (published on host:8081) which contains CHISGElement/skills data.
+      # On macOS, containers can reach the host via host.docker.internal.
+      WEAVIATE_URL: http://host.docker.internal:8081
+      # Local/dev-only: allows hitting /api/diagnostics/weaviate/backfill-vectors
+      ENABLE_WEAVIATE_VECTOR_BACKFILL: "true"
+      # Optional: ReCAPTCHA secret (set in production). If set, /api/contact requires token verification.
+      RECAPTCHA_SECRET: "${RECAPTCHA_SECRET:-}"
+      # Contact recipient (default used if SMTP not configured)
+      CONTACT_RECIPIENT: "world@espthinkers.co.uk"
+      # SMTP host/port may remain as env vars; credentials are provided via Docker secrets below
+      SMTP_HOST: "smtp.ionos.co.uk"
+      SMTP_PORT: "587"
+    volumes:
+      - ./secrets/smtp_user:/run/secrets/smtp_user:ro
+      - ./secrets/smtp_pass:/run/secrets/smtp_pass:ro
     ports:
       - "8080:8080"
     depends_on:
       - mongodb
       - weaviate
+    networks:
+      - shared-network
+
+  # --- SKILLS MAP PLATFORM ---
+  skills-frontend:
+    build:
+      context: ../skills-map-platform/frontend
+      dockerfile: Dockerfile
+    container_name: skills-frontend
+    restart: always
+    networks:
+      - shared-network
+
+  skills-api:
+    build:
+      context: ..
+      dockerfile: skills-map-platform/api/Dockerfile
+      args:
+        API_PATH: skills-map-platform/api
+        SHARED_SCHEMAS_PATH: shared-schemas
+    container_name: skills-api
+    restart: always
+    environment:
+      DB_HOST: skills-mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: password123
+      DB_NAME: skillsmap
+      JWT_SECRET: skills-map-dev-secret-key-change-in-prod
+      WEAVIATE_URL: http://host.docker.internal:8081
+    depends_on:
+      - skills-mysql
+    networks:
+      - shared-network
+
+  skills-mysql:
+    image: mysql:8.0
+    container_name: skills-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password123
+      MYSQL_DATABASE: skillsmap
+    ports:
+      - "3307:3306"
+    volumes:
+      - skills_mysql_data:/var/lib/mysql
+      - ../skills-map-platform/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     networks:
       - shared-network
 
@@ -60,6 +126,31 @@ services:
       - "27018:27017"
     volumes:
       - mongodb_data:/data/db
+    networks:
+      - shared-network
+
+  # --- DRB (MAT Strategic Dashboard) ---
+  drb-frontend:
+    build:
+      context: ../DRB/frontend
+      dockerfile: Dockerfile.frontend
+    container_name: drb-frontend
+    restart: always
+    networks:
+      - shared-network
+
+  drb-api:
+    build:
+      context: ../DRB
+      dockerfile: Dockerfile.backend
+    container_name: drb-api
+    restart: always
+    environment:
+      MONGO_URI: mongodb://admin:password123@mongodb:27017/drb_monitor?authSource=admin
+    ports:
+      - "8082:8082"
+    depends_on:
+      - mongodb
     networks:
       - shared-network
 
@@ -87,6 +178,7 @@ services:
 volumes:
   mongodb_data:
   weaviate_data:
+  skills_mysql_data:
 
 networks:
   shared-network:

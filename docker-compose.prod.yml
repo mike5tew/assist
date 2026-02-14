@@ -12,9 +12,22 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./main-proxy/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./main-proxy/nginx-vultr-portfolio.conf:/etc/nginx/conf.d/default.conf
+      - certbot_www:/var/www/certbot:ro
+      - certbot_certs:/etc/letsencrypt:ro
     networks:
       - shared-network
+
+  # --- SSL CERTIFICATE MANAGEMENT ---
+  # Run once: docker compose run --rm certbot certonly --webroot -w /var/www/certbot -d espthinking.co.uk -d www.espthinking.co.uk
+  # Renew: docker compose run --rm certbot renew
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - certbot_www:/var/www/certbot
+      - certbot_certs:/etc/letsencrypt
+    profiles:
+      - ssl  # Only runs when explicitly invoked: docker compose --profile ssl run certbot
 
   # --- ASSIST APP ---
   assist-frontend:
@@ -29,6 +42,10 @@ services:
     container_name: assist-api
     restart: always
     env_file: .env
+    environment:
+      API_PORT: "8080"
+      WEAVIATE_URL: http://weaviate:8080
+      MONGODB_URI: mongodb://${MONGO_ROOT_USER}:${MONGO_ROOT_PASSWORD}@mongodb:27017/esp_organizer?authSource=admin
     expose:
       - "8080"
     depends_on:
@@ -49,11 +66,39 @@ services:
     image: mike5tew/skills-api:latest
     container_name: skills-api
     restart: always
-    env_file: .env # The api is coded to use DB_... vars directly
+    env_file: .env
+    environment:
+      WEAVIATE_URL: http://weaviate:8080
+      DB_HOST: skills-db
+      DB_PORT: "3306"
     expose:
       - "8080"
     depends_on:
       - skills-db
+      - weaviate
+    networks:
+      - shared-network
+
+  # --- DRB (Trust Financial & Estates Monitor) ---
+  drb-frontend:
+    image: mike5tew/drb-frontend:latest
+    container_name: drb-frontend
+    restart: always
+    networks:
+      - shared-network
+    depends_on:
+      - drb-api
+
+  drb-api:
+    image: mike5tew/drb-api:latest
+    container_name: drb-api
+    restart: always
+    expose:
+      - "8082"
+    environment:
+      - MONGO_URI=mongodb://${MONGO_ROOT_USER}:${MONGO_ROOT_PASSWORD}@mongodb:27017/drb_monitor?authSource=admin
+    depends_on:
+      - mongodb
     networks:
       - shared-network
 
@@ -113,6 +158,8 @@ volumes:
   skills_db_data:
   mongodb_data:
   weaviate_data:
+  certbot_www:
+  certbot_certs:
 
 networks:
   shared-network:

@@ -86,3 +86,31 @@ check:
 	@pgrep -fl "react-scripts start" || echo "No local frontend running."
 	@echo "Checking Docker containers..."
 	cd $(PROJECT_ROOT) && docker-compose ps
+
+# ============================================================
+# Documentation & Indexing
+# ============================================================
+
+.PHONY: index backup search
+
+# Generate comprehensive project index (shareable overview)
+index:
+	@echo "Generating project index..."
+	@$(PROJECT_ROOT)/scripts/generate-project-index.sh $(PROJECT_ROOT)/PROJECT_INDEX.md
+	@echo ""
+	@echo "Generated: $(PROJECT_ROOT)/PROJECT_INDEX.md"
+	@echo "Share this file with collaborators or feed to AI assistants."
+
+# Backup Weaviate to S3
+backup:
+	@echo "Backing up Weaviate to S3..."
+	@$(PROJECT_ROOT)/scripts/backup-weaviate-to-s3.sh http://localhost:8081 esp-weaviate-backups
+
+# Search documentation in Weaviate
+search:
+	@echo "Usage: make search q='your query'"
+	@echo "Searching for: $(q)"
+	@curl -sS -X POST http://localhost:8081/v1/graphql \
+		-H 'Content-Type: application/json' \
+		-d '{"query":"{ Get { Documentation(limit: 10, nearText: {concepts: [\"$(q)\"]}) { title file_path project } } }"}' \
+		| jq '.data.Get.Documentation[] | "\(.project): \(.title) -> \(.file_path)"'

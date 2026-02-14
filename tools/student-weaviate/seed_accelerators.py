@@ -78,8 +78,9 @@ def exists_object(weaviate_url, chisg_id):
 
     Returns (exists: bool, existing_record: dict|None)
     """
+    # Query more fields so we can compare for updates
     query_body = json.dumps({
-        "query": f"{{ Get {{ CHISGElement(where:{{path:[\"chisg_id\"], operator:Equal, valueString:\"{chisg_id}\"}}) {{ _additional {{ id }} name chisg_id }} }} }}"
+        "query": f"{{ Get {{ CHISGElement(where:{{path:[\"chisg_id\"], operator:Equal, valueString:\"{chisg_id}\"}}) {{ _additional {{ id }} name chisg_id domain description suggested_years etp_spectrum_id etp_vector etp_energy_cost source }} }} }}"
     }).encode('utf-8')
     url = weaviate_url.rstrip('/') + '/v1/graphql'
     req = request.Request(url, data=query_body, headers={"Content-Type": "application/json"}, method='POST')
@@ -94,6 +95,28 @@ def exists_object(weaviate_url, chisg_id):
         # don't hard-fail on existence checks; warn and treat as not exists
         print(f"Warning: existence check failed for {chisg_id}: {e}")
         return False, None
+
+
+def patch_object(weaviate_url, weaviate_id, props):
+    """Patch/update an existing Weaviate object by its id.
+
+    Returns (ok: bool, response_or_error)
+    """
+    url = weaviate_url.rstrip('/') + f"/v1/objects/{weaviate_id}"
+    payload = {
+        "class": "CHISGElement",
+        "properties": props
+    }
+    data = json.dumps(payload).encode('utf-8')
+    req = request.Request(url, data=data, headers={"Content-Type": "application/json"}, method='PUT')
+    try:
+        with request.urlopen(req) as resp:
+            body = resp.read().decode('utf-8')
+            return True, json.loads(body)
+    except error.HTTPError as e:
+        return False, e.read().decode('utf-8')
+    except Exception as e:
+        return False, str(e)
 
 
 def post_object(weaviate_url, obj):
@@ -115,6 +138,7 @@ def main():
     parser.add_argument("--weaviate", default=DEFAULT_WEAVIATE, help="Weaviate base URL (default from WEAVIATE_URL or http://localhost:8081)")
     parser.add_argument("--file", default=DEFAULT_FILE, help="Path to accelerator JSON")
     parser.add_argument("--dry-run", action="store_true", help="Do not POST, just print what would be sent")
+    parser.add_argument("--update", action="store_true", help="If object exists, update its properties when they differ")
     args = parser.parse_args()
 
     if not os.path.exists(args.file):
@@ -142,8 +166,37 @@ def main():
         exists, existing = exists_object(args.weaviate, normalized)
         if exists:
             existing_id = existing.get('_additional', {}).get('id') if existing else None
-            print(f"⏭️ SKIP (exists): {a.get('name')} -> chisg_id={normalized} (weaviate id={existing_id})")
-            successes.append((a.get('id'), 'skipped', existing_id))
+            if args.update:
+                # Determine differences
+                diffs = {}
+                # Fields we care to update
+                keys = ["name", "description", "domain", "suggested_years", "etp_spectrum_id", "etp_vector", "etp_energy_cost", "source"]
+                for k in keys:
+                    wanted = (obj['properties'].get(k) or "")
+                    current = (existing.get(k) or "")
+                    if str(wanted) != str(current):
+                        diffs[k] = {"current": current, "wanted": wanted}
+
+                if diffs:
+                    if args.dry_run:
+                        print(f"🔁 WOULD UPDATE: {a.get('name')} (chisg_id={normalized})")
+                        print(json.dumps(diffs, indent=2))
+                        successes.append((a.get('id'), 'would_update', existing_id))
+                    else:
+                        # perform update
+                        ok_upd, upd_res = patch_object(args.weaviate, existing_id, obj['properties'])
+                        if ok_upd:
+                            print(f"🔁 UPDATED: {a.get('name')} -> chisg_id={normalized} id={existing_id}")
+                            successes.append((a.get('id'), 'updated', existing_id))
+                        else:
+                            print(f"❌ UPDATE FAILED: {a.get('name')} -> {upd_res}")
+                            failures.append((a.get('id'), upd_res))
+                else:
+                    print(f"⏭️ SKIP (unchanged): {a.get('name')} -> chisg_id={normalized} (weaviate id={existing_id})")
+                    successes.append((a.get('id'), 'skipped', existing_id))
+            else:
+                print(f"⏭️ SKIP (exists): {a.get('name')} -> chisg_id={normalized} (weaviate id={existing_id})")
+                successes.append((a.get('id'), 'skipped', existing_id))
             continue
 
         if args.dry_run:

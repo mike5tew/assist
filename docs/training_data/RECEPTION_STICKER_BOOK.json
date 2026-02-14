@@ -1,0 +1,16 @@
+{
+  "source": "RECEPTION_STICKER_BOOK",
+  "description": "Reception sticker-book skill set — intended to map to existing platform skills (skills_key). If a skill is not found it will be reported by the attach script.",
+  "skills": [
+    { "name": "Attention", "notes": "Focus on short tasks and instructions" },
+    { "name": "Working Memory", "notes": "Hold information for a short time (e.g., remember a 2-step instruction)" },
+    { "name": "Fine Motor Skills", "notes": "Use scissors, crayons, and manipulate small objects" },
+    { "name": "Following Protocols", "notes": "Follow simple classroom routines and rules" },
+    { "name": "Social Confidence", "notes": "Approach peers and adults; participate in group play" },
+    { "name": "Speaking", "notes": "Use sentences to express needs and ideas" },
+    { "name": "Vocabulary", "notes": "Use and understand a growing range of words" },
+    { "name": "Non-verbal communication", "notes": "Use gestures, eye contact and facial expressions appropriately" },
+    { "name": "Self-regulation", "notes": "Manage emotions and behaviour in class situations" },
+    { "name": "Empathy", "notes": "Recognise and respond to others' feelings" }
+  ]
+}

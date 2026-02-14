@@ -53,6 +53,13 @@ func RegisterRoutes(r *mux.Router, coachService coach.CoachServiceMVP) {
 	apiRouter.HandleFunc("/skills/semantic-query", SemanticQueryHandler).Methods("POST", "OPTIONS")
 	log.Println("✅ Semantic query endpoint registered")
 
+	// Weaviate admin (local/dev)
+	apiRouter.HandleFunc("/diagnostics/weaviate/backfill-vectors", WeaviateBackfillVectorsHandler).Methods("POST", "OPTIONS")
+	apiRouter.HandleFunc("/diagnostics/weaviate/add-doc", WeaviateAddDocumentationHandler).Methods("POST", "OPTIONS")
+
+	// Public contact endpoint (frontend submits a recaptcha token + message)
+	apiRouter.HandleFunc("/contact", ContactHandler).Methods("POST", "OPTIONS")
+
 	// Semantic Links API (extract/search/validate/export)
 	apiRouter.HandleFunc("/semantic-links/extract", SemanticLinksExtractHandler).Methods("POST", "OPTIONS")
 	apiRouter.HandleFunc("/semantic-links/search", SemanticLinksSearchHandler).Methods("GET", "POST", "OPTIONS")

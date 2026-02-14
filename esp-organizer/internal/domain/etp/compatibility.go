@@ -111,6 +111,19 @@ var CompatibilitySolutions = map[int]CompatibilitySolution{
 			"They're experiencing this strongly",
 		},
 	},
+	9: {
+		SpectrumID:      9,
+		Name:            "Structure Voltage Gradients",
+		NegativeSupport: "Flexible zones: Permission to reorganise mid-task, multiple valid approaches",
+		PositiveSupport: "Structure scaffolds: Clear routines, visual timetables, predictable sequences",
+		BridgeActivity:  "Structured choice: 'Here's the framework, you choose the order within it'",
+		Language: []string{
+			"I need a clear plan before starting",
+			"I work better when I can figure it out as I go",
+			"Let's set up the structure, but keep it flexible",
+			"I need to know what's coming next",
+		},
+	},
 }
 
 // GetCompatibilitySolution returns the solution for a given spectrum ID

@@ -37,7 +37,7 @@ type AnimalPilotModel struct {
 // TheAnimalPilotModel defines the core insight
 var TheAnimalPilotModel = AnimalPilotModel{
 	Description: "The 'Wild Animal' isn't a glitch in the OS; it IS the OS",
-	Animal:      "The hardware - the 17 ETP sliders themselves. Biological, amoral, functional.",
+	Animal:      "The hardware - the 9 ETP sliders themselves. Biological, amoral, functional.",
 	Pilot:       "Executive Function - the hand on the slider. The capacity to CHOOSE position.",
 	Dysfunction: "Not having a slider at -2 (aggression). Dysfunction is having it STUCK there.",
 	Goal:        "Agency to move sliders yourself, rather than having triggers move them for you.",
@@ -53,6 +53,14 @@ type KineticAggressionProfile struct {
 }
 
 // KineticAggression defines the ETP profile during violent state
+// TODO(etp-9-migration): Redesign for 9-spectrum model.
+// Old references that need domain decisions:
+//   - impulse_gap (-2.0)       → Now pilot_strength (global moderator, not a spectrum). What replaces it here?
+//   - authority_response (+2.0) → Removed. Closest: threat_response? Or a skill under integrity_logic?
+//   - presence_sensitivity (+2.0) → Now a skill under mirror_neuron_tuning. Use mirror_neuron_tuning instead?
+//   - social_gravity and risk_tolerance still valid (IDs 1, 6)
+//
+// Consider: Does orderliness play a role in aggression? (e.g., rigid routine disrupted → violence trigger)
 var KineticAggression = KineticAggressionProfile{
 	Description: "Violence is what happens when multiple ETP dials are turned to one extreme simultaneously",
 	Settings: map[string]float64{
@@ -185,6 +193,15 @@ type SystemLevelShift struct {
 }
 
 // SystemLevelShifts defines common multi-slider patterns
+// TODO(etp-9-migration): All 4 shifts below use old 17-spectrum IDs. Redesign needed:
+//
+//	defensive_activation: IDs 8 (impulse_gap→pilot_strength), 10 (risk_tolerance→6), 12 (presence_sensitivity→skill)
+//	deep_focus:           IDs 1 (social_gravity✓), 4 (energy_directionality=2), 12 (presence_sensitivity→skill)
+//	social_engagement:    IDs 1 (social_gravity✓), 3 (emotional_transparency→skill), 5 (mirror_neuron_tuning=8)
+//	principled_stand:     IDs 14 (authority_response→removed), 17 (integrity_logic=7), 13 (agency_threshold→skill)
+//
+// Mapping: old→new IDs: 1→1, 4→2, 7→3(voltage_sensitivity), 10→6, 17→7, 5→8(mirror_neuron)
+// New question: Does orderliness (9) shift in any of these patterns?
 var SystemLevelShifts = []SystemLevelShift{
 	{
 		Name:        "defensive_activation",
@@ -282,7 +299,7 @@ type PeriodicTableAnalogy struct {
 
 // ThePeriodicTableOfHumanNature captures the chemistry analogy
 var ThePeriodicTableOfHumanNature = PeriodicTableAnalogy{
-	Principle:   "The 17 ETPs are the periodic table of human nature",
+	Principle:   "The 9 ETPs are the periodic table of human nature",
 	Example:     "You don't get angry at Hydrogen for being explosive; you just learn how to handle it so it doesn't blow up the lab",
 	Lesson:      "By treating the 'Wild Animal' as spectrum settings, you remove shame and judgment",
 	Application: "Give the child the Schematic to their own brain - owner's manual, not moral rulebook",
@@ -336,6 +353,13 @@ type RangeOfMotionExercise struct {
 }
 
 // RangeOfMotionExercises for developing fluidity
+// TODO(etp-9-migration): Update spectrum IDs and add orderliness exercise:
+//
+//	Exercise 1: spectrum_id 14 (authority_response) → removed. Remap to threat_response (4)?
+//	Exercise 2: spectrum_id 1 (social_gravity) → still valid ✓
+//	Exercise 3: spectrum_id 8 (impulse_gap) → now pilot_strength moderator, not a spectrum. Replace with orderliness (9)?
+//	Exercise 4: spectrum_id 10 (risk_tolerance) → renumbered to 6
+//	Also: Add new exercise for orderliness (9) — e.g., "tidy workspace then creative mess" switch
 var RangeOfMotionExercises = []RangeOfMotionExercise{
 	{
 		Name:         "challenging_compliant_switch",

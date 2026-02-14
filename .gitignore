@@ -51,6 +51,9 @@ data/
 *.db
 *.sqlite
 
+# Local secret files (do not commit)
+secrets/
+
 # Weaviate
 weaviate-data/
 

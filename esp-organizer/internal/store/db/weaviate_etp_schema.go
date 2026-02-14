@@ -17,7 +17,7 @@ import (
 // rather than having triggers move them involuntarily.
 
 // CreateETPProfileClass creates the ETPProfile collection
-// Stores a student's 17-slider dashboard configuration
+// Stores a student's 9-slider dashboard configuration + 2 global moderators
 func CreateETPProfileClass(ctx context.Context) error {
 	if err := EnsureWeaviateClient(ctx); err != nil {
 		return fmt.Errorf("failed to ensure weaviate client: %w", err)
@@ -35,7 +35,7 @@ func CreateETPProfileClass(ctx context.Context) error {
 
 	class := &wvmodels.Class{
 		Class:       className,
-		Description: "Student ETP profile with 8 core spectrum slider positions + global moderators",
+		Description: "Student ETP profile with 9 core spectrum slider positions + global moderators",
 		Vectorizer:  "none", // No vectorization needed for structured data
 		Properties: []*wvmodels.Property{
 			{
@@ -88,6 +88,11 @@ func CreateETPProfileClass(ctx context.Context) error {
 				Name:        "mirror_neuron_tuning",
 				DataType:    []string{"number"},
 				Description: "Selective (-2) to Absorbent (+2) - empathy sensitivity",
+			},
+			{
+				Name:        "orderliness",
+				DataType:    []string{"number"},
+				Description: "Flexible (-2) to Ordered (+2) - preference for structure vs spontaneity",
 			},
 			// Global Moderators
 			{

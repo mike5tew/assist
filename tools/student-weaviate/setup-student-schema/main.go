@@ -80,7 +80,7 @@ func setupETPProfileClass(client *weaviate.Client) {
 
 	class := &models.Class{
 		Class:       className,
-		Description: "Student's Emotional Trigger Point profile across 8 core spectra + 2 global moderators",
+		Description: "Student's Emotional Trigger Point profile across 9 core spectra + 2 global moderators",
 		Properties: []*models.Property{
 			{Name: "studentId", DataType: []string{"text"}, Description: "Unique student identifier"},
 			{Name: "schoolId", DataType: []string{"text"}, Description: "School identifier for multi-tenancy"},
@@ -94,6 +94,7 @@ func setupETPProfileClass(client *weaviate.Client) {
 			{Name: "riskTolerance", DataType: []string{"int"}, Description: "Averse (-100) to Seeking (+100) - risk creates anxiety vs excitement"},
 			{Name: "integrityLogic", DataType: []string{"int"}, Description: "Relativistic (-100) to Absolutist (+100) - moral flexibility vs rigidity"},
 			{Name: "mirrorNeuronTuning", DataType: []string{"int"}, Description: "Selective (-100) to Absorbent (+100) - others' emotions distinct vs shared"},
+			{Name: "orderliness", DataType: []string{"int"}, Description: "Flexible (-100) to Ordered (+100) - preference for structure vs spontaneity"},
 			// 2 Global Moderators (affect ALL spectra)
 			{Name: "pilotStrength", DataType: []string{"int"}, Description: "Executive function capacity (0-100) - hand on all sliders"},
 			{Name: "currentLoad", DataType: []string{"int"}, Description: "Stress/depletion level (0-100) - narrows range on all spectra"},
