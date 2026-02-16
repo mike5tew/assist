@@ -3,6 +3,7 @@ import { Box, Button, Card, CardActions, CardContent, Chip, Container, Grid, Pap
 import { Link } from 'react-router-dom';
 import { Psychology as CHISGIcon, Storage as WeaviateIcon, Hub as GraphIcon, Verified as VerifiedIcon, TravelExplore as ExploreIcon } from '@mui/icons-material';
 import ContactReveal from '../../components/ContactReveal';
+import SEO from '../../components/SEO';
 
 const CHISGNav: React.FC = () => {
   return (
@@ -56,6 +57,11 @@ const CHISGLanding: React.FC = () => {
 
   return (
     <Box>
+      <SEO
+        title="CHISG — Contextualised Hierarchical Iterative Semantic Groupings"
+        description="CHISG is the knowledge-graph methodology that structures educational content, maps semantic relationships between skills, and eliminates AI hallucinations through grounded knowledge."
+        path="/chisg"
+      />
       {/* Hero */}
       <Box
         sx={{

@@ -3,6 +3,7 @@ import { Box, Container, Typography, Grid, Button, Stack, Paper, Chip } from '@m
 import { Link } from 'react-router-dom';
 import { AutoAwesome as MagicIcon, IntegrationInstructions as BridgeIcon, Psychology as CHISGIcon, Storage as WeaviateIcon } from '@mui/icons-material';
 import ContactReveal from '../../components/ContactReveal';
+import SEO from '../../components/SEO';
 
 const ESPWorldNav: React.FC = () => {
   return (
@@ -52,6 +53,11 @@ const ESPWorldNav: React.FC = () => {
 const ESPWorldLanding: React.FC = () => {
   return (
     <Box data-esp-marker="ESP_WORLD_MARKER_20260210">
+      <SEO
+        title="ESP World — The Integrated Learning Ecosystem"
+        description="ESP World brings together ETP profiles, CHISG knowledge graphs, skills mapping, and AI coaching into one coherent educational platform."
+        path="/esp-world"
+      />
       {/* Hero */}
       <Box
         sx={{

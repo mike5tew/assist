@@ -52,6 +52,7 @@ DataObject as CriteriaIcon,
 import { Link } from 'react-router-dom';
 import DivideIcon from '../../components/icons/DivideIcon';
 import ContactReveal from '../../components/ContactReveal';
+import SEO from '../../components/SEO';
 
 // Portfolio navigation bar
 const PortfolioNav: React.FC = () => {
@@ -114,7 +115,7 @@ const PortfolioNav: React.FC = () => {
                 Tools
               </Button>
               <Menu anchorEl={toolsAnchor} open={Boolean(toolsAnchor)} onClose={closeTools}>
-                <MenuItem component="a" href="http://localhost/drb/" target="_blank" rel="noreferrer">MAT Strategic Dashboard</MenuItem>
+                <MenuItem component="a" href="/drb/" onClick={closeTools}>MAT Strategic Dashboard</MenuItem>
                 <MenuItem component={Link} to="/lao" onClick={closeTools}>LAO Adaptive Revision</MenuItem>
                 <MenuItem component={Link} to="/parent-os" onClick={closeTools}>ParentOS</MenuItem>
                 <MenuItem component={Link} to="/primary-os" onClick={closeTools}>PrimaryOS (Neuron Navigators)</MenuItem>
@@ -863,10 +864,10 @@ const projects: ProjectCardProps[] = [
     description:
       'A high-level oversight engine for Multi-Academy Trusts. Aggregates Open Banking data and utility spend to correlate financial health with physical and educational assets.',
     tech: ['Go', 'React', 'Vite', 'MySQL', 'MongoDB', 'Open Banking'],
-    status: 'In Development',
-    statusColor: 'warning',
+    status: 'Concept Demo',
+    statusColor: 'info',
     icon: <TrustIcon fontSize="large" />,
-    demoLink: 'http://localhost/drb/',
+    demoLink: '/drb/',
     isExternal: true,
     relevance: 'Secure financial data aggregation and multi-site governance reporting.',
     impact: 'Transforms "Structural Displacement" into fiscal and operational clarity for MAT leadership.',
@@ -908,13 +909,13 @@ const projects: ProjectCardProps[] = [
     description:
       'A "point-of-observation" tool for teachers to log student competency and Emotional Trigger Points (ETP) in real-time. Captures the "biology of the classroom" as it happens.',
     tech: ['React Native', 'Expo', 'Weaviate', 'Go API'],
-    status: 'In Development',
-    statusColor: 'warning',
+    status: 'Concept',
+    statusColor: 'info',
     icon: <MobileIcon fontSize="large" />,
     demoLink: '/primary-os',
     isExternal: false,
     relevance: 'High-concurrency data capture and real-time synchronization with vector databases.',
-    impact: 'Reduces teacher administrative load by 30% through instant, tap-based competency logging.',
+    impact: 'Reduces teacher administrative load through instant, tap-based competency logging.',
     brandColor: '#f59e0b',
   },
   {
@@ -1295,6 +1296,11 @@ const CTASection: React.FC = () => {
 const PortfolioLanding: React.FC = () => {
   return (
     <Box>
+      <SEO
+        title="ESP Thinking — Educational Technology That Understands Learners"
+        description="Portfolio of educational technology tools built on CHISG knowledge graphs and ETP biological spectra. Skills mapping, adaptive revision, AI coaching, and strategic oversight for schools and trusts."
+        path="/"
+      />
       <HeroSection />
       <EndorsementSection />
       <ProblemFrameworkSection />

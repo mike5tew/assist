@@ -2,6 +2,7 @@ import React from 'react';
 import { CssBaseline, Box } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { BrowserRouter as Router, Routes, Route, Outlet, useLocation } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 
 import NavHeader from './components/NavHeader';
 import PortfolioLanding from './pages/Portfolio/PortfolioLanding';
@@ -99,6 +100,7 @@ export default function App() {
   const routerBasename = process.env.REACT_APP_BASENAME || (window.location.pathname.startsWith('/esp-organizer') ? '/esp-organizer' : '/');
   
   return (
+    <HelmetProvider>
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Router basename={routerBasename}>
@@ -155,6 +157,7 @@ export default function App() {
         </Routes>
       </Router>
     </ThemeProvider>
+    </HelmetProvider>
   );
 }
 

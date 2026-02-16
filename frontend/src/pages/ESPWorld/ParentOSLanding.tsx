@@ -48,6 +48,7 @@ import {
 } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import ContactReveal from '../../components/ContactReveal';
+import SEO from '../../components/SEO';
 
 // ─── The 9 Spectra for Parents ──────────────────────────────
 const parentSpectra = [
@@ -219,6 +220,11 @@ const ParentOSLanding: React.FC = () => {
 
   return (
     <Box>
+      <SEO
+        title="ParentOS — Understanding Your Child's Learning Profile"
+        description="ParentOS helps parents understand and support their child across the 9 biological spectra. Interactive spectrum explorer and practical family guidance."
+        path="/parent-os"
+      />
       {/* ── Hero Section ── */}
       <Box
         sx={{
@@ -291,21 +297,7 @@ const ParentOSLanding: React.FC = () => {
                 </Stack>
 
                 <Stack direction="row" spacing={2} sx={{ pt: 1 }}>
-                  <Button
-                    variant="contained"
-                    size="large"
-                    component={Link}
-                    to="/etp-profile"
-                    sx={{
-                      bgcolor: 'white',
-                      color: '#0f766e',
-                      fontWeight: 'bold',
-                      px: 4,
-                      '&:hover': { bgcolor: alpha('#ffffff', 0.9) },
-                    }}
-                  >
-                    Launch Spectrum Explorer
-                  </Button>
+                  <ContactReveal email="world@espthinking.co.uk" label="Register Interest" />
                 </Stack>
               </Stack>
             </Grid>
@@ -400,12 +392,12 @@ const ParentOSLanding: React.FC = () => {
               {
                 icon: <SelfIcon fontSize="large" />,
                 title: 'Your Wiring Matters Too',
-                description: 'ParentOS includes tools for parents to understand their own spectra. Compatibility friction happens when your settings clash with your child\'s — and that\'s nobody\'s fault.',
+                description: 'ParentOS will include tools for parents to understand their own spectra. Compatibility friction happens when your settings clash with your child\'s — and that\'s nobody\'s fault.',
               },
               {
                 icon: <SchoolIcon fontSize="large" />,
                 title: 'From PrimaryOS to ParentOS',
-                description: 'The same ETP framework used in classrooms now available for families. Your child\'s teacher may already be observing the same patterns — ParentOS helps you see what they see.',
+                description: 'The same ETP framework used in classrooms is being developed for families. Your child\'s teacher may already be observing the same patterns — ParentOS will help you see what they see.',
               },
             ].map((card) => (
               <Grid item xs={12} md={6} key={card.title}>
@@ -993,45 +985,11 @@ const ParentOSLanding: React.FC = () => {
           </Typography>
           
           <Stack direction="row" spacing={2} justifyContent="center" flexWrap="wrap" useFlexGap>
-            <Button
-              variant="contained"
-              size="large"
-              component={Link}
-              to="/parent-os/explorer"
-              startIcon={<ExploreIcon />}
-              sx={{
-                px: 5,
-                py: 1.5,
-                fontWeight: 'bold',
-                bgcolor: 'white',
-                color: '#0f766e',
-                '&:hover': { bgcolor: alpha('#ffffff', 0.9) },
-              }}
-            >
-              Launch Spectrum Explorer
-            </Button>
-            <ContactReveal email="world@espthinking.co.uk" label="Get in Touch" />
-            <Button
-              variant="outlined"
-              size="large"
-              component="a"
-              href="/parent-os/guide"
-              sx={{
-                px: 5,
-                py: 1.5,
-                fontWeight: 'bold',
-                color: 'white',
-                borderColor: 'white',
-                '&:hover': { borderColor: 'white', bgcolor: alpha('#ffffff', 0.1) },
-              }}
-            >
-              Read the Parent Guide
-            </Button>
+            <ContactReveal email="world@espthinking.co.uk" label="Register Interest" />
           </Stack>
           
           <Typography variant="caption" sx={{ display: 'block', mt: 4, opacity: 0.8 }}>
-            Foundation access is always free. No credit card required. No data harvesting. 
-            Just a better way to see your child.
+            ParentOS is in development. Register your interest to be notified when it launches.
           </Typography>
         </Container>
       </Box>

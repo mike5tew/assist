@@ -44,13 +44,11 @@ services:
     env_file: .env
     environment:
       API_PORT: "8080"
-      WEAVIATE_URL: http://weaviate:8080
       MONGODB_URI: mongodb://${MONGO_ROOT_USER}:${MONGO_ROOT_PASSWORD}@mongodb:27017/esp_organizer?authSource=admin
     expose:
       - "8080"
     depends_on:
       - mongodb
-      - weaviate
     networks:
       - shared-network
 

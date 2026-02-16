@@ -1,166 +1,198 @@
-# HumanOS Ecosystem - Project Status
+# ESP Thinking Ecosystem — Project Status
 
-**Last Updated**: 2026-01-21
-**Current Phase**: Phase 1 - Foundation & First Revenue (Commercial Pilot)
-**Primary Focus**: LittleAndOften (LAO) - GCSE Revision Tool
+**Last Updated**: 2026-02-16
+**Current Phase**: Infrastructure Complete — Assessing Commercial Viability
+**Primary Focus**: CHISG Commercial Assessment + ETP Response Matrix Integration + LAO Testing
 
 ---
 
-## 🚨 Current Sprint Status
+## Architecture Overview
 
-**Goal**: Complete LAO Mobile MVP for TestFlight Distribution.
+This ecosystem has three layers:
+
+1. **Foundational Tools** — reusable services applied across products
+2. **Products** — user-facing applications built on those tools
+3. **Concept Demonstrations** — prototypes used for stakeholder engagement
+
+### Foundational Tools (not products in their own right)
+
+| Tool | Purpose | Status | Applied In |
+|------|---------|--------|------------|
+| **CHISG** | Knowledge graph for skills/concepts | Weaviate schema + semantic search working | Skills Map, LAO, PrimaryOS, CareerOS |
+| **Skills Map Platform** | Skills tree, course maps, student tracking | Production-ready (full CRUD, auth, admin) | Portfolio tools, PrimaryOS, classroom tools |
+| **humanOS** | AI coaching orchestrator with safeguarding | Partial (orchestrator + LLM + chat UI, in-memory storage) | ETP Profile, coaching tools |
+| **ETP Framework** | 9 biological spectra + voltage calculations | Domain logic complete (Go), Weaviate schema defined | All products |
+
+### Products
+
+| Product | Purpose | Status | Notes |
+|---------|---------|--------|-------|
+| **LAO** | GCSE Science revision (mobile) | Testing in TestFlight | 17 screens, full Go API + SQLite, EAS pipeline |
+| **PrimaryOS** | Primary-age ETP + Neuron Navigators | Landing page only | Concept defined; no backend. Components would feed other products |
+| **ParentOS** | Parent-facing spectrum explorer | Landing page only | Explorer/Guide pages are "Coming Soon" shells |
+| **CareerOS** | Skills passport + role matching | Landing page only | Rich concept page, zero backend |
+| **ETP Profile** | Interactive spectrum sliders | Working demo | 8 sliders + voltage calc + action plan generation |
+
+### Concept Demonstrations
+
+| Demo | Purpose | Status | Notes |
+|------|---------|--------|-------|
+| **DRB** | MAT strategic dashboard concept | Demo-functional | Shows MATs what's possible with finance/estates/governance. Seeded demo data, no real data ingestion |
+
+---
+
+## Current Sprint Status
+
+**Goal**: Assess CHISG commercial viability; continue LAO field testing.
 
 | Priority | Task | Status | Notes |
 |----------|------|--------|-------|
-| 1 | LAO Mobile (GCSE Revision Tool) | ✅ Pilot Ready | Pushed build 20260121.1 to TestFlight |
-| 2 | Relational Data Migration | ✅ COMPLETE | Restored SQLite architecture from JSON |
-| 3 | Study Tracking & Rewards | ✅ COMPLETE | Activities completed + Daily Effort stats |
-| 4 | UI Standardization | 🔄 REFINING | Standardized "Title Card" headers across screens |
+| 1 | ETP Response Matrix | ✅ COMPLETE | 18 response matrix entries (9 spectra × 2 settings) coded in Go, deployed to Vultr, MongoDB persistence |
+| 2 | MongoDB Migration (ETP) | ✅ COMPLETE | ETP profiles migrated from Weaviate → MongoDB. Assist Weaviate confirmed local-only. |
+| 3 | CHISG Technical Spec | 🔄 IN PROGRESS | Technical outline for stakeholders covering hallucination reduction, analogy detection, gap analysis |
+| 4 | CHISG Commercial Assessment | 🔄 IN PROGRESS | Preparing tech outline for Toby Fotherby to assess uniqueness/viability |
+| 5 | LAO Field Testing | 🔄 IN PROGRESS | TestFlight build live; collecting usage feedback |
+| 6 | PrimaryOS or ParentOS MVP | ⬜ CONSIDERING | PrimaryOS components reusable across ecosystem; ParentOS may be more commercial |
+
+**Key Decision Pending**: Whether CHISG (as a knowledge-graph methodology) has standalone commercial value, which would change the development priority order significantly.
 
 ---
 
-## 📜 Work History & Completed Milestones
+## Completed Milestones
 
-### LittleAndOften (LAO) Mobile ✅
-- [x] **Relational Restoration**: Successfully moved from problematic JSON storage back to `expo-sqlite` (Relational).
-- [x] **Content Linking**: Linked 25+ modules and 3 subjects to Markdown lesson summaries.
-- [x] **Motivational Features**:
-    - [x] Global `StudyTimerContext` tracking active study time.
-    - [x] "Activities Completed" tracking (Daily count stored in AsyncStorage).
-    - [x] Dashboard cards for "Daily Effort" and "Activity Count".
-    - [x] Toast notifications for activity start/completion milestones.
-- [x] **Activity Modes**:
-    - [x] **Audio Summaries**: Linked to TTS with manual playback and auto-timer pausing.
-    - [x] **Speed Reader**: word-by-word reading mode with scoring fixed.
-    - [x] **Flashcards**: Spaced repetition logic active.
-- [x] **Deployment**: Automated EAS build and TestFlight submission pipeline enabled.
+### Production Deployment ✅ (Feb 2026)
+- [x] All 7 Docker images built for linux/amd64 and pushed to Docker Hub (`mike5tew/`)
+- [x] Vultr server (`192.248.151.185`) running 10 containers via `docker-compose.prod.yml`
+- [x] Domain `espthinking.co.uk` live with Let's Encrypt SSL (expires 2026-05-15)
+- [x] Nginx reverse proxy serving: portfolio, skills map, DRB, all APIs
+- [x] Visitor analytics system with MongoDB + bearer token auth
+- [x] All landing pages verified returning 200 over HTTPS
 
-### Strategy & Business Development ✅
-- [x] **Strategic Prototype**: Created high-fidelity "Non-School Functions" dashboard for Finance, HR, and Estates (Skills Map Portfolio).
-- [x] **Financial & Estates Concept**: Defined a non-accountancy monitoring system for trust-level operational health (See [FINANCIAL_ESTATES_SYSTEM.md](FINANCIAL_ESTATES_SYSTEM.md)).
-- [x] **drb Ignite Business Case**: Drafted and submitted high-level pitch for Data & Insight Manager role.
+### Portfolio Site ✅ (Feb 2026)
+- [x] 8 landing pages (Portfolio, ETP, PrimaryOS, LAO, ESP World, CHISG, ParentOS, CareerOS)
+- [x] ContactReveal email forms on all landing CTAs (protected from harvesting)
+- [x] Live interactive tools: ETP Profile, Semantic Query, AI Chat
+- [x] Analytics dashboard at `/analytics` with period selector and event tracking
 
-### Skills Tree Rising (Primary Schools) ✅
-- [x] **Sticker Album Framework**: Re-conceptualized the UI as a "Sticker Album" to reduce complexity (See [STICKER_ALBUM_EXTENSION.md](STICKER_ALBUM_EXTENSION.md)).
-- [x] Full backend API (Go) and Frontend (React + TS) active.
+### LAO Mobile ✅ (Jan 2026)
+- [x] Expo/React Native app with 17 screens
+- [x] SQLite-backed Go API with 11 handler modules
+- [x] Audio summaries, speed reader, flashcards, progress tracking
+- [x] EAS build pipeline → TestFlight distribution
 
-### Infrastructure & Deployment ✅
-- [x] Monorepo structure established (`/assist`)
-- [x] Production deployment on Vultr (Docker Compose)
-- [x] SPA routing fixed for all frontend applications
-- [x] `main-proxy` Nginx configuration finalized
-- [x] `skills-frontend` and `assist-frontend` deployable and working
+### Skills Map Platform ✅
+- [x] Full CRUD API (Go) with JWT auth and admin roles
+- [x] Graph explorer, skills tree, course management
+- [x] Weaviate CHISG integration (579 elements, 1,120 links, 27 courses)
+- [x] MySQL operational database for assignments and markbook scores
+- [x] Production deployed behind main proxy
 
-### CHISG Integration ✅
-- [x] Weaviate integration for semantic links
-- [x] MongoDB for document and metadata storage
-- [x] **CHISG Manual Link Extractor Tool**: Development started to speed up the creation of the "Golden Set" of semantic links for training and quality evaluation.
+### ETP Domain Logic ✅
+- [x] 9 spectra definitions with trainable skills (`spectra.go`, 347 lines)
+- [x] Voltage calculator with real impact calculations (`voltage_calculator.go`, 318 lines)
+- [x] Compatibility solutions for all 8 spectra (`compatibility.go`, 192 lines)
+- [x] 3 cognitive modes, educational enigmas, identity hijacking frameworks
+- [x] Weaviate ETPProfile schema (660 lines)
+- [x] Interactive frontend with sliders, undo/redo, help dialog
 
-### Skills Tree Rising ✅
-- [x] Full backend API (Go)
-- [x] Frontend (React + TypeScript)
-- [x] JWT Authentication
-- [x] Production deployment
+### ETP Response Matrix ✅ (Feb 2026)
+- [x] 18 response matrix entries (9 spectra × 2 settings) encoded in `response_matrix.go`
+- [x] Three barrier types mapped: verbalising, starting, mistakes
+- [x] Adult language shifts: avoid/use pairs for each spectrum setting
+- [x] Play-first strategies for each setting
+- [x] In-memory response matrix (zero database dependency for plan generation)
+- [x] Action plan endpoint (`POST /api/actionplan`) returns personalised interventions
+- [x] Coach handler personalisation (`personaliseWithETP()`) uses response matrix for live coaching
+- [x] Unified language shifts and Play-First Principle constants exported
 
-### SkillsMarkBook Sticker Album (Conceptual Design) ✅
-- [x] **Full feature specification**: See [STICKER_ALBUM_EXTENSION.md](STICKER_ALBUM_EXTENSION.md)
-- [x] **Physical design**: A5 album format, 8 skill areas, 5cm×5cm stickers
-- [x] **Implementation roadmap**: 3-phase rollout (MVP 1-3 weeks, Enhancement 4-6 weeks)
-- [x] **Database schema**: Complete SQL schema for awards, progress tracking, print jobs
-- [x] **API specification**: 15+ endpoints for awards, export, statistics
-- [x] **Success metrics**: 12 KPIs defined (adoption, engagement, equity, cost)
-- [ ] **Design assets**: Sticker art + album templates (Next: outsource or commission)
+### MongoDB Migration (ETP Profiles) ✅ (Feb 2026)
+- [x] ETP profile storage migrated from Weaviate to MongoDB (`etp_profiles` collection in `esp_organizer` database)
+- [x] `getETPDB()` lazy singleton follows same pattern as `getAnalyticsDB()`
+- [x] Profiles stored as proper BSON documents: `userId`, `spectrumProfile` (map), `spectrumVector`, `timestamp`
+- [x] Non-blocking save: if MongoDB unavailable, plan still generates from in-memory response matrix
+- [x] Coach handler queries MongoDB for most recent profile by userId
+- [x] `docker-compose.prod.yml` updated: removed `WEAVIATE_URL` from assist-api, removed Weaviate from depends_on
+- [x] Deployed and verified on Vultr — MongoDB profile ID returned in API response
 
----
+### Semantic Link Extraction Tool (70% complete)
+- [x] Backend API endpoints (extract, search, validate) + Weaviate integration
+- [x] React `<SemanticLinkExtractor />` with PDF viewer and 3-click workflow
+- [ ] LLM-as-judge validation handler
+- [ ] Hierarchy inference logic
+- [ ] Batch processing pipeline
 
-## 🔄 IN PROGRESS
-
-### 1. GCSE Revision Tool (Priority 1 - Revenue)
-**Goal**: A tool for GCSE students to revise efficiently, powered by the CHISG knowledge graph.
-- [ ] Define core feature set for MVP (Lesson Overviews, Keyword Extraction, Question Practice).
-- [ ] Design and implement the student-facing UI.
-- [ ] Integrate with CHISG for content generation.
-- [ ] Set up Stripe for subscription payments.
-- [ ] Launch beta and acquire first paying subscribers.
-
-### 1B. SkillsMarkBook Extension: Sticker Album (Priority 3 - Engagement)
-**Goal**: Transform abstract skill tracking into a tangible, collectible physical artifact with A5 albums and printed stickers.
-**Status**: Conceptual (Full specification complete; ready for implementation phase 1)
-
-**Completed**:
-- [x] Full feature specification document
-- [x] Physical design (A5 album, 8 skill areas, sticker format)
-- [x] 3-phase implementation roadmap
-- [x] Database schema (7 tables: skill_areas, awards, progress, print_jobs, etc.)
-- [x] 15+ API endpoints specified
-- [x] 12 success metrics defined
-- [x] Risk analysis + mitigation
-
-**Next** (Phase 1 - Weeks 1-3):
-- [ ] Create/commission sticker art (40 hours)
-- [ ] Finalize A5 album templates (20 hours)
-- [ ] Implement database schema
-- [ ] Build core API endpoints (award, export, PDF generation)
-- [ ] Develop mobile UI components
-- [ ] Set up print queue system
-
-**Related Doc**: [STICKER_ALBUM_EXTENSION.md](STICKER_ALBUM_EXTENSION.md) - Full implementation guide
-
-### 2. Semantic Link Extraction Tool (Priority 1A - Critical Enabler)
-**Goal**: Integrated React + Go service to rapidly build the knowledge graph that powers all products.
-**Status**: 70% complete (backend + frontend DONE; validation + integration next)
-
-- [x] Week 1: Backend API endpoints & Weaviate integration ✅ COMPLETE
-  - [x] Go API endpoints (extract, search, validate)
-  - [x] SemanticLink model with hierarchy and provenance
-  - [x] SemanticLinkService with MongoDB + Weaviate integration
-  - [x] Nginx routing configured
-- [x] Week 2: React frontend component ✅ COMPLETE
-  - [x] `<SemanticLinkExtractor />` with 3-click workflow
-  - [x] PDF viewer with text selection
-  - [x] Term selection and relationship type UI
-  - [x] Service layer with API integration
-  - [x] Route added to main app
-- [ ] Week 3: Quality validation & hierarchy inference (IN PROGRESS NEXT)
-  - [ ] Implement `SemanticLinksValidateHandler` with LLM-as-judge
-  - [ ] Complete hierarchy inference logic
-  - [ ] Test E2E extraction flow
-- [ ] Week 4: Pipeline integration & batch processing (NOT STARTED)
-
-**Notes**: Blocks GCSE Tool until populated; connects to lesson_files, skills, and Weaviate.
-
-### 3. Skills Tree Dashboard Fix (Priority 4 - Bug)
-**Goal**: Fix the race condition where the Dashboard doesn't load skills on first visit.
-- [ ] Update `Dashboard.tsx` `useEffect` to depend on `token`.
-- [ ] Rebuild and redeploy `skills-frontend`.
-
-### 4. Integrated Insight Markbook (Priority 3 - Pilot)
-**Goal**: Rapidly develop a "Passive Pilot" UI for logging competency (Skills Map) and character (ETP Profile) data.
-- [ ] Design "Passive Pilot" interface (one-click logging).
-- [ ] Implement ETP Profile builder (tracking "Character Tells").
-- [ ] Integrate "Sticker Album" visual feedback.
-- [ ] Prepare proof-of-concept demonstration for drb Ignite.
+### DRB Concept Demo ✅
+- [x] Go + MongoDB backend with CRUD routes (schools, finance, estates, contractors, keys)
+- [x] React dashboard + estates monitor
+- [x] Seeded with representative demo data for 13 schools
 
 ---
 
-## 📅 Roadmap Summary
+## What's NOT Built Yet (Honest Assessment)
 
-1.  **Phase 1 (Now)**: GCSE Revision Tool MVP & CHISG Foundation
-    *   *Milestone*: First paying subscribers. Working knowledge graph pipeline.
-2.  **Phase 2**: Product Scaling & Skills Tree Rising Refinement
-    *   *Milestone*: $500-2000/mo revenue.
-3.  **Phase 3**: New Products (Solo Skills Map, Immunology Assistant)
+These are described on landing pages but have **no implementation behind them**:
+
+| Claim | Where Promised | Reality |
+|-------|---------------|---------|
+| CareerOS Role Architect | `/careeros` landing | Static example data only; no backend |
+| CareerOS Skills Passport | `/careeros` landing | No backend, no data model |
+| CareerOS Intelligent Matching | `/careeros` landing | No backend |
+| PrimaryOS Teacher Dashboard | `/primary-os` landing | No backend; hero CTAs correctly commented out |
+| PrimaryOS Sticker Book | `/primary-os` landing | Framework specified in docs but not implemented |
+| PrimaryOS Neuron Navigators Journal | `/primary-os` landing | Concept only |
+| ParentOS Spectrum Explorer | `/parent-os/explorer` | Coming Soon page with ContactReveal |
+| ParentOS Parent Guide | `/parent-os/guide` | Coming Soon page with ContactReveal |
+| humanOS persistent profiles | humanOS standalone | In-memory only (`map[string]*StudentProfile`) |
 
 ---
 
-## 📂 Documentation Map
+## Next Steps (Decision Tree)
 
-**Active Documents**:
-- `PROJECT_STATUS.md`: This dashboard (Current State).
-- `ROADMAP.md`: Long-term strategic plan (formerly *Action Plan*).
-- `DAILY_LOG.md`: Daily engineering log & debugging notes.
-- `DECISION_LOG.md`: Architectural decisions record.
-- `STRATEGIC_PLAYBOOK.md`: Pitch/Vision strategy & interview prep.
-- `PSYCHOLOGICAL_FRAMEWORKS.md`: Core educational theory reference.
-- `PUBLICATION_PROTOCOL.md`: Strategy for academic papers, articles, and open-source releases.
-- `DEPLOYMENT_PLAYBOOK.md`: Step-by-step commands for deploying to production.
+```
+If CHISG has commercial value (Fotherby assessment):
+  → Build full CHISG demo with GCSE Science curriculum mapping
+  → This becomes the core IP to protect/license
+
+If PrimaryOS next:
+  → Components (spectrum sliders, sticker tracking) reuse across ecosystem
+  → Needs: backend API, teacher dashboard, student-facing sticker UI
+  → Estimated: weeks of work
+
+If ParentOS next:
+  → Potentially more commercial (B2C vs B2B)
+  → Simpler scope (spectrum explorer + guides)
+  → Could be built as a layer on top of ETP Profile + CHISG
+```
+
+---
+
+## Infrastructure Reference
+
+| Service | Container | Port | Database |
+|---------|-----------|------|----------|
+| Portfolio + assist API | assist-frontend / assist-api | 80 / 8080 | MongoDB (`esp_organizer`, `esp_analytics`) |
+| Skills Map | skills-frontend / skills-api | 80 / 8080 | MySQL (`skills_db`), Weaviate |
+| DRB | drb-frontend / drb-api | 80 / 8082 | MongoDB (`drb_monitor`) |
+| Weaviate | weaviate | 8080 (internal) | Used by skills-api only (CHISG semantic search) |
+| Main Proxy | main-proxy | 80 / 443 | — |
+
+**Note (Feb 2026)**: assist-api no longer depends on Weaviate. ETP profiles stored in MongoDB. The in-memory response matrix (`response_matrix.go`) has zero database dependency — all 18 entries live in compiled Go code.
+
+**Docker Hub**: `mike5tew/` — main-proxy, assist-frontend, assist-api, skills-frontend, skills-api, drb-frontend, drb-api
+**Domain**: espthinking.co.uk → 192.248.151.185 (Vultr)
+**SSL**: Let's Encrypt via certbot container (ssl profile)
+
+---
+
+## Documentation Map
+
+| Document | Purpose |
+|----------|---------|
+| `PROJECT_STATUS.md` | This file — current state and priorities |
+| `PROJECT_INDEX.md` | Architecture, data systems, file locations |
+| `PORTFOLIO_SITE_OVERVIEW.md` | Live site routes, CTAs, integrations |
+| `STRATEGIC_PLAYBOOK.md` | Pitch/vision strategy |
+| `SEMANTIC_SEARCH_APPROACH.md` | Weaviate integration design |
+| `ETP_VOLTAGE_COMPATIBILITY_FRAMEWORK.md` | ETP domain logic reference |
+| `FINANCIAL_ESTATES_SYSTEM.md` | DRB concept definition |
+| `STICKER_ALBUM_IMPLEMENTATION_SUMMARY.md` | SkillsMarkBook sticker album spec |

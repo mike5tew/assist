@@ -53,8 +53,8 @@ import {
   SwapHoriz as SwapIcon,
   Hub as HubIcon,
 } from '@mui/icons-material';
-import { Link } from 'react-router-dom';
 import ContactReveal from '../components/ContactReveal';
+import SEO from '../components/SEO';
 
 // ─── Role Profile Example ──────────────────────────────────
 const roleExample = {
@@ -135,7 +135,7 @@ const benefits = [
     for: 'Employers',
     icon: <BusinessIcon />,
     points: [
-      'Reduce time-to-hire by 40% with precision matching',
+      'Reduce time-to-hire with precision matching',
       'Eliminate "keyword bingo" applications',
       'Identify internal mobility candidates you\'d otherwise miss',
       'Auditable, defensible hiring decisions',
@@ -172,6 +172,11 @@ const CareerOSLanding: React.FC = () => {
 
   return (
     <Box>
+      <SEO
+        title="CareerOS — Verified Skills Passport and Intelligent Matching"
+        description="CareerOS connects verified skills to career pathways. Role Architect, Skills Passport, and Intelligent Matching powered by the CHISG knowledge graph."
+        path="/careeros"
+      />
       {/* ── Hero Section ── */}
       <Box
         sx={{
@@ -238,7 +243,7 @@ const CareerOSLanding: React.FC = () => {
                 </Box>
 
                 <Typography variant="h5" sx={{ opacity: 0.92, maxWidth: 620 }}>
-                  The CV is obsolete. CareerOS replaces keyword-stuffed documents with 
+                  CareerOS is designed to replace keyword-stuffed documents with 
                   verified skills maps — creating a common language between talent, employers, 
                   and educators. Every capability traced to evidence. Every match explained.
                 </Typography>
@@ -251,22 +256,7 @@ const CareerOSLanding: React.FC = () => {
                 </Stack>
 
                 <Stack direction="row" spacing={2} sx={{ pt: 1 }}>
-                  <Button
-                    variant="contained"
-                    size="large"
-                    component={Link}
-                    to="/careeros/demo"
-                    sx={{
-                      bgcolor: 'white',
-                      color: '#2563eb',
-                      fontWeight: 'bold',
-                      px: 4,
-                      '&:hover': { bgcolor: alpha('#ffffff', 0.9) },
-                    }}
-                  >
-                    Request Enterprise Demo
-                  </Button>
-                 
+                  <ContactReveal email="world@espthinking.co.uk" label="Register Interest" />
                 </Stack>
               </Stack>
             </Grid>
@@ -379,7 +369,7 @@ const CareerOSLanding: React.FC = () => {
                 know how to game the system.
               </Typography>
               <Typography variant="body1" sx={{ fontSize: '1.1rem', lineHeight: 1.7 }}>
-                <strong>CareerOS doesn't digitise the CV — it replaces it.</strong>
+                <strong>CareerOS is designed to replace the CV, not digitise it.</strong>
               </Typography>
             </Grid>
             
@@ -566,7 +556,7 @@ const CareerOSLanding: React.FC = () => {
             textAlign="center"
             sx={{ mb: 5, maxWidth: 780, mx: 'auto' }}
           >
-            CareerOS connects the entire skills ecosystem — employers, individuals, and educators — 
+            CareerOS is designed to connect the entire skills ecosystem — employers, individuals, and educators — 
             through a shared language of verified competency.
           </Typography>
 
@@ -701,8 +691,8 @@ const CareerOSLanding: React.FC = () => {
                 </Typography>
                 <Typography variant="body2">
                   CHISG's semantic graph understands that <strong>React</strong> and <strong>Vue</strong> 
-                  share 78% of prerequisite skills. A candidate with Vue L4 is <strong>semantically close</strong> 
-                  to a React L3 requirement — and CareerOS explains exactly why.
+                  share significant prerequisite skills. A candidate with Vue L4 would be <strong>semantically close</strong> 
+                  to a React L3 requirement — and CareerOS would explain exactly why.
                 </Typography>
               </Paper>
             </Grid>
@@ -886,48 +876,16 @@ const CareerOSLanding: React.FC = () => {
             Replace the CV. Unlock Hidden Talent.
           </Typography>
           <Typography variant="body1" sx={{ mb: 4, maxWidth: 600, mx: 'auto', opacity: 0.95 }}>
-            CareerOS is available for enterprise deployment, skills passport pilots, 
+            CareerOS is in development for enterprise deployment, skills passport pilots, 
             and education-partner integration.
           </Typography>
           
           <Stack direction="row" spacing={2} justifyContent="center" flexWrap="wrap" useFlexGap>
-            <Button
-              variant="contained"
-              size="large"
-              component={Link}
-              to="/careeros/enterprise"
-              sx={{
-                px: 5,
-                py: 1.5,
-                fontWeight: 'bold',
-                bgcolor: 'white',
-                color: '#2563eb',
-                '&:hover': { bgcolor: alpha('#ffffff', 0.9) },
-              }}
-            >
-              Book Enterprise Demo
-            </Button>
-            <ContactReveal email="world@espthinking.co.uk" label="Get in Touch" />
-            <Button
-              variant="outlined"
-              size="large"
-              component={Link}
-              to="/careeros/passport"
-              sx={{
-                px: 5,
-                py: 1.5,
-                fontWeight: 'bold',
-                color: 'white',
-                borderColor: 'white',
-                '&:hover': { borderColor: 'white', bgcolor: alpha('#ffffff', 0.1) },
-              }}
-            >
-              Create Your Skills Passport
-            </Button>
+            <ContactReveal email="world@espthinking.co.uk" label="Register Interest" />
           </Stack>
           
           <Typography variant="caption" sx={{ display: 'block', mt: 4, opacity: 0.8 }}>
-            For individuals: free foundational passport. For organisations: enterprise licensing available.
+            Development updates and pilot opportunities available on request.
           </Typography>
         </Container>
       </Box>

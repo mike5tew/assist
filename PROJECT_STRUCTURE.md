@@ -33,23 +33,18 @@ The real `skills-map-platform` project lives at:
 It is a **separate git repo** that is NOT part of the `assist` workspace. AI assistants
 must not confuse files inside `assist/skills-map-platform/` with the real project.
 
-### 2. CRITICAL: Dual Weaviate Instances + Network Topology Issue
+### 2. Weaviate Architecture (Updated Feb 2026)
 
-⚠️ **This is the source of the orphaned skills bug.**
+The ecosystem uses **two Weaviate instances** with distinct roles:
 
-Skills-map-platform uses **TWO SEPARATE WEAVIATE INSTANCES** running on different Docker networks:
+| Weaviate | Container | Port | Location | What It Holds | Status |
+|----------|-----------|------|----------|---------------|--------|
+| **humanOS Weaviate** | humanos-weaviate-1 | 8081 | Vultr (humanOS stack) | CHISGElement (579 skills) + SkillLink (1,120 links) + CourseSkillSuggestions (27 courses) | **Production — CHISG semantic search** |
+| **assist Weaviate** | weaviate | 8088 (host) | Local only | Documentation, project docs, local development | **Local dev only — NOT on Vultr** |
 
-| Weaviate | Container | Port | Network | What It Holds | Status |
-|----------|-----------|------|---------|---------------|--------|
-| **weaviate-ETPs-HumanOS-skillsmapinCHISG** | humanos-weaviate-1 | 8081 | humanos-network | ✅ CHISGElement (579 skills) + **SkillLink (1,120 links)** + ETP + HumanOS | **HAS DATA** |
-| **weaviate (legacy/assist compose)** | weaviate | 8088 (host) | shared-network | Local compose Weaviate (often empty for CHISG) | Legacy / not authoritative |
+**Key architectural decision (Feb 2026)**: assist-api on Vultr no longer depends on Weaviate. ETP profiles are stored in MongoDB (`etp_profiles` collection in `esp_organizer` database). The in-memory response matrix (`response_matrix.go`) has zero database dependency. The `docker-compose.prod.yml` was updated to remove `WEAVIATE_URL` from assist-api and remove Weaviate from its `depends_on`.
 
-**The Problem**: services were (incorrectly) configured to use port 8088 (the legacy/empty compose Weaviate) instead of port 8081 (the master CHISG Weaviate).
-
-**The Fix Required**: 
-- Rename containers and clarify purpose
-- Update `skills-api` to point to the correct **weaviate-ETPs-HumanOS-skillsmapinCHISG** instance
-- Isolate these properly so only intended projects access each store
+**Weaviate on Vultr** serves skills-api for CHISG semantic search (CHISGElement, SkillLink). The coach handler in assist-api can still query humanOS Weaviate via `db.GetWeaviateClient()` for CHISG skill matching.
 
 ### 3. Weaviate CourseSkillSuggestions Class
 
@@ -63,18 +58,29 @@ Each object = one course, containing:
 - `core_skills` (text[]) — skill names that match `CHISGElement.name`
 - `practice_skills` (text[]), `implicit_skills` (text[])
 
-### 4. Docker Container Port Map & Network Topology
+### 4. Docker Container Port Map & Network Topology (Updated Feb 2026)
 
-| Container | Purpose | Port | Network | Status |
-|-----------|---------|------|---------|--------|
-| **assist-weaviate** (TBD rename) | weaviate-assist | 8089 (TBD) | assist-network | Store assist project docs/ideas |
-| **humanos-weaviate-1** (TBD: rename to skills-weaviate) | weaviate-ETPs-HumanOS-skillsmapinCHISG | **8081** | humanos-network | Master CHISG + ETP + HumanOS data |
-| **weaviate** (LEGACY - TO BE REMOVED) | Old skills-map Weaviate | 8088 | assist-network | **EMPTY — DEPRECATE** |
-| **skills-api** | skills-map-platform API | 8080 | assist-network | Should reach 8081, currently broken |
-| **skills-frontend** | skills-map-platform UI | 80 | assist-network | Accesses skills-api |
-| **skills-mysql** | skillstree-mysql | 3307 (host) | assist-network | Operational data |
+**Vultr Production (192.248.151.185)**:
 
-**Network Issue**: `skills-api` needs to reliably reach **weaviate-ETPs-HumanOS-skillsmapinCHISG** (port 8081) but they're on different networks. Current workaround (`host.docker.internal:8081`) is unreliable.
+| Container | Purpose | Port | Notes |
+|-----------|---------|------|-------|
+| **main-proxy** | Nginx reverse proxy | 80/443 | SSL via Let's Encrypt |
+| **assist-api** | ESP Organizer API | 8080 | Depends on MongoDB only |
+| **assist-frontend** | Portfolio / landing pages | 80 | Static React |
+| **skills-api** | Skills Map API | 8080 | Depends on MySQL + Weaviate |
+| **skills-frontend** | Skills Map UI | 80 | Static React |
+| **drb-api** | DRB API | 8082 | Depends on MongoDB |
+| **drb-frontend** | DRB Dashboard | 80 | Static React |
+| **mongodb** | MongoDB | 27017 | `esp_organizer`, `esp_analytics`, `drb_monitor` databases |
+| **skills-db** | MySQL | 3306 | `dare2lead` database |
+| **weaviate** | Weaviate | 8080 (internal) | CHISG data — used by skills-api |
+
+**Local Development Only**:
+
+| Container | Purpose | Port | Notes |
+|-----------|---------|------|-------|
+| **assist Weaviate** | Local Weaviate | 8088 (host) | Document search, development only |
+| **humanOS Weaviate** | humanOS stack | 8081 (host) | CHISG master data (separate compose) |
 
 ### 2b. Semantic Search Reality: `nearVector` + explicit vectors
 

@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"encoding/json"
+	"esp-organizer/internal/domain/etp"
 	"esp-organizer/internal/domain/skills"
 	"esp-organizer/internal/integration"
 	"esp-organizer/internal/models"
@@ -18,6 +19,7 @@ import (
 	"github.com/weaviate/weaviate-go-client/v4/weaviate/graphql"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // CoachRespondRequest now includes optional answer for diagnostic checking
@@ -28,6 +30,7 @@ type CoachRespondRequest struct {
 	StudentAnswer  string `json:"student_answer,omitempty"`  // Student's answer to check
 	ExpectedAnswer string `json:"expected_answer,omitempty"` // Correct answer for comparison
 	QuestionText   string `json:"question_text,omitempty"`   // The question asked
+	StudentId      string `json:"student_id,omitempty"`      // Optional: student ID for ETP-aware responses
 }
 
 // CoachRespondResponse now includes diagnostic information
@@ -67,6 +70,19 @@ type CoachRespondResponse struct {
 	MisconceptionLinks  []MisconceptionLink `json:"misconception_links,omitempty"`
 	CorrectionStrategy  string              `json:"correction_strategy,omitempty"`
 	EncouragingResponse string              `json:"encouraging_response,omitempty"`
+
+	// ETP-aware response personalisation
+	ETPPersonalisation *ETPPersonalisation `json:"etp_personalisation,omitempty"`
+}
+
+// ETPPersonalisation holds ETP-derived language and strategy adjustments
+type ETPPersonalisation struct {
+	ProfileFound     bool                `json:"profile_found"`
+	DominantSettings map[string]string   `json:"dominant_settings,omitempty"` // spectrum_name -> setting
+	BarrierLanguage  map[string][]string `json:"barrier_language,omitempty"`  // barrier_type -> recommended phrases
+	AvoidLanguage    map[string][]string `json:"avoid_language,omitempty"`    // barrier_type -> phrases to avoid
+	PlayStrategies   []string            `json:"play_strategies,omitempty"`
+	AdaptedScript    string              `json:"adapted_script,omitempty"` // The ETP-tailored intervention script
 }
 
 // AnswerDiagnostics explains why an answer is incorrect
@@ -193,6 +209,21 @@ func FullDiagnosticCoachHandler(w http.ResponseWriter, r *http.Request) {
 		response.ConfidenceScore = response.CHISGResponse.ConfidenceScore * 0.9 // Reduce confidence due to barriers
 	} else {
 		response.ConfidenceScore = response.CHISGResponse.ConfidenceScore
+	}
+
+	// 8b. ETP-aware response personalisation
+	// If a student ID is provided, look up their ETP profile and tailor the
+	// intervention language using the response matrix.
+	if req.StudentId != "" {
+		etpPersonalisation := personaliseWithETP(ctx, req.StudentId, barriers)
+		response.ETPPersonalisation = etpPersonalisation
+
+		// If we found an ETP profile and have barriers, replace the generic
+		// intervention with an ETP-adapted version
+		if etpPersonalisation != nil && etpPersonalisation.ProfileFound && etpPersonalisation.AdaptedScript != "" {
+			response.InterventionScript = etpPersonalisation.AdaptedScript
+			log.Printf("[Coach] ETP-personalised intervention applied for student %s", req.StudentId)
+		}
 	}
 
 	// 9. Generate combined response
@@ -1678,4 +1709,178 @@ func SemanticQueryHandler(w http.ResponseWriter, r *http.Request) {
 		log.Printf("SemanticQueryHandler: failed to encode response: %v", err)
 		return
 	}
+}
+
+// personaliseWithETP looks up a student's ETP profile from MongoDB and uses the
+// response matrix to generate personalised intervention language. This replaces
+// generic "You should try harder" moral language with ETP-aware engineering language.
+func personaliseWithETP(ctx context.Context, studentId string, barriers []string) *ETPPersonalisation {
+	db, err := getETPDB()
+	if err != nil {
+		log.Printf("[Coach/ETP] MongoDB not available: %v", err)
+		return &ETPPersonalisation{ProfileFound: false}
+	}
+
+	// Query the student's most recent ETP profile from MongoDB
+	var profileDoc ETPProfileDoc
+	findOpts := options.FindOne().SetSort(bson.D{{Key: "timestamp", Value: -1}})
+	err = db.Collection("etp_profiles").FindOne(ctx, bson.M{"userId": studentId}, findOpts).Decode(&profileDoc)
+	if err != nil {
+		log.Printf("[Coach/ETP] No ETP profile found for student %s: %v", studentId, err)
+		return &ETPPersonalisation{ProfileFound: false}
+	}
+
+	// Convert the stored map[string]int to map[string]float64
+	profileValues := make(map[string]float64)
+	for k, v := range profileDoc.SpectrumProfile {
+		profileValues[k] = float64(v)
+	}
+
+	if len(profileValues) == 0 {
+		log.Printf("[Coach/ETP] Empty spectrum profile for %s", studentId)
+		return &ETPPersonalisation{ProfileFound: false}
+	}
+
+	log.Printf("[Coach/ETP] Found ETP profile for %s with %d spectrum values", studentId, len(profileValues))
+
+	// Use the response matrix to generate personalised interventions
+	personalisation := &ETPPersonalisation{
+		ProfileFound:     true,
+		DominantSettings: make(map[string]string),
+		BarrierLanguage:  make(map[string][]string),
+		AvoidLanguage:    make(map[string][]string),
+	}
+
+	// Determine dominant settings
+	for spectrumName, value := range profileValues {
+		absVal := value
+		if absVal < 0 {
+			absVal = -absVal
+		}
+		if absVal >= 0.5 {
+			setting := etp.InterpretProfileValue(spectrumName, value)
+			personalisation.DominantSettings[spectrumName] = setting
+		}
+	}
+
+	// Get the response matrix entries for dominant settings
+	actions := etp.GeneratePersonalisedPlan(profileValues, 0.5)
+
+	// Map barriers detected in the message to relevant ETP response matrix entries
+	for _, action := range actions {
+		// Check if this action's barrier type matches any detected barriers
+		barrierMatch := false
+		for _, b := range barriers {
+			// Map detected barrier names to response matrix barrier types
+			if matchBarrierToETP(b, action.BarrierType) {
+				barrierMatch = true
+				break
+			}
+		}
+
+		if barrierMatch || len(barriers) == 0 {
+			personalisation.BarrierLanguage[action.BarrierType] = append(
+				personalisation.BarrierLanguage[action.BarrierType],
+				action.InsteadSay...,
+			)
+			personalisation.AvoidLanguage[action.BarrierType] = append(
+				personalisation.AvoidLanguage[action.BarrierType],
+				action.AvoidSaying...,
+			)
+			personalisation.PlayStrategies = append(
+				personalisation.PlayStrategies,
+				action.PlayStrategies...,
+			)
+		}
+	}
+
+	// Build the adapted intervention script using ETP language
+	personalisation.AdaptedScript = buildETPAdaptedIntervention(barriers, actions, profileValues)
+
+	return personalisation
+}
+
+// matchBarrierToETP maps detected barrier names (confusion, frustration, etc.)
+// to ETP response matrix barrier types (verbalising, starting, mistakes)
+func matchBarrierToETP(detectedBarrier, etpBarrierType string) bool {
+	mapping := map[string][]string{
+		"verbalising": {"confusion", "low_confidence"},
+		"starting":    {"frustration", "confusion", "age_too_young"},
+		"mistakes":    {"frustration", "low_confidence"},
+	}
+
+	if types, ok := mapping[etpBarrierType]; ok {
+		for _, t := range types {
+			if t == detectedBarrier {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+// buildETPAdaptedIntervention creates a personalised intervention script
+// that uses the response matrix language instead of generic moral language
+func buildETPAdaptedIntervention(barriers []string, actions []etp.PersonalisedAction, profileValues map[string]float64) string {
+	if len(actions) == 0 {
+		return ""
+	}
+
+	var parts []string
+
+	// Group actions by relevant barrier
+	for _, action := range actions {
+		// Check if this action is relevant to any detected barrier
+		relevant := false
+		for _, b := range barriers {
+			if matchBarrierToETP(b, action.BarrierType) {
+				relevant = true
+				break
+			}
+		}
+
+		if !relevant && len(barriers) > 0 {
+			continue
+		}
+
+		// Use the strongest setting's language
+		if len(action.InsteadSay) > 0 {
+			parts = append(parts, action.InsteadSay[0])
+		}
+	}
+
+	if len(parts) == 0 {
+		// Fallback: use general engineering language
+		return "I notice what's happening right now. Let's look at what's blocking you and work with it, not against it."
+	}
+
+	return strings.Join(parts, " ")
+}
+
+// parseSpectrumProfile parses the stored spectrum profile string back into values.
+// The format stored is the Go map string representation: map[key1:value1 key2:value2]
+func parseSpectrumProfile(profileStr string) map[string]float64 {
+	result := make(map[string]float64)
+
+	// Strip "map[" prefix and "]" suffix
+	profileStr = strings.TrimPrefix(profileStr, "map[")
+	profileStr = strings.TrimSuffix(profileStr, "]")
+
+	if profileStr == "" {
+		return result
+	}
+
+	// Split by space and parse key:value pairs
+	pairs := strings.Fields(profileStr)
+	for _, pair := range pairs {
+		parts := strings.SplitN(pair, ":", 2)
+		if len(parts) == 2 {
+			val, err := strconv.ParseFloat(parts[1], 64)
+			if err == nil {
+				result[parts[0]] = val
+			}
+		}
+	}
+
+	return result
 }

@@ -41,6 +41,7 @@ import {
 } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import ContactReveal from '../components/ContactReveal';
+import SEO from '../components/SEO';
 
 // ─── Spectra Data ───────────────────────────────────────────
 interface Spectrum {
@@ -171,6 +172,11 @@ const ETPLanding: React.FC = () => {
 
   return (
     <Box>
+      <SEO
+        title="ETP — Emergent Tendency Profiles"
+        description="Understand learners through 9 biological spectra. ETP maps social gravity, voltage sensitivity, threat response, and more to create actionable development profiles."
+        path="/etp-landing"
+      />
       {/* ── Hero Section ── */}
       <Box
         sx={{

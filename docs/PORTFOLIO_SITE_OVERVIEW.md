@@ -1,6 +1,6 @@
 # ESP Thinking Portfolio Site — Current Overview (assist/frontend)
 
-_Last updated: 2026-02-14_
+_Last updated: 2026-02-15_
 
 This document describes the current **ESP Thinking portfolio site** implemented in `assist/frontend`. It is written so that Weaviate-assist can index an accurate, up-to-date view of the portfolio, its routes, and how it connects to the wider ecosystem.
 
@@ -126,12 +126,14 @@ Each landing page is opinionated about its audience and call-to-action, but patt
 - CTAs:
   - Bottom CTA uses `ContactReveal` to open a protected email form to `world@espthinking.co.uk` with label **"Request School Demo"**.
   - ParentOS bridge CTA links to `/parent-os`.
+  - Hero CTAs (Teacher Dashboard, Neuron Navigators) are correctly commented out — routes don't exist yet.
+- **Implementation status**: Landing page only. No backend, no teacher dashboard, no sticker book. Components described here would be reusable across the ecosystem if built.
 
 ### 4.2 LAOLanding (`/lao`)
 
 - Focus: LAO GCSE revision experience.
 - Hero: marketing copy and visuals tailored to revision resistance and low-friction engagement.
-- CTA: bottom-of-page button wired through `ContactReveal` for protected contact with `world@espthinking.co.uk`.
+- CTA: `ContactReveal` labelled **"Request TestFlight Access"** with `world@espthinking.co.uk`. Caption notes "Mobile app currently in TestFlight".
 
 ### 4.3 ETPLanding (`/etp-landing`)
 
@@ -143,15 +145,17 @@ Each landing page is opinionated about its audience and call-to-action, but patt
 
 - Focus: parent-facing framing of the same CHISG/ETP language used in school.
 - Links:
-  - `/parent-os/explorer` for interactive exploration.
-  - `/parent-os/guide` for deeper written guidance.
+  - `/parent-os/explorer` — "Coming Soon" page with description and ContactReveal ("Register Interest").
+  - `/parent-os/guide` — "Coming Soon" page with description and ContactReveal ("Register Interest").
 - CTA: includes `ContactReveal` for parent/partner contact.
+- **Implementation status**: Landing page only. Explorer and Guide are Coming Soon shells — no backend.
 
 ### 4.5 CareerOSLanding (`/careeros/*`)
 
 - Focus: verified skills passport / CareerOS view.
 - Implemented as a nested router inside `CareerOSLanding`.
 - Exposes internal routes under `/careeros/...` (e.g. demo, enterprise, passport), all fronted by the main portfolio router at `/careeros/*`.
+- **Implementation status**: Landing page only (948 lines of rich concept content with static example data). No backend, no data model, no interactive features.
 
 ### 4.6 ESPWorldLanding (`/esp-world`)
 
@@ -185,33 +189,65 @@ Some landings (e.g. `/`, `/primary-os`, `/lao`, `/etp-landing`) intentionally **
 
 ## 6. Backends & Data Dependencies
 
-The portfolio frontend is primarily a **read-only + demo** layer, but several routes depend on backend services:
+The portfolio frontend is primarily a **read-only + demo** layer. Implementation status varies significantly by product.
 
+### Working backends:
 - Semantic tools (`/semantic-query`, `/ai-chat`, `/contentLoader`, `/semantic-links/extract`):
   - Use the assist API (`esp-organizer`) and the `weaviate-assist` instance to search and manipulate docs/semantic links.
-- ParentOS, ESP World, and CHISG content:
-  - Read from existing docs and CHISG/ETP definitions; some demos are stubbed for now but wired for future data integration.
-- Skills Map hand-off:
-  - Depends on `skills-map-platform` stack (Go API + MySQL + Weaviate CHISG instance) running behind the main proxy.
+- ETP Profile (`/etp-profile`):
+  - Full domain logic in Go (spectra, voltage calculation, compatibility). Weaviate ETPProfile schema defined.
+- Skills Map hand-off (`/skillstree` → redirect):
+  - Full production stack (Go API + MySQL + Weaviate CHISG instance) running behind the main proxy.
+- DRB (`/drb/` via nginx):
+  - Go + MongoDB backend with seeded demo data. Concept demonstration for MATs, not a standalone product.
+- Analytics (`/api/analytics/*`):
+  - Page view + event tracking, MongoDB storage, bearer token auth.
+
+### Concept-only (landing pages with no backend):
+- PrimaryOS (`/primary-os`): No backend, no teacher dashboard, no sticker book implementation.
+- ParentOS (`/parent-os`, `/parent-os/explorer`, `/parent-os/guide`): Coming Soon pages with ContactReveal.
+- CareerOS (`/careeros/*`): Static concept content with hardcoded example data. No Skills Passport, Role Architect, or Matching backend.
+
+### Foundational tools (applied across products, not standalone):
+- CHISG knowledge graph: Weaviate-backed, used by Skills Map, Semantic Query, and AI Chat.
+- humanOS coaching: Standalone project with orchestrator + LLM integration but in-memory student profiles.
 
 ---
 
-## 7. Current Deployment Assumptions
+## 7. Current Deployment
 
-Local / dev:
+### Production (Live — espthinking.co.uk)
 
-- Run via Docker Compose in the `assist` repo (`make up` or equivalent commands).
-- Portfolio React app is served by `assist-frontend` container.
-- For dev convenience, `assist-frontend` can be exposed on `http://localhost:3000` while the main Nginx proxy serves `http://localhost/`.
-- The `/skillstree/` path is served by `skills-frontend` (skills-map-platform) behind the `main-proxy` Nginx container.
+- **Domain**: `espthinking.co.uk` (DNS on IONOS → `192.248.151.185`)
+- **SSL**: Let's Encrypt certificate via certbot container (expires 2026-05-15)
+- **Server**: Vultr VPS running `docker-compose.prod.yml` with 10 containers
+- **Docker Hub**: All images under `mike5tew/` namespace (linux/amd64)
 
-Production (planned via Vultr docs):
+Container routing via `main-proxy` Nginx:
+- `/` → `assist-frontend` (portfolio React app)
+- `/api/` → `assist-api` (esp-organizer Go API, port 8080)
+- `/skillstree/` → `skills-frontend` (Skills Map React app)
+- `/skillstree/api/` → `skills-api` (Skills Map Go API)
+- `/drb/` → `drb-frontend` (DRB concept demo)
+- `/drb/api/` → `drb-api` (DRB Go API, port 8082)
 
-- `assist-frontend` is fronted by a main Nginx proxy container that also forwards:
-  - `/skillstree/` → `skills-frontend`
-  - `/skillstree/api/` → `skills-api`
-  - Additional apps (e.g. DRB) under subpaths.
-- Domain mapping is handled at Nginx + DNS level (see Vultr migration docs for smartminds.education; ESPThinking.co.uk will follow the same pattern but with a different primary domain).
+Data services:
+- MongoDB (`esp_organizer`, `esp_analytics`, `drb_monitor`)
+- MySQL `skills_db` (Skills Map operational data)
+- Weaviate v1.24.10 (CHISG knowledge graph)
+
+### Visitor Analytics
+
+- Tracking: page views + CTA events (contact_unlocked, contact_sent)
+- Privacy: daily hashed fingerprint (SHA256 of IP+UA), auto-deleted after 365 days
+- Stats endpoint: `/api/analytics/stats` (bearer token auth)
+- Dashboard: `/analytics` (period selector, summary cards, charts)
+
+### Local / Dev
+
+- Run via Docker Compose: `make up` or `docker compose up`
+- Portfolio at `http://localhost:3000` (dev) or `http://localhost/` (via proxy)
+- Skills Map at `http://localhost/skillstree/`
 
 ---
 

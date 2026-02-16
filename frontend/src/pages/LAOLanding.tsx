@@ -32,6 +32,7 @@ import {
 import { Link } from 'react-router-dom';
 import NavHeader from '../components/NavHeader';
 import ContactReveal from '../components/ContactReveal';
+import SEO from '../components/SEO';
 
 
 const features = [
@@ -90,6 +91,11 @@ const LAOLanding: React.FC = () => {
 
   return (
     <Box>
+      <SEO
+        title="LAO — Adaptive GCSE Science Revision"
+        description="Little and Often revision tool for GCSE Science. Speed reading, audio summaries, flashcards, and CHISG-driven gap analysis — designed to reduce revision resistance."
+        path="/lao"
+      />
       <NavHeader />
       {/* ── Hero Section ── */}
       <Box
@@ -129,24 +135,9 @@ const LAOLanding: React.FC = () => {
               </Typography>
               
               <Stack direction="row" spacing={2} alignItems="center">
-                <Button 
-                  variant="contained" 
-                  size="large" 
-                  endIcon={<ArrowForwardIcon />}
-                  sx={{ 
-                    bgcolor: '#64ffda', 
-                    color: '#1a237e', 
-                    fontWeight: 'bold',
-                    py: 1.5,
-                    px: 4,
-                    '&:hover': { bgcolor: '#1de9b6' }
-                  }}
-                >
-                  View Prototype
-                </Button>
-                <ContactReveal email="world@espthinking.co.uk" label="Get in Touch" />
+                <ContactReveal email="world@espthinking.co.uk" label="Request TestFlight Access" />
                 <Typography variant="caption" sx={{ opacity: 0.7 }}>
-                  Currently in TestFlight
+                  Mobile app currently in TestFlight
                 </Typography>
               </Stack>
             </Grid>

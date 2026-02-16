@@ -7,31 +7,73 @@
 
 ## Executive Summary
 
-This ecosystem comprises tools for **education data management**, **student development tracking**, and **AI-assisted learning**. The core innovation is the **CHISG** (Contextualised Hierarchical Iterative Semantic Groupings) knowledge graph combined with **ETP** (Emergent Tendency Profiles) for personalised learning.
+This ecosystem comprises **foundational tools** for education data management and AI-assisted learning, and **products** built on top of them. The core innovation is **CHISG** (Contextualised Hierarchical Iterative Semantic Groupings) — a knowledge-graph methodology for structuring educational content — combined with **ETP** (Emergent Tendency Profiles) for personalised learning.
+
+### Architecture Layers
+
+1. **Foundational Tools** (reusable services, not standalone products):
+   - CHISG knowledge graph (Weaviate + semantic links)
+   - Skills Map Platform (skills CRUD, course maps, student tracking)
+   - humanOS (AI coaching orchestrator with safeguarding)
+   - ETP framework (9 biological spectra + voltage calculations + response matrix)
+
+2. **Products** (user-facing applications):
+   - LAO (GCSE revision mobile app — in TestFlight)
+   - PrimaryOS (primary-age ETP — concept stage)
+   - ParentOS (parent-facing spectrum tools — concept stage)
+   - CareerOS (skills passport — concept stage)
+   - ETP Profile (interactive spectrum demo — working)
+
+3. **Concept Demonstrations** (stakeholder engagement):
+   - DRB (MAT strategic dashboard — demo with seeded data, shows MATs what's possible)
 
 ### Primary Value Propositions
 
 1. **For Schools**: Real-time competency tracking, behaviour logging, and strategic oversight
 2. **For Students**: Adaptive revision tools with engagement-first design
-3. **For Trusts/MATs**: Consolidated financial and estates monitoring with data-driven governance
+3. **For Parents**: Understanding and supporting their child's development across the spectra
+4. **For Trusts/MATs**: Consolidated financial and estates monitoring with data-driven governance
 
 ---
 
-## Generated: 2026-02-07 10:45
+## Generated: 2026-02-15
 
 ---
 
 ## Project Overview
 
+### Foundational Tools
+
 | Project | Purpose | Status | Tech Stack |
 |---------|---------|--------|------------|
-| **SkillsMarkbookMobile** | Primary teacher competency logging | Development | React Native, Expo |
-| **DRB** | Trust financial & estates monitoring | Development | Go, PostgreSQL, Open Banking |
-| **LAOMobile** | GCSE revision app | TestFlight | React Native, Go, MongoDB |
-| **assist** | Monorepo (docs, API, frontend) | Active | Go, React, Weaviate, Docker |
-| **skills-map-platform** | Skills tree, course maps, student proficiency | Active | Go, React, MySQL, Weaviate |
+| **CHISG** | Knowledge graph methodology for skills/concepts | Weaviate schema working, semantic search functional | Weaviate, Go, MongoDB |
+| **skills-map-platform** | Skills tree, course maps, student proficiency | Production-ready | Go, React, MySQL, Weaviate |
+| **humanOS** | AI coaching orchestrator with safeguarding | Partial (in-memory storage) | Go, React, Weaviate, AWS Bedrock |
+| **ETP Framework** | 9 biological spectra, voltage calculations, response matrix | Domain logic + response matrix complete, MongoDB persistence | Go, MongoDB |
+
+### Products
+
+| Project | Purpose | Status | Tech Stack |
+|---------|---------|--------|------------|
+| **LAOMobile** | GCSE revision app | TestFlight (field testing) | React Native, Go, SQLite |
+| **PrimaryOS** | Primary-age ETP + Neuron Navigators | Landing page only (concept) | React (landing) |
+| **ParentOS** | Parent-facing spectrum explorer | Landing page only (concept) | React (landing) |
+| **CareerOS** | Skills passport + role matching | Landing page only (concept) | React (landing) |
+| **ETP Profile** | Interactive spectrum demo | Working | React, Go |
+| **SkillsMarkbookMobile** | Primary teacher competency logging | Development (early) | React Native, Expo |
+
+### Concept Demonstrations
+
+| Project | Purpose | Status | Tech Stack |
+|---------|---------|--------|------------|
+| **DRB** | MAT financial & estates dashboard concept | Demo-functional (seeded data) | Go, React, MongoDB |
+
+### Infrastructure
+
+| Project | Purpose | Status | Tech Stack |
+|---------|---------|--------|------------|
+| **assist** | Monorepo (docs, API, frontend, deployment) | Active | Go, React, Weaviate, Docker |
 | **ESPProj** | Legacy MIS features | Migration | Go, React, MySQL |
-| **humanOS** | Emotional motivation models | Research | Documentation, Weaviate |
 
 ---
 
@@ -65,10 +107,10 @@ SkillsMarkbookMobile/
 
 ---
 
-### 2. DRB (Data/Financial Monitor)
+### 2. DRB (MAT Strategic Dashboard — Concept Demo)
 **Location**: `/Users/michaelstewart/Coding/DRB`
 
-Strategic oversight tool for trust-level leadership monitoring financial and estates health.
+A concept demonstration for Multi-Academy Trusts, showing the type of strategic oversight tooling that could be built. Not a standalone product — used for stakeholder engagement to illustrate what's possible with consolidated financial and estates data.
 
 **Key Modules**:
 - **Bank Aggregation**: Open Banking (AISP) integration
@@ -116,7 +158,7 @@ A method of parsing and validating information for vector database ingestion tha
 | risk_tolerance | Risk-averse ↔ Risk-seeking |
 | integrity_logic | Flexible principles ↔ Rigid principles |
 | mirror_neuron_tuning | Low empathy ↔ High empathy |
-| orderliness | Flexible - Ordered |
+| orderliness | Flexible/Spontaneous ↔ Ordered/Structured |
 
 Plus 2 global moderators: `pilot_strength`, `current_load`
 
@@ -328,9 +370,10 @@ make index
 - **Eyes-Up Teaching**: Log behaviours without looking down at a device
 
 ### Why These Projects Matter for Data Management Roles
-- **DRB**: Direct experience with Open Banking integration, financial data consolidation, and governance dashboards
+- **DRB**: Concept demo showing Open Banking integration, financial data consolidation, and governance dashboards for MATs
+- **Skills Map / CHISG**: Foundational tool — vector database management, semantic search, and knowledge graph design applied across all products
 - **SkillsMarkbookMobile**: Real-time data capture, competency tracking, and cross-system sync
-- **CHISG/Weaviate**: Vector database management, semantic search, and knowledge graph design
+- **humanOS**: Foundational tool — AI coaching orchestrator with safeguarding framework, applied across products
 
 ---
 

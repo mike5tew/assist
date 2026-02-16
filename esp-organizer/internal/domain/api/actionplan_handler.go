@@ -3,13 +3,18 @@ package api
 import (
 	"context"
 	"encoding/json"
+	"esp-organizer/internal/domain/etp"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
-	"github.com/weaviate/weaviate-go-client/v4/weaviate"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // ETPProfileRequest matches the JSON from the frontend
@@ -17,32 +22,50 @@ type ETPProfileRequest struct {
 	Values map[string]int `json:"values"`
 }
 
-var assistClient *weaviate.Client
+// ETPProfileDoc is the MongoDB document for an ETP profile
+type ETPProfileDoc struct {
+	ID              primitive.ObjectID `bson:"_id,omitempty" json:"id"`
+	UserID          string             `bson:"userId" json:"userId"`
+	SpectrumProfile map[string]int     `bson:"spectrumProfile" json:"spectrumProfile"`
+	SpectrumVector  []float32          `bson:"spectrumVector" json:"spectrumVector"`
+	Timestamp       time.Time          `bson:"timestamp" json:"timestamp"`
+}
 
-func getAssistClient() *weaviate.Client {
-	if assistClient == nil {
-		// Use environment variable or default to Docker service name
-		weaviateHost := os.Getenv("WEAVIATE_URL")
-		if weaviateHost == "" {
-			weaviateHost = "weaviate:8080"
-		} else {
-			// Strip scheme if present (WEAVIATE_URL might include http://)
-			if len(weaviateHost) > 7 && weaviateHost[:7] == "http://" {
-				weaviateHost = weaviateHost[7:]
-			} else if len(weaviateHost) > 8 && weaviateHost[:8] == "https://" {
-				weaviateHost = weaviateHost[8:]
-			}
-		}
-		log.Printf("Connecting to Weaviate at: http://%s", weaviateHost)
+// ---------- MongoDB connection for ETP data ----------
 
-		cfg := weaviate.Config{
-			Host:    weaviateHost,
-			Scheme:  "http",
-			Headers: nil,
-		}
-		assistClient = weaviate.New(cfg)
+var etpDB *mongo.Database
+
+func getETPDB() (*mongo.Database, error) {
+	if etpDB != nil {
+		return etpDB, nil
 	}
-	return assistClient
+
+	uri := os.Getenv("MONGODB_URI")
+	if uri == "" {
+		return nil, fmt.Errorf("MONGODB_URI not set")
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))
+	if err != nil {
+		return nil, fmt.Errorf("mongo connect: %w", err)
+	}
+	if err := client.Ping(ctx, nil); err != nil {
+		return nil, fmt.Errorf("mongo ping: %w", err)
+	}
+
+	etpDB = client.Database("esp_organizer")
+
+	// Ensure indexes on etp_profiles collection
+	coll := etpDB.Collection("etp_profiles")
+	coll.Indexes().CreateOne(ctx, mongo.IndexModel{
+		Keys: bson.D{{Key: "userId", Value: 1}, {Key: "timestamp", Value: -1}},
+	})
+
+	log.Println("✅ ETP MongoDB connection established (database: esp_organizer)")
+	return etpDB, nil
 }
 
 func ActionPlanHandler(w http.ResponseWriter, r *http.Request) {
@@ -58,17 +81,8 @@ func ActionPlanHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("Received ETP Profile: %+v", req.Values)
 
-	client := getAssistClient()
-
-	// 1. Create ETPProfile object
-	// Convert map to separate fields (if needed) or just store as JSON string or vector
-	// The schema has "spectrumVector" as number[]
-	// I need to order the values correctly to make a vector.
-	// I'll define a canonical order.
-	// TODO: This legacy order preserves backward compatibility with old 17-spectrum vectors.
-	// New canonical order is the 9 core spectra defined in etp.ETPSpectra.
-	// Once all stored vectors are migrated, replace with:
-	//   etp.SpectrumNames() + "orderliness"
+	// 1. Store ETP profile in MongoDB
+	// Build the spectrum vector using canonical order
 	order := []string{
 		"social_gravity", "guilt_response", "emotional_transparency", "energy_directionality", "mirror_neuron_tuning", "resource_allocation",
 		"voltage_sensitivity", "impulse_gap", "self_righting_speed", "risk_tolerance", "anticipation_bias", "presence_sensitivity",
@@ -81,42 +95,122 @@ func ActionPlanHandler(w http.ResponseWriter, r *http.Request) {
 		if val, ok := req.Values[key]; ok {
 			vector[i] = float32(val)
 		} else {
-			vector[i] = 0 // Default to 0
+			vector[i] = 0
 		}
 	}
 
-	// Create the object
-	dataObj := map[string]interface{}{
-		"userId":          "test-user-001",               // TODO: Get from auth
-		"spectrumProfile": fmt.Sprintf("%v", req.Values), // Simple string rep
-		"spectrumVector":  vector,                        // The raw vector
-		"timestamp":       time.Now().Format(time.RFC3339),
+	profileDoc := ETPProfileDoc{
+		UserID:          "test-user-001", // TODO: Get from auth
+		SpectrumProfile: req.Values,
+		SpectrumVector:  vector,
+		Timestamp:       time.Now(),
 	}
 
-	response, err := client.Data().Creator().
-		WithClassName("ETPProfile").
-		WithProperties(dataObj).
-		Do(context.Background())
+	var profileId string
 
+	db, err := getETPDB()
 	if err != nil {
-		log.Printf("Error creating ETPProfile in Weaviate: %v", err)
-		http.Error(w, fmt.Sprintf("Failed to save profile: %v", err), http.StatusInternalServerError)
-		return
+		log.Printf("[ActionPlan] MongoDB not available, continuing without persistence: %v", err)
+		profileId = "ephemeral"
+	} else {
+		result, err := db.Collection("etp_profiles").InsertOne(r.Context(), profileDoc)
+		if err != nil {
+			log.Printf("[ActionPlan] Failed to save ETP profile to MongoDB: %v", err)
+			profileId = "save-failed"
+		} else {
+			profileId = result.InsertedID.(primitive.ObjectID).Hex()
+			log.Printf("[ActionPlan] Saved ETP profile to MongoDB: %s", profileId)
+		}
 	}
 
-	log.Printf("Created ETPProfile with ID: %v", response.Object.ID)
+	// 2. Generate personalised action plan from the in-memory response matrix
+	profileValues := make(map[string]float64)
+	for k, v := range req.Values {
+		profileValues[k] = float64(v)
+	}
 
-	// 2. Mock Action Plan Generation
-	// (In future: Query PersonalityLearningStrategy using the vector)
+	actions := etp.GeneratePersonalisedPlan(profileValues, 0.5)
+
+	// Build the action plan response
+	actionPlan := buildActionPlanResponse(actions)
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]interface{}{
-		"status":    "success",
-		"profileId": response.Object.ID,
-		"actionPlan": []string{
-			"Review your Social Gravity settings.",
-			"Practice Impulse Gap expansion in low-stress environments.",
-			"Monitor Risk Tolerance thresholds.",
-		},
+		"status":          "success",
+		"profileId":       profileId,
+		"actionPlan":      actionPlan.Summary,
+		"detailedActions": actionPlan.DetailedActions,
+		"barrierProfile":  actionPlan.BarrierProfile,
+		"languageGuide":   actionPlan.LanguageGuide,
+		"playStrategies":  actionPlan.PlayStrategies,
+		"unifiedLanguage": etp.UnifiedLanguageShifts,
+		"playFirstSteps":  etp.PlayFirstPrinciple,
 	})
+}
+
+// ActionPlanResponse holds the structured plan returned to the frontend
+type ActionPlanResponse struct {
+	Summary         []string                 `json:"summary"`
+	DetailedActions []etp.PersonalisedAction `json:"detailed_actions"`
+	BarrierProfile  map[string][]string      `json:"barrier_profile"`
+	LanguageGuide   map[string]LanguageEntry `json:"language_guide"`
+	PlayStrategies  []string                 `json:"play_strategies"`
+}
+
+// LanguageEntry pairs avoid/use language for a spectrum
+type LanguageEntry struct {
+	SpectrumName string   `json:"spectrum_name"`
+	Setting      string   `json:"setting"`
+	Avoid        []string `json:"avoid"`
+	Use          []string `json:"use"`
+}
+
+// buildActionPlanResponse creates the action plan from in-memory response matrix data
+func buildActionPlanResponse(actions []etp.PersonalisedAction) ActionPlanResponse {
+	resp := ActionPlanResponse{
+		BarrierProfile: make(map[string][]string),
+		LanguageGuide:  make(map[string]LanguageEntry),
+	}
+
+	playSet := make(map[string]bool)
+
+	for _, a := range actions {
+		spectrum := etp.GetSpectrumByName(a.SpectrumName)
+		spectrumLabel := a.SpectrumName
+		if spectrum != nil {
+			spectrumLabel = spectrum.SolutionName
+		}
+
+		summaryLine := fmt.Sprintf("[%s] %s setting (%s): %s",
+			strings.ToUpper(a.BarrierType), a.Setting, a.SettingStrength, a.BarrierDesc)
+		resp.Summary = append(resp.Summary, summaryLine)
+
+		resp.BarrierProfile[a.BarrierType] = append(resp.BarrierProfile[a.BarrierType], a.BarrierDesc)
+
+		resp.LanguageGuide[a.SpectrumName] = LanguageEntry{
+			SpectrumName: spectrumLabel,
+			Setting:      a.Setting,
+			Avoid:        a.AvoidSaying,
+			Use:          a.InsteadSay,
+		}
+
+		for _, p := range a.PlayStrategies {
+			if !playSet[p] {
+				playSet[p] = true
+				resp.PlayStrategies = append(resp.PlayStrategies, p)
+			}
+		}
+	}
+
+	resp.DetailedActions = actions
+
+	if len(resp.Summary) == 0 {
+		resp.Summary = []string{
+			"Your ETP profile is relatively balanced across all spectra.",
+			"Focus on the Play-First Principle: observe settings, name them neutrally, design play that expands range.",
+			"Use engineering language: 'Your setting is...' instead of 'You are...'",
+		}
+	}
+
+	return resp
 }

@@ -56,6 +56,7 @@ import {
 } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import ContactReveal from '../components/ContactReveal';
+import SEO from '../components/SEO';
 
 // ─── ETP Spectra for PrimaryOS ─────────────────────────────
 const primarySpectra = [
@@ -242,6 +243,11 @@ const PrimaryOSLanding: React.FC = () => {
 
   return (
     <Box>
+      <SEO
+        title="PrimaryOS — The Operating System for Growing Learners"
+        description="PrimaryOS adapts the 9 ETP biological spectra for primary-age children. Neuron Navigators guide books, foundational skill domains, and teacher tools that replace shame with strategy."
+        path="/primary-os"
+      />
       {/* ── Hero Section ── */}
       <Box
         sx={{
@@ -885,29 +891,23 @@ const PrimaryOSLanding: React.FC = () => {
                   <Divider sx={{ my: 2 }} />
                   
                   <Typography variant="subtitle2" gutterBottom fontWeight="bold">
-                    Real teacher feedback:
+                    How this changes the classroom:
                   </Typography>
                   
                   <Stack spacing={2}>
                     <Paper elevation={0} sx={{ p: 2, bgcolor: alpha(brandColor, 0.04), borderRadius: 2 }}>
                       <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
-                        "I used to spend 20 minutes a day on 'Stop calling out.' Now I spend 2 minutes saying 
-                        'I can see you're processing out loud — jot that thought down and we'll come back to it.' 
-                        The behaviour hasn't changed — my response has. And it works better."
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-                        — Year 3 teacher, 14 years experience
+                        Instead of spending time on "Stop calling out," teachers can say 
+                        "I can see you're processing out loud — jot that thought down and we'll come back to it." 
+                        The behaviour hasn't changed — the response has. And the PrimaryOS framework is designed to make that shift natural.
                       </Typography>
                     </Paper>
                     
                     <Paper elevation={0} sx={{ p: 2, bgcolor: alpha(brandColor, 0.04), borderRadius: 2 }}>
                       <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
-                        "The Neuron Navigators book has become our morning check-in. Children arrive, open their 
-                        journal, and place their sticker. I can see in 30 seconds who's regulated and who needs 
-                        support. It's changed how I start my day."
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-                        — Year 1 teacher, 6 years experience
+                        The Neuron Navigators book is designed as a morning check-in tool. Children arrive, open their 
+                        journal, and place their sticker. Teachers can see at a glance who's regulated and who needs 
+                        support — changing how they start their day.
                       </Typography>
                     </Paper>
                   </Stack>
@@ -1024,7 +1024,7 @@ const PrimaryOSLanding: React.FC = () => {
             Give Every Child the Manual to Their Own Mind
           </Typography>
           <Typography variant="body1" sx={{ mb: 4, maxWidth: 600, mx: 'auto', opacity: 0.95 }}>
-            PrimaryOS is available to schools as a complete framework — including teacher training, 
+            PrimaryOS is being developed for schools as a complete framework — including teacher training, 
             Neuron Navigators journals, and CHISG-aligned skill tracking.
           </Typography>
           
@@ -1049,7 +1049,7 @@ const PrimaryOSLanding: React.FC = () => {
           </Stack>
           
           <Typography variant="caption" sx={{ display: 'block', mt: 4, opacity: 0.8 }}>
-            Single-school and MAT-wide licensing available. Neuron Navigators journals available in class sets.
+            Single-school and MAT-wide licensing planned. Neuron Navigators journals will be available in class sets.
           </Typography>
         </Container>
       </Box>
