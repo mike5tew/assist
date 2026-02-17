@@ -106,9 +106,12 @@ Ranking is determined by the number of independent **logical routes** that lead 
 
 ### 3. Computed Trust Value
 Trust is not a static flag but a computed score:
-$$Trust(A \xrightarrow{r} B) = f(\text{SourceCount}, \text{IndependentPathCount}, \text{AnalogyMatches})$$
 
-Relationships with low Trust Scores are treated as "hypotheses" and are flagged for human review or excluded from automated coaching responses.
+$$\mathcal{T}(A \xrightarrow{r} B) = \phi(M_a) \cdot \left[ 1 - e^{-( \alpha \ln(1+N_s) + \beta N_p )} \right]$$
+
+Where $N_s$ = independent source count, $N_p$ = independent path count, $M_a$ = cross-domain analogy matches, $\phi(M_a)$ = analogy scaling factor, and $\alpha, \beta$ = weighting coefficients. The saturating exponential ensures diminishing returns from additional sources, while $\phi(M_a)$ amplifies trust when the same structural pattern is confirmed across domains.
+
+Relationships with low $\mathcal{T}$ scores are treated as "hypotheses" and are flagged for human review or excluded from automated coaching responses.
 
 ### 4. Opinion vs. Structural Truth (The Echo Chamber Filter)
 A high `SourceCount` can be misleading if it represents **Consensus by Correlation** (everyone repeating the same person) rather than **Consensus by Derivation** (everyone finding the same truth independently).

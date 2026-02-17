@@ -115,14 +115,19 @@ The trust scoring system identifies claims that are:
 
 **The Trust Score Formula**:
 
-$$Trust(A \xrightarrow{r} B) = f(\text{SourceCount}, \text{IndependentPathCount}, \text{AnalogyMatches})$$
+$$\mathcal{T}(A \xrightarrow{r} B) = \phi(M_a) \cdot \left[ 1 - e^{-( \alpha \ln(1+N_s) + \beta N_p )} \right]$$
 
 Where:
-- **SourceCount** = number of independent sources claiming this relationship
-- **IndependentPathCount** = number of distinct logical routes leading to the same conclusion (structural redundancy)
-- **AnalogyMatches** = number of times the same relational pattern appears in other domains
+- $\mathcal{T}$ = computed trust score for the claim $A \xrightarrow{r} B$, bounded $(0, 1]$
+- $N_s$ = number of independent sources claiming this relationship
+- $N_p$ = number of distinct logical routes leading to the same conclusion (structural redundancy)
+- $M_a$ = number of times the same relational pattern appears in other domains (analogy matches)
+- $\phi(M_a)$ = analogy scaling factor — amplifies trust when the same structural pattern is independently confirmed across domains
+- $\alpha, \beta$ = weighting coefficients for source vs path contributions
+- The saturating term $1 - e^{-x}$ ensures diminishing returns: the first few independent sources matter most; additional repetitions add progressively less confidence
+- The logarithmic $\ln(1 + N_s)$ further compresses source count, reflecting that 10 sources citing one paper are not 10× more trustworthy than one — the echo chamber filter handles source independence before $N_s$ is computed
 
-A claim with high SourceCount but low IndependentPathCount is classified as **opinion** (consensus by correlation). A claim with high IndependentPathCount across domains is classified as **structural truth** (consensus by derivation).
+**Interpretation**: A claim with high $N_s$ but low $N_p$ saturates slowly (consensus by correlation — **opinion**). A claim with high $N_p$ across domains drives $\phi(M_a)$ upward and $\beta N_p$ dominates (consensus by derivation — **structural truth**).
 
 **The Echo Chamber Filter**: If ten sources all cite one original paper, CHISG clusters them as a single opinion node rather than counting them as ten independent confirmations. Source independence is tracked through provenance metadata.
 
