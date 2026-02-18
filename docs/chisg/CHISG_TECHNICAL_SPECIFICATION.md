@@ -254,6 +254,72 @@ Retroactively map published research onto validated nodes, completing the proven
 
 ---
 
+## Next Phase: LLM-to-CHISG Extraction Pipeline
+
+### The Goal
+
+Build a learning model that enables an LLM to convert source material into CHISG semantic units — extracting structured `[Entity A] —[relation]→ [Entity B]` triples with full provenance metadata.
+
+### Difficulty Gradient
+
+The extraction problem has a clear difficulty gradient based on source material density:
+
+#### Level 1: Definitions (Easy)
+
+**Source**: The existing LAO keyword database (2,746 GCSE Science definitions from Quizlet + AI-generated, manually verified).
+
+Definitions are the ideal training candidate because the information is already condensed. A definition like *"Generator: A device that converts kinetic energy into electrical energy"* maps almost directly to a semantic unit:
+
+```
+Generator —[converts]→ kinetic energy → electrical energy
+  knowledge_type: declarative
+  source: quizlet-expert-verified
+  domain: physics
+  level: gcse
+```
+
+The relation type, entities, and domain are largely explicit in the text. Extraction at this level is a parsing problem, not a reasoning problem.
+
+#### Level 2: Textbook Passages (Medium)
+
+Longer structured text where relationships are stated but spread across sentences and paragraphs. The LLM must identify which statements are knowledge claims (vs. pedagogical scaffolding, worked examples, or motivational filler) and assign appropriate relation types.
+
+#### Level 3: Research Papers (Hard — The Real Test)
+
+**This is where the methodology must prove itself.**
+
+Research papers present three challenges that definitions do not:
+
+1. **Context-dependent truth**: A relationship extracted from a paper may only hold under specific experimental conditions, in a particular organism, at a certain scale, or within stated assumptions. The metadata — the `context[]` array — becomes the critical component. A claim like *"Protein X inhibits pathway Y"* is meaningless without: species, cell type, concentration range, temperature, and whether this was in vivo or in vitro. **The context in which the link between items is actually true is far more difficult to extract than the link itself.**
+
+2. **Implicit relationships**: Research papers assume domain knowledge. The relationship between two concepts may never be explicitly stated — it is implied by the experimental design or by the juxtaposition of results. The LLM must infer relationships that the author assumed the reader would recognise.
+
+3. **Hedged and qualified claims**: Research language is deliberately cautious — "suggests", "may contribute to", "is consistent with". These qualifications map to trust metadata (confidence weighting), not to the relationship itself. The extraction model must separate the claim from its hedging.
+
+### Training Strategy
+
+The definitions serve as **supervised training data** for the extraction pipeline:
+
+1. **Phase A**: Convert 2,746 definitions → semantic units (high accuracy, known-good output)
+2. **Phase B**: Use these as ground truth to train/evaluate LLM extraction prompts
+3. **Phase C**: Graduate to textbook passages, using definition-derived units to validate extracted relationships
+4. **Phase D**: Attack research papers, where the context extraction problem becomes the primary challenge
+
+Each phase produces training signal for the next. The definitions are not the goal — they are the **calibration set**.
+
+### Key Metadata Fields for Research-Grade Extraction
+
+| Field | Why It Matters | Easy at Definition Level | Hard at Paper Level |
+|-------|---------------|------------------------|-------------------|
+| `relation_type` | What connects A to B | Usually explicit ("is a", "converts") | Often implicit or hedged |
+| `context.conditions` | When is this true | Usually universal at GCSE | Species, concentration, temperature, etc. |
+| `context.scope` | At what scale/level | GCSE level, straightforward | May only apply in vitro, or at molecular scale |
+| `confidence` | How sure are we | High (verified definition) | Varies — "suggests" vs "demonstrates" |
+| `context.assumptions` | What must be true for this to hold | Rarely stated | Critical and often unstated |
+| `contradicts` | What claims conflict | Rare at GCSE | Common in active research areas |
+
+---
+
 ## Applications
 
 ### Education (Primary Focus)
