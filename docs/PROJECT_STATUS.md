@@ -1,8 +1,8 @@
 # ESP Thinking Ecosystem — Project Status
 
-**Last Updated**: 2026-02-16
-**Current Phase**: Infrastructure Complete — Assessing Commercial Viability
-**Primary Focus**: CHISG Commercial Assessment + ETP Response Matrix Integration + LAO Testing
+**Last Updated**: 2026-02-18
+**Current Phase**: Infrastructure Complete — Awaiting CHISG Commercial Assessment
+**Primary Focus**: CHISG Commercial Assessment (spec sent to Toby Fotherby) + LAO Testing
 
 ---
 
@@ -49,12 +49,18 @@ This ecosystem has three layers:
 |----------|------|--------|-------|
 | 1 | ETP Response Matrix | ✅ COMPLETE | 18 response matrix entries (9 spectra × 2 settings) coded in Go, deployed to Vultr, MongoDB persistence |
 | 2 | MongoDB Migration (ETP) | ✅ COMPLETE | ETP profiles migrated from Weaviate → MongoDB. Assist Weaviate confirmed local-only. |
-| 3 | CHISG Technical Spec | 🔄 IN PROGRESS | Technical outline for stakeholders covering hallucination reduction, analogy detection, gap analysis |
-| 4 | CHISG Commercial Assessment | 🔄 IN PROGRESS | Preparing tech outline for Toby Fotherby to assess uniqueness/viability |
+| 3 | CHISG Technical Spec | ✅ COMPLETE | Formal spec with trust equation sent to Toby Fotherby (18 Feb 2026). See `docs/chisg/CHISG_TECHNICAL_SPECIFICATION.md` |
+| 4 | CHISG Commercial Assessment | ⏳ AWAITING RESPONSE | Spec delivered to Fotherby. Decision point: if commercial → build full demo; if not → pivot to PrimaryOS/ParentOS |
 | 5 | LAO Field Testing | 🔄 IN PROGRESS | TestFlight build live; collecting usage feedback |
-| 6 | PrimaryOS or ParentOS MVP | ⬜ CONSIDERING | PrimaryOS components reusable across ecosystem; ParentOS may be more commercial |
+| 6 | Weaviate Documentation Sync | ✅ COMPLETE | Assist Weaviate (8088) now holds 4,322 doc chunks as project source of truth. Ingestion script defaults to assist instance. |
+| 7 | PrimaryOS or ParentOS MVP | ⬜ BLOCKED | Waiting on CHISG assessment outcome before committing development priority |
 
-**Key Decision Pending**: Whether CHISG (as a knowledge-graph methodology) has standalone commercial value, which would change the development priority order significantly.
+**Key Decision Pending**: Awaiting Toby Fotherby's assessment of CHISG commercial viability (spec sent 18 Feb 2026). This determines the entire development priority order.
+
+**While Waiting — Actionable Now**:
+1. LAO field testing and content expansion (no dependency on CHISG decision)
+2. Semantic Link Extraction Tool completion (70% → 100%) — needed regardless of CHISG outcome
+3. Trust score computation implementation — the formal equation is designed, can be coded in Go
 
 ---
 
@@ -148,10 +154,19 @@ These are described on landing pages but have **no implementation behind them**:
 
 ## Next Steps (Decision Tree)
 
+**Status**: CHISG spec delivered to Toby Fotherby (18 Feb 2026). Awaiting response.
+
 ```
-If CHISG has commercial value (Fotherby assessment):
+If CHISG has commercial value (Fotherby says yes):
+  → Implement trust scoring computation (equation is formalised)
+  → Build structural analogy detection engine
   → Build full CHISG demo with GCSE Science curriculum mapping
   → This becomes the core IP to protect/license
+  → Complete Semantic Link Extraction Tool (70% → 100%)
+
+If CHISG is not commercially distinctive (Fotherby says no):
+  → CHISG remains an internal tool (still valuable as grounding layer)
+  → Pivot to PrimaryOS or ParentOS as next product
 
 If PrimaryOS next:
   → Components (spectrum sliders, sticker tracking) reuse across ecosystem
@@ -163,6 +178,14 @@ If ParentOS next:
   → Simpler scope (spectrum explorer + guides)
   → Could be built as a layer on top of ETP Profile + CHISG
 ```
+
+### Immediate Next Step (no dependency on Fotherby)
+
+**Complete the Semantic Link Extraction Tool** (70% → 100%)
+- Remaining: LLM-as-judge validation, hierarchy inference, batch processing
+- This tool is needed regardless of CHISG commercial outcome
+- It accelerates knowledge graph population for any path forward
+- Estimated: 1–2 weeks of focused work
 
 ---
 
