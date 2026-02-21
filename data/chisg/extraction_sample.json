@@ -1,0 +1,608 @@
+{
+  "extraction_meta": {
+    "source": "LAOMobile/backend/lao.db",
+    "method": "LLM extraction (Claude, single-pass)",
+    "date": "2026-02-19",
+    "status": "DRAFT — awaiting human review",
+    "total_definitions": 2746,
+    "sample_size": 20
+  },
+  "extraction_rules": {
+    "version": "0.1",
+    "principles": [
+      {
+        "id": "R1",
+        "rule": "Named substances in conditions are entities",
+        "detail": "If a condition names a specific substance, organism, or mechanism, extract it as a separate semantic unit with its functional role. Do not bury named participants in context metadata."
+      },
+      {
+        "id": "R2",
+        "rule": "Replace sequence markers with causal relations",
+        "detail": "Convert 'first step', 'leads to', 'then' into explicit causal relations (causes, enables, inhibits). Sequence words are pedagogical scaffolding, not knowledge."
+      },
+      {
+        "id": "R3",
+        "rule": "Extract what the source states — nothing more",
+        "detail": "The extraction must be a faithful map of the submitted material. Do not inject domain knowledge the source does not contain. If the source says A causes C with no mechanism, extract A→C. Do not insert B."
+      },
+      {
+        "id": "R4",
+        "rule": "Granularity is set by the source, not the extractor",
+        "detail": "Each source declares its own scope (domain, level, granularity). A GCSE definition that omits a mechanism is complete at GCSE level. Gap detection happens at the graph layer by comparing sources at different declared levels — not during extraction."
+      },
+      {
+        "id": "R5",
+        "rule": "Two layers: faithful extraction vs graph-level analysis",
+        "detail": "Layer 1 (extraction) maps the source faithfully. Layer 2 (graph analysis) detects gaps, contradictions, and missing mechanisms by comparing across multiple sources. The extractor must never do Layer 2 work."
+      },
+      {
+        "id": "R6",
+        "rule": "Definitions are input, not knowledge",
+        "detail": "A definition is one author's recorded claim. It is consumed by the extractor to produce links. After extraction, the original text has no ongoing role in the knowledge system. Multiple definitions of the same term from different sources produce overlapping links — that convergence IS the trust score mechanism. Store source text as archive (SQLite/filesystem), not in the knowledge graph."
+      },
+      {
+        "id": "R7",
+        "rule": "No 'is defined as' relation",
+        "detail": "Definitions do not generate 'is defined as' links. They generate the structural claims embedded within them (causes, is composed of, has value, etc.). An entity's description field may hold a source definition for display, but the definition itself is not a semantic link — it is a linguistic artefact."
+      }
+    ]
+  },
+  "semantic_units": [
+    {
+      "id": "def-1536",
+      "source_term": "Industrial production of ethanol",
+      "source_definition": "Ethene + Steam (high temp and pressure and a catalyst (phosphoric acid)) produces ethanol.",
+      "subject": "physics",
+      "extractions": [
+        {
+          "entity_a": "ethene and steam",
+          "relation": "produces",
+          "entity_b": "ethanol",
+          "backward_relation": "is produced from",
+          "knowledge_type": "procedural",
+          "context": {
+            "conditions": "high temperature, high pressure, phosphoric acid catalyst",
+            "domain": "chemistry",
+            "level": "gcse"
+          }
+        },
+        {
+          "entity_a": "phosphoric acid",
+          "relation": "acts as catalyst in",
+          "entity_b": "production of ethanol from ethene",
+          "backward_relation": "is catalysed by",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "chemistry",
+            "level": "gcse"
+          }
+        },
+        {
+          "entity_a": "catalyst",
+          "relation": "increases rate of",
+          "entity_b": "chemical reaction",
+          "backward_relation": "rate is increased by",
+          "knowledge_type": "declarative",
+          "context": {
+            "conditions": "not consumed in the reaction",
+            "domain": "chemistry",
+            "level": "gcse",
+            "note": "phosphoric acid is the specific example here"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-3864",
+      "source_term": "Reproductive Isolation",
+      "source_definition": "The prevention of interbreeding between populations, which is the first step towards speciation.",
+      "subject": "physics",
+      "extractions": [
+        {
+          "entity_a": "reproductive isolation",
+          "relation": "is defined as",
+          "entity_b": "prevention of interbreeding between populations",
+          "backward_relation": "defines",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "biology",
+            "level": "gcse"
+          }
+        },
+        {
+          "entity_a": "reproductive isolation",
+          "relation": "causes",
+          "entity_b": "speciation",
+          "backward_relation": "is caused by",
+          "knowledge_type": "conditional",
+          "context": {
+            "domain": "biology",
+            "level": "gcse"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-1614",
+      "source_term": "pH and plants",
+      "source_definition": "Different plants thrive in different soil pHs. Limescale is used to neutralise soil if it becomes too acidic.",
+      "subject": "physics",
+      "extractions": [
+        {
+          "entity_a": "soil pH",
+          "relation": "affects",
+          "entity_b": "plant growth",
+          "backward_relation": "is affected by",
+          "knowledge_type": "conditional",
+          "context": {
+            "conditions": "different plants require different pH ranges",
+            "domain": "biology",
+            "level": "gcse"
+          }
+        },
+        {
+          "entity_a": "limescale",
+          "relation": "neutralises",
+          "entity_b": "acidic soil",
+          "backward_relation": "is neutralised by",
+          "knowledge_type": "procedural",
+          "context": {
+            "conditions": "when soil becomes too acidic",
+            "domain": "chemistry",
+            "level": "gcse"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-3478",
+      "source_term": "Free Fall",
+      "source_definition": "Motion under gravity alone, with an acceleration of ~9.8 m/s².",
+      "subject": "physics",
+      "extractions": [
+        {
+          "entity_a": "free fall",
+          "relation": "is defined as",
+          "entity_b": "motion under gravity alone",
+          "backward_relation": "defines",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "physics",
+            "level": "gcse"
+          }
+        },
+        {
+          "entity_a": "free fall acceleration",
+          "relation": "has value",
+          "entity_b": "9.8 m/s²",
+          "backward_relation": "is the value of",
+          "knowledge_type": "declarative",
+          "context": {
+            "conditions": "near Earth's surface, no air resistance",
+            "domain": "physics",
+            "level": "gcse"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-0075",
+      "source_term": "lightning rod",
+      "source_definition": "a pointed rod connected to the ground that provides a path for electric charges to travel to the earth",
+      "subject": "physics",
+      "extractions": [
+        {
+          "entity_a": "lightning rod",
+          "relation": "provides path for",
+          "entity_b": "electric charges to travel to earth",
+          "backward_relation": "travels via",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "physics",
+            "level": "gcse"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-0374",
+      "source_term": "chromosome",
+      "source_definition": "the bundles of tightly coiled DNA that are visible during mitosis and meiosis.",
+      "subject": "physics",
+      "extractions": [
+        {
+          "entity_a": "chromosome",
+          "relation": "is composed of",
+          "entity_b": "tightly coiled DNA",
+          "backward_relation": "forms",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "biology",
+            "level": "gcse"
+          }
+        },
+        {
+          "entity_a": "chromosome",
+          "relation": "is visible during",
+          "entity_b": "mitosis and meiosis",
+          "backward_relation": "makes visible",
+          "knowledge_type": "conditional",
+          "context": {
+            "conditions": "only visible during cell division",
+            "domain": "biology",
+            "level": "gcse"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-3401",
+      "source_term": "Half-life",
+      "source_definition": "The time for half the nuclei in a sample to decay; defines the activity and persistence of a source.",
+      "subject": "physics",
+      "extractions": [
+        {
+          "entity_a": "half-life",
+          "relation": "is defined as",
+          "entity_b": "time for half the nuclei in a sample to decay",
+          "backward_relation": "defines",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "physics",
+            "level": "gcse"
+          }
+        },
+        {
+          "entity_a": "half-life",
+          "relation": "determines",
+          "entity_b": "activity and persistence of a radioactive source",
+          "backward_relation": "is determined by",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "physics",
+            "level": "gcse"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-1015",
+      "source_term": "Species",
+      "source_definition": "A group of similar organisms. These may not all look the same (they can have a lot of variation) but they can breed and produce fertile offspring.",
+      "subject": "physics",
+      "extractions": [
+        {
+          "entity_a": "species",
+          "relation": "is defined as",
+          "entity_b": "group of similar organisms that can breed and produce fertile offspring",
+          "backward_relation": "defines",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "biology",
+            "level": "gcse"
+          }
+        },
+        {
+          "entity_a": "members of a species",
+          "relation": "can exhibit",
+          "entity_b": "variation in appearance",
+          "backward_relation": "is exhibited by",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "biology",
+            "level": "gcse",
+            "note": "common misconception that same species = same appearance"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-3045",
+      "source_term": "Treatment of Gonorrhea",
+      "source_definition": "Penicillin is used but now many antibiotic resistant strains have developed.",
+      "subject": "physics",
+      "extractions": [
+        {
+          "entity_a": "penicillin",
+          "relation": "is used to treat",
+          "entity_b": "gonorrhea",
+          "backward_relation": "is treated by",
+          "knowledge_type": "procedural",
+          "context": {
+            "domain": "biology",
+            "level": "gcse"
+          }
+        },
+        {
+          "entity_a": "gonorrhea strains",
+          "relation": "have developed",
+          "entity_b": "antibiotic resistance",
+          "backward_relation": "has developed in",
+          "knowledge_type": "declarative",
+          "context": {
+            "conditions": "increasing prevalence over time",
+            "domain": "biology",
+            "level": "gcse"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-0439",
+      "source_term": "heroin",
+      "source_definition": "A very dangerous depressant drug. Causes vomiting and severe headaches.",
+      "subject": "physics",
+      "extractions": [
+        {
+          "entity_a": "heroin",
+          "relation": "is classified as",
+          "entity_b": "depressant drug",
+          "backward_relation": "includes",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "biology",
+            "level": "gcse"
+          }
+        },
+        {
+          "entity_a": "heroin",
+          "relation": "causes",
+          "entity_b": "vomiting and severe headaches",
+          "backward_relation": "is caused by",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "biology",
+            "level": "gcse"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-1843",
+      "source_term": "Disadvantages of nuclear power",
+      "source_definition": "Expensive to set up",
+      "subject": "physics",
+      "extractions": [
+        {
+          "entity_a": "nuclear power",
+          "relation": "has disadvantage",
+          "entity_b": "expensive initial setup cost",
+          "backward_relation": "is a disadvantage of",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "physics",
+            "level": "gcse",
+            "note": "definition appears incomplete — likely one of several disadvantages"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-0372",
+      "source_term": "Hayflick Limit",
+      "source_definition": "What the term is called for the limit one cell can divide",
+      "subject": "physics",
+      "extractions": [
+        {
+          "entity_a": "Hayflick limit",
+          "relation": "is defined as",
+          "entity_b": "maximum number of times a cell can divide",
+          "backward_relation": "is called",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "biology",
+            "level": "gcse",
+            "note": "source definition is poorly worded — extracted meaning is clearer than original"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-1971",
+      "source_term": "Uses of the fraction diesel oil",
+      "source_definition": "fuel for some cars and trains",
+      "subject": "physics",
+      "extractions": [
+        {
+          "entity_a": "diesel oil",
+          "relation": "is used as",
+          "entity_b": "fuel for cars and trains",
+          "backward_relation": "uses",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "chemistry",
+            "level": "gcse"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-3679",
+      "source_term": "Culture Medium",
+      "source_definition": "A nutrient-rich substance (like agar or broth) used to grow microorganisms.",
+      "subject": "physics",
+      "extractions": [
+        {
+          "entity_a": "culture medium",
+          "relation": "is used to grow",
+          "entity_b": "microorganisms",
+          "backward_relation": "is grown in",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "biology",
+            "level": "gcse"
+          }
+        },
+        {
+          "entity_a": "culture medium",
+          "relation": "examples include",
+          "entity_b": "agar and broth",
+          "backward_relation": "is an example of",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "biology",
+            "level": "gcse"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-4020",
+      "source_term": "Excess reactant",
+      "source_definition": "A reactant that is not completely used up and some remains after the reaction.",
+      "subject": "chemistry",
+      "extractions": [
+        {
+          "entity_a": "excess reactant",
+          "relation": "is defined as",
+          "entity_b": "reactant not completely consumed in a reaction",
+          "backward_relation": "defines",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "chemistry",
+            "level": "gcse"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-1223",
+      "source_term": "organ system",
+      "source_definition": "Collection of organs working together to do a very important job.",
+      "subject": "physics",
+      "extractions": [
+        {
+          "entity_a": "organ system",
+          "relation": "is composed of",
+          "entity_b": "organs working together",
+          "backward_relation": "form part of",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "biology",
+            "level": "gcse"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-1213",
+      "source_term": "palisade cell",
+      "source_definition": "Cell found in leaves which contains many chloroplasts.",
+      "subject": "physics",
+      "extractions": [
+        {
+          "entity_a": "palisade cell",
+          "relation": "is found in",
+          "entity_b": "leaves",
+          "backward_relation": "contains",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "biology",
+            "level": "gcse"
+          }
+        },
+        {
+          "entity_a": "palisade cell",
+          "relation": "contains many",
+          "entity_b": "chloroplasts",
+          "backward_relation": "is found in large numbers in",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "biology",
+            "level": "gcse"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-3606",
+      "source_term": "Fleming's Left-Hand Rule",
+      "source_definition": "A method to predict the direction of force (thumb=motion, first finger=field, second finger=current).",
+      "subject": "physics",
+      "extractions": [
+        {
+          "entity_a": "Fleming's left-hand rule",
+          "relation": "predicts",
+          "entity_b": "direction of force on a current-carrying conductor in a magnetic field",
+          "backward_relation": "is predicted by",
+          "knowledge_type": "procedural",
+          "context": {
+            "domain": "physics",
+            "level": "gcse"
+          }
+        },
+        {
+          "entity_a": "Fleming's left-hand rule",
+          "relation": "maps",
+          "entity_b": "thumb→motion, first finger→field, second finger→current",
+          "backward_relation": "is represented by",
+          "knowledge_type": "procedural",
+          "context": {
+            "domain": "physics",
+            "level": "gcse"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-1485",
+      "source_term": "nocturnal animals",
+      "source_definition": "Animals that are active at night.",
+      "subject": "physics",
+      "extractions": [
+        {
+          "entity_a": "nocturnal animals",
+          "relation": "are defined as",
+          "entity_b": "animals active at night",
+          "backward_relation": "defines",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "biology",
+            "level": "gcse"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-1541",
+      "source_term": "Hydrogels",
+      "source_definition": "These are made from polymer chains which can expand as they trap more and more water. They are used for nappies and contact lenses.",
+      "subject": "physics",
+      "extractions": [
+        {
+          "entity_a": "hydrogels",
+          "relation": "are made from",
+          "entity_b": "polymer chains",
+          "backward_relation": "are used to make",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "chemistry",
+            "level": "gcse"
+          }
+        },
+        {
+          "entity_a": "hydrogels",
+          "relation": "expand by",
+          "entity_b": "trapping water",
+          "backward_relation": "causes expansion of",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "chemistry",
+            "level": "gcse"
+          }
+        },
+        {
+          "entity_a": "hydrogels",
+          "relation": "are used in",
+          "entity_b": "nappies and contact lenses",
+          "backward_relation": "use",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "chemistry",
+            "level": "gcse"
+          }
+        }
+      ]
+    }
+  ]
+}

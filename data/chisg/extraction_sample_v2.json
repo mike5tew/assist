@@ -1,0 +1,677 @@
+{
+  "extraction_meta": {
+    "source": "LAOMobile/backend/lao.db",
+    "method": "LLM extraction (Claude, single-pass)",
+    "date": "2026-02-19",
+    "version": "0.2",
+    "status": "DRAFT — definitions as input, no 'is defined as' links",
+    "total_definitions": 2746,
+    "sample_size": 20
+  },
+  "extraction_rules": {
+    "version": "0.2",
+    "principles": [
+      {
+        "id": "R1",
+        "rule": "Named substances in conditions are entities",
+        "detail": "If a condition names a specific substance, organism, or mechanism, extract it as a separate semantic unit with its functional role. Do not bury named participants in context metadata."
+      },
+      {
+        "id": "R2",
+        "rule": "Replace sequence markers with causal relations",
+        "detail": "Convert 'first step', 'leads to', 'then' into explicit causal relations (causes, enables, inhibits). Sequence words are pedagogical scaffolding, not knowledge."
+      },
+      {
+        "id": "R3",
+        "rule": "Extract what the source states — nothing more",
+        "detail": "The extraction must be a faithful map of the submitted material. Do not inject domain knowledge the source does not contain. If the source says A causes C with no mechanism, extract A→C. Do not insert B."
+      },
+      {
+        "id": "R4",
+        "rule": "Granularity is set by the source, not the extractor",
+        "detail": "Each source declares its own scope (domain, level, granularity). A GCSE definition that omits a mechanism is complete at GCSE level. Gap detection happens at the graph layer by comparing sources at different declared levels — not during extraction."
+      },
+      {
+        "id": "R5",
+        "rule": "Two layers: faithful extraction vs graph-level analysis",
+        "detail": "Layer 1 (extraction) maps the source faithfully. Layer 2 (graph analysis) detects gaps, contradictions, and missing mechanisms by comparing across multiple sources. The extractor must never do Layer 2 work."
+      },
+      {
+        "id": "R6",
+        "rule": "Definitions are input, not knowledge",
+        "detail": "A definition is one author's recorded claim. It is consumed by the extractor to produce links. After extraction, the original text has no ongoing role in the knowledge system. Multiple definitions of the same term from different sources produce overlapping links — that convergence IS the trust score mechanism. Store source text as archive (SQLite/filesystem), not in the knowledge graph."
+      },
+      {
+        "id": "R7",
+        "rule": "No 'is defined as' relation",
+        "detail": "Definitions do not generate 'is defined as' links. They generate the structural claims embedded within them (causes, is composed of, has value, etc.). A definition that contains only a vocabulary label and no structural claims produces zero links — that is correct, not an error."
+      },
+      {
+        "id": "R8",
+        "rule": "Controlled relation vocabulary",
+        "detail": "All links must use one of the approved relations. This keeps the graph traversable and queryable.",
+        "relations": [
+          { "relation": "causes",        "backward": "is caused by",       "use": "Causal chains, produces, leads to" },
+          { "relation": "enables",       "backward": "is enabled by",      "use": "Conditions, catalysts, prerequisites" },
+          { "relation": "inhibits",      "backward": "is inhibited by",    "use": "Blocks, prevents, reduces" },
+          { "relation": "is composed of","backward": "composes",           "use": "Structure, contains, made from" },
+          { "relation": "is a type of",  "backward": "includes",           "use": "Classification, taxonomy" },
+          { "relation": "has property",  "backward": "is property of",     "use": "Attributes, characteristics, behaviours" },
+          { "relation": "has value",     "backward": "is the value of",    "use": "Specific quantities, measurements" },
+          { "relation": "is used for",   "backward": "uses",               "use": "Applications, functions, treatments" },
+          { "relation": "is found in",   "backward": "contains",           "use": "Location, context, occurrence" },
+          { "relation": "is an example of","backward": "has example",      "use": "Instances, specimens" },
+          { "relation": "determines",    "backward": "is determined by",   "use": "One thing controls/sets another" },
+          { "relation": "represents",    "backward": "is represented by",  "use": "Models, mnemonics, diagrams" },
+          { "relation": "contradicts",   "backward": "is contradicted by", "use": "Opposing claims" }
+        ]
+      }
+    ]
+  },
+  "semantic_units": [
+    {
+      "id": "def-1536",
+      "source_term": "Industrial production of ethanol",
+      "source_definition": "Ethene + Steam (high temp and pressure and a catalyst (phosphoric acid)) produces ethanol.",
+      "subject": "chemistry",
+      "extractions": [
+        {
+          "entity_a": "ethene and steam",
+          "relation": "causes",
+          "entity_b": "ethanol",
+          "backward_relation": "is caused by",
+          "knowledge_type": "procedural",
+          "context": {
+            "conditions": "high temperature, high pressure, phosphoric acid catalyst",
+            "domain": "chemistry",
+            "level": "gcse",
+            "source_id": "lao-kw-1536"
+          }
+        },
+        {
+          "entity_a": "phosphoric acid",
+          "relation": "enables",
+          "entity_b": "production of ethanol from ethene",
+          "backward_relation": "is enabled by",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "chemistry",
+            "level": "gcse",
+            "source_id": "lao-kw-1536"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-3864",
+      "source_term": "Reproductive Isolation",
+      "source_definition": "The prevention of interbreeding between populations, which is the first step towards speciation.",
+      "subject": "biology",
+      "extractions": [
+        {
+          "entity_a": "reproductive isolation",
+          "relation": "inhibits",
+          "entity_b": "interbreeding between populations",
+          "backward_relation": "is inhibited by",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "biology",
+            "level": "gcse",
+            "source_id": "lao-kw-3864"
+          }
+        },
+        {
+          "entity_a": "reproductive isolation",
+          "relation": "causes",
+          "entity_b": "speciation",
+          "backward_relation": "is caused by",
+          "knowledge_type": "conditional",
+          "context": {
+            "domain": "biology",
+            "level": "gcse",
+            "source_id": "lao-kw-3864"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-1614",
+      "source_term": "pH and plants",
+      "source_definition": "Different plants thrive in different soil pHs. Limescale is used to neutralise soil if it becomes too acidic.",
+      "subject": "biology",
+      "extractions": [
+        {
+          "entity_a": "soil pH",
+          "relation": "determines",
+          "entity_b": "plant growth",
+          "backward_relation": "is determined by",
+          "knowledge_type": "conditional",
+          "context": {
+            "conditions": "different plants require different pH ranges",
+            "domain": "biology",
+            "level": "gcse",
+            "source_id": "lao-kw-1614"
+          }
+        },
+        {
+          "entity_a": "limescale",
+          "relation": "inhibits",
+          "entity_b": "soil acidity",
+          "backward_relation": "is inhibited by",
+          "knowledge_type": "procedural",
+          "context": {
+            "conditions": "when soil becomes too acidic",
+            "domain": "chemistry",
+            "level": "gcse",
+            "source_id": "lao-kw-1614"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-3478",
+      "source_term": "Free Fall",
+      "source_definition": "Motion under gravity alone, with an acceleration of ~9.8 m/s².",
+      "subject": "physics",
+      "extractions": [
+        {
+          "entity_a": "free fall",
+          "relation": "is a type of",
+          "entity_b": "motion",
+          "backward_relation": "includes",
+          "knowledge_type": "declarative",
+          "context": {
+            "conditions": "only gravity acting, no air resistance",
+            "domain": "physics",
+            "level": "gcse",
+            "source_id": "lao-kw-3478"
+          }
+        },
+        {
+          "entity_a": "free fall acceleration",
+          "relation": "has value",
+          "entity_b": "9.8 m/s²",
+          "backward_relation": "is the value of",
+          "knowledge_type": "declarative",
+          "context": {
+            "conditions": "near Earth's surface",
+            "domain": "physics",
+            "level": "gcse",
+            "source_id": "lao-kw-3478"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-0075",
+      "source_term": "lightning rod",
+      "source_definition": "a pointed rod connected to the ground that provides a path for electric charges to travel to the earth",
+      "subject": "physics",
+      "extractions": [
+        {
+          "entity_a": "lightning rod",
+          "relation": "enables",
+          "entity_b": "electric charge flow to earth",
+          "backward_relation": "is enabled by",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "physics",
+            "level": "gcse",
+            "source_id": "lao-kw-0075"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-0374",
+      "source_term": "chromosome",
+      "source_definition": "the bundles of tightly coiled DNA that are visible during mitosis and meiosis.",
+      "subject": "biology",
+      "extractions": [
+        {
+          "entity_a": "chromosome",
+          "relation": "is composed of",
+          "entity_b": "tightly coiled DNA",
+          "backward_relation": "composes",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "biology",
+            "level": "gcse",
+            "source_id": "lao-kw-0374"
+          }
+        },
+        {
+          "entity_a": "chromosome",
+          "relation": "has property",
+          "entity_b": "visible during mitosis and meiosis",
+          "backward_relation": "is property of",
+          "knowledge_type": "conditional",
+          "context": {
+            "conditions": "only during cell division",
+            "domain": "biology",
+            "level": "gcse",
+            "source_id": "lao-kw-0374"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-3401",
+      "source_term": "Half-life",
+      "source_definition": "The time for half the nuclei in a sample to decay; defines the activity and persistence of a source.",
+      "subject": "physics",
+      "extractions": [
+        {
+          "entity_a": "half-life",
+          "relation": "determines",
+          "entity_b": "activity and persistence of a radioactive source",
+          "backward_relation": "is determined by",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "physics",
+            "level": "gcse",
+            "source_id": "lao-kw-3401"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-1015",
+      "source_term": "Species",
+      "source_definition": "A group of similar organisms. These may not all look the same (they can have a lot of variation) but they can breed and produce fertile offspring.",
+      "subject": "biology",
+      "extractions": [
+        {
+          "entity_a": "members of a species",
+          "relation": "has property",
+          "entity_b": "can interbreed to produce fertile offspring",
+          "backward_relation": "is property of",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "biology",
+            "level": "gcse",
+            "source_id": "lao-kw-1015"
+          }
+        },
+        {
+          "entity_a": "members of a species",
+          "relation": "has property",
+          "entity_b": "phenotypic variation",
+          "backward_relation": "is property of",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "biology",
+            "level": "gcse",
+            "source_id": "lao-kw-1015"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-3045",
+      "source_term": "Treatment of Gonorrhea",
+      "source_definition": "Penicillin is used but now many antibiotic resistant strains have developed.",
+      "subject": "biology",
+      "extractions": [
+        {
+          "entity_a": "penicillin",
+          "relation": "is used for",
+          "entity_b": "treating gonorrhea",
+          "backward_relation": "uses",
+          "knowledge_type": "procedural",
+          "context": {
+            "domain": "biology",
+            "level": "gcse",
+            "source_id": "lao-kw-3045"
+          }
+        },
+        {
+          "entity_a": "gonorrhea strains",
+          "relation": "has property",
+          "entity_b": "antibiotic resistance",
+          "backward_relation": "is property of",
+          "knowledge_type": "declarative",
+          "context": {
+            "conditions": "increasing prevalence over time",
+            "domain": "biology",
+            "level": "gcse",
+            "source_id": "lao-kw-3045"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-0439",
+      "source_term": "heroin",
+      "source_definition": "A very dangerous depressant drug. Causes vomiting and severe headaches.",
+      "subject": "biology",
+      "extractions": [
+        {
+          "entity_a": "heroin",
+          "relation": "is a type of",
+          "entity_b": "depressant drug",
+          "backward_relation": "includes",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "biology",
+            "level": "gcse",
+            "source_id": "lao-kw-0439"
+          }
+        },
+        {
+          "entity_a": "heroin",
+          "relation": "causes",
+          "entity_b": "vomiting and severe headaches",
+          "backward_relation": "is caused by",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "biology",
+            "level": "gcse",
+            "source_id": "lao-kw-0439"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-1843",
+      "source_term": "Disadvantages of nuclear power",
+      "source_definition": "Expensive to set up",
+      "subject": "physics",
+      "extractions": [
+        {
+          "entity_a": "nuclear power",
+          "relation": "has property",
+          "entity_b": "high initial setup cost",
+          "backward_relation": "is property of",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "physics",
+            "level": "gcse",
+            "source_id": "lao-kw-1843"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-0372",
+      "source_term": "Hayflick Limit",
+      "source_definition": "What the term is called for the limit one cell can divide",
+      "subject": "biology",
+      "extractions": [
+        {
+          "entity_a": "cell division",
+          "relation": "has property",
+          "entity_b": "maximum number of divisions (Hayflick limit)",
+          "backward_relation": "is property of",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "biology",
+            "level": "gcse",
+            "source_id": "lao-kw-0372"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-1971",
+      "source_term": "Uses of the fraction diesel oil",
+      "source_definition": "fuel for some cars and trains",
+      "subject": "chemistry",
+      "extractions": [
+        {
+          "entity_a": "diesel oil",
+          "relation": "is used for",
+          "entity_b": "fuel for cars and trains",
+          "backward_relation": "uses",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "chemistry",
+            "level": "gcse",
+            "source_id": "lao-kw-1971"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-3679",
+      "source_term": "Culture Medium",
+      "source_definition": "A nutrient-rich substance (like agar or broth) used to grow microorganisms.",
+      "subject": "biology",
+      "extractions": [
+        {
+          "entity_a": "culture medium",
+          "relation": "is used for",
+          "entity_b": "growing microorganisms",
+          "backward_relation": "uses",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "biology",
+            "level": "gcse",
+            "source_id": "lao-kw-3679"
+          }
+        },
+        {
+          "entity_a": "agar",
+          "relation": "is an example of",
+          "entity_b": "culture medium",
+          "backward_relation": "has example",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "biology",
+            "level": "gcse",
+            "source_id": "lao-kw-3679"
+          }
+        },
+        {
+          "entity_a": "broth",
+          "relation": "is an example of",
+          "entity_b": "culture medium",
+          "backward_relation": "has example",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "biology",
+            "level": "gcse",
+            "source_id": "lao-kw-3679"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-4020",
+      "source_term": "Excess reactant",
+      "source_definition": "A reactant that is not completely used up and some remains after the reaction.",
+      "subject": "chemistry",
+      "extractions": [
+        {
+          "entity_a": "excess reactant",
+          "relation": "has property",
+          "entity_b": "not fully consumed in reaction",
+          "backward_relation": "is property of",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "chemistry",
+            "level": "gcse",
+            "source_id": "lao-kw-4020"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-1223",
+      "source_term": "organ system",
+      "source_definition": "Collection of organs working together to do a very important job.",
+      "subject": "biology",
+      "extractions": [
+        {
+          "entity_a": "organ system",
+          "relation": "is composed of",
+          "entity_b": "organs",
+          "backward_relation": "composes",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "biology",
+            "level": "gcse",
+            "source_id": "lao-kw-1223"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-1213",
+      "source_term": "palisade cell",
+      "source_definition": "Cell found in leaves which contains many chloroplasts.",
+      "subject": "biology",
+      "extractions": [
+        {
+          "entity_a": "palisade cell",
+          "relation": "is found in",
+          "entity_b": "leaves",
+          "backward_relation": "contains",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "biology",
+            "level": "gcse",
+            "source_id": "lao-kw-1213"
+          }
+        },
+        {
+          "entity_a": "palisade cell",
+          "relation": "is composed of",
+          "entity_b": "chloroplasts (many)",
+          "backward_relation": "composes",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "biology",
+            "level": "gcse",
+            "source_id": "lao-kw-1213"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-3606",
+      "source_term": "Fleming's Left-Hand Rule",
+      "source_definition": "A method to predict the direction of force (thumb=motion, first finger=field, second finger=current).",
+      "subject": "physics",
+      "extractions": [
+        {
+          "entity_a": "Fleming's left-hand rule",
+          "relation": "determines",
+          "entity_b": "direction of force on a current-carrying conductor",
+          "backward_relation": "is determined by",
+          "knowledge_type": "procedural",
+          "context": {
+            "domain": "physics",
+            "level": "gcse",
+            "source_id": "lao-kw-3606"
+          }
+        },
+        {
+          "entity_a": "Fleming's left-hand rule",
+          "relation": "represents",
+          "entity_b": "thumb→motion, first finger→field, second finger→current",
+          "backward_relation": "is represented by",
+          "knowledge_type": "procedural",
+          "context": {
+            "domain": "physics",
+            "level": "gcse",
+            "source_id": "lao-kw-3606"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-1485",
+      "source_term": "nocturnal animals",
+      "source_definition": "Animals that are active at night.",
+      "subject": "biology",
+      "extractions": [
+        {
+          "entity_a": "nocturnal animals",
+          "relation": "has property",
+          "entity_b": "active at night",
+          "backward_relation": "is property of",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "biology",
+            "level": "gcse",
+            "source_id": "lao-kw-1485"
+          }
+        }
+      ]
+    },
+    {
+      "id": "def-1541",
+      "source_term": "Hydrogels",
+      "source_definition": "These are made from polymer chains which can expand as they trap more and more water. They are used for nappies and contact lenses.",
+      "subject": "chemistry",
+      "extractions": [
+        {
+          "entity_a": "hydrogels",
+          "relation": "is composed of",
+          "entity_b": "polymer chains",
+          "backward_relation": "composes",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "chemistry",
+            "level": "gcse",
+            "source_id": "lao-kw-1541"
+          }
+        },
+        {
+          "entity_a": "water absorption",
+          "relation": "causes",
+          "entity_b": "hydrogel expansion",
+          "backward_relation": "is caused by",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "chemistry",
+            "level": "gcse",
+            "source_id": "lao-kw-1541"
+          }
+        },
+        {
+          "entity_a": "hydrogels",
+          "relation": "is used for",
+          "entity_b": "nappies and contact lenses",
+          "backward_relation": "uses",
+          "knowledge_type": "declarative",
+          "context": {
+            "domain": "chemistry",
+            "level": "gcse",
+            "source_id": "lao-kw-1541"
+          }
+        }
+      ]
+    }
+  ],
+  "extraction_stats": {
+    "v1_total_links": 36,
+    "v1_is_defined_as_links": 8,
+    "v2_total_links": 33,
+    "v2_zero_link_definitions": 0,
+    "relations_used": {
+      "causes": 5,
+      "enables": 2,
+      "inhibits": 2,
+      "is_composed_of": 4,
+      "is_a_type_of": 2,
+      "has_property": 7,
+      "has_value": 1,
+      "is_used_for": 4,
+      "is_found_in": 1,
+      "is_an_example_of": 2,
+      "determines": 3,
+      "represents": 1,
+      "contradicts": 0
+    },
+    "notes": [
+      "All 'is defined as' links removed — definitions are input, not knowledge",
+      "All relations now from controlled vocabulary (13 types)",
+      "Subject fields corrected from SQLite SubjectID to actual domain",
+      "Every link carries source_id for provenance tracking back to SQLite",
+      "Culture medium: 'examples include' split into per-example links with correct direction (agar is an example of culture medium, not the reverse)",
+      "Definitions that were previously definition-only now produce structural claims (Hayflick → cell division has property, nocturnal → has property active at night)"
+    ]
+  }
+}
