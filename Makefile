@@ -93,24 +93,27 @@ check:
 
 .PHONY: index backup search
 
-# Generate comprehensive project index (shareable overview)
+# Generate comprehensive project index + re-ingest docs into Weaviate
 index:
 	@echo "Generating project index..."
 	@$(PROJECT_ROOT)/scripts/generate-project-index.sh $(PROJECT_ROOT)/PROJECT_INDEX.md
 	@echo ""
+	@echo "Re-ingesting documentation into Weaviate (port 8088)..."
+	@cd /Users/michaelstewart/Coding/humanOS && \
+		scripts/.venv/bin/python scripts/ingest_docs.py
+	@echo ""
 	@echo "Generated: $(PROJECT_ROOT)/PROJECT_INDEX.md"
-	@echo "Share this file with collaborators or feed to AI assistants."
+	@echo "Documentation re-ingested into Weaviate (port 8088)."
 
 # Backup Weaviate to S3
 backup:
 	@echo "Backing up Weaviate to S3..."
 	@$(PROJECT_ROOT)/scripts/backup-weaviate-to-s3.sh http://localhost:8081 esp-weaviate-backups
 
-# Search documentation in Weaviate
+# Search documentation in Weaviate (BM25 on port 8088)
 search:
-	@echo "Usage: make search q='your query'"
 	@echo "Searching for: $(q)"
-	@curl -sS -X POST http://localhost:8081/v1/graphql \
+	@curl -sS -X POST http://localhost:8088/v1/graphql \
 		-H 'Content-Type: application/json' \
-		-d '{"query":"{ Get { Documentation(limit: 10, nearText: {concepts: [\"$(q)\"]}) { title file_path project } } }"}' \
-		| jq '.data.Get.Documentation[] | "\(.project): \(.title) -> \(.file_path)"'
+		-d '{"query":"{ Get { Documentation(limit: 10, bm25: {query: \"$(q)\"}) { title file_path project section_path } } }"}' \
+		| python3 -c "import sys,json; d=json.load(sys.stdin); [print(f\"{r['project']:20s} {r['title'][:50]}\n{'':20s} {r['file_path']}\") for r in d['data']['Get']['Documentation']]"

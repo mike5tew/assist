@@ -36,6 +36,11 @@ import {
   CheckCircle,
   SwapHoriz,
   ContentPaste,
+  AutoFixHigh,
+  ThumbUp,
+  ThumbDown,
+  ExpandMore,
+  ExpandLess,
 } from '@mui/icons-material';
 import PDFViewer from './PDFViewer';
 import { Source } from './SourceRegister';
@@ -70,6 +75,25 @@ interface ExistingLink {
   target_term: string;
 }
 
+interface ReviewLink {
+  entity_a: string;
+  relation: string;
+  entity_b: string;
+  context: string;
+  source_quote: string;
+  attribution?: string;
+}
+
+interface ReviewTask {
+  id: string;
+  paper_id: string;
+  source_title?: string;
+  source_text: string;
+  proposed_links: ReviewLink[];
+  status: string;
+  created_at: string;
+}
+
 interface LinkBuilderProps {
   source: Source | null;
   onBack?: () => void;
@@ -77,6 +101,7 @@ interface LinkBuilderProps {
 
 type ActiveField = 'entityA' | 'entityB' | 'excerpt' | null;
 type ViewTab = 'text' | 'pdf';
+type RightTab = 'manual' | 'ai';
 
 export default function LinkBuilder({ source, onBack }: LinkBuilderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -121,6 +146,14 @@ export default function LinkBuilder({ source, onBack }: LinkBuilderProps) {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
+  // AI Review tab state
+  const [rightTab, setRightTab] = useState<RightTab>('manual');
+  const [reviewTasks, setReviewTasks] = useState<ReviewTask[]>([]);
+  const [loadingTasks, setLoadingTasks] = useState(false);
+  const [editedLinks, setEditedLinks] = useState<{ [taskId: string]: ReviewLink[] }>({});
+  const [approvingTask, setApprovingTask] = useState<string | null>(null);
+  const [expandedTask, setExpandedTask] = useState<string | null>(null);
+
   // Fetch link types on mount
   useEffect(() => {
     fetchLinkTypes();
@@ -143,6 +176,60 @@ export default function LinkBuilder({ source, onBack }: LinkBuilderProps) {
     window.addEventListener('keydown', handleGlobalKeyDown);
     return () => window.removeEventListener('keydown', handleGlobalKeyDown);
   }, [source, entityA, entityB, linkAToB, linkBToA, chapter, excerptText, pageNumber, qualityScore, qualityReason, contextLinkIds]);
+
+  const fetchReviewTasks = async () => {
+    setLoadingTasks(true);
+    try {
+      const response = await apiClient.get<{ success: boolean; tasks: ReviewTask[] }>('/api/expert-review/pending');
+      const tasks = response.tasks || [];
+      setReviewTasks(tasks);
+      // Initialise editable copies
+      const initial: { [id: string]: ReviewLink[] } = {};
+      tasks.forEach(t => { initial[t.id] = t.proposed_links.map(l => ({ ...l })); });
+      setEditedLinks(initial);
+      if (tasks.length > 0) setExpandedTask(tasks[0].id);
+    } catch (err) {
+      console.error('Failed to fetch review tasks:', err);
+    } finally {
+      setLoadingTasks(false);
+    }
+  };
+
+  const handleUpdateLink = (taskId: string, linkIdx: number, field: keyof ReviewLink, value: string) => {
+    setEditedLinks(prev => {
+      const links = (prev[taskId] || []).map((l, i) =>
+        i === linkIdx ? { ...l, [field]: value } : l
+      );
+      return { ...prev, [taskId]: links };
+    });
+  };
+
+  const handleApproveTask = async (task: ReviewTask) => {
+    setApprovingTask(task.id);
+    try {
+      await apiClient.post(`/api/expert-review/tasks/${task.id}/approve`, {
+        approved_links: editedLinks[task.id] || task.proposed_links,
+      });
+      setReviewTasks(prev => prev.filter(t => t.id !== task.id));
+      setEditedLinks(prev => { const n = { ...prev }; delete n[task.id]; return n; });
+      setSuccess('Task approved — links written to knowledge graph');
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err: any) {
+      setError(`Approval failed: ${err.message}`);
+    } finally {
+      setApprovingTask(null);
+    }
+  };
+
+  const handleRejectTask = async (taskId: string) => {
+    try {
+      await apiClient.post(`/api/expert-review/tasks/${taskId}/approve`, { approved_links: [] });
+      setReviewTasks(prev => prev.filter(t => t.id !== taskId));
+      setEditedLinks(prev => { const n = { ...prev }; delete n[taskId]; return n; });
+    } catch (err) {
+      console.error('Reject failed:', err);
+    }
+  };
 
   const fetchLinkTypes = async () => {
     try {
@@ -532,15 +619,181 @@ export default function LinkBuilder({ source, onBack }: LinkBuilderProps) {
         />
       </Paper>
 
-      {/* Right Panel: Link Entry */}
-      <Paper sx={{ width: 400, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-        <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
-          <Typography variant="h6">🔗 Create Link</Typography>
-          <Typography variant="caption" color="text.secondary">
-            Click a field, then highlight text to populate
-          </Typography>
-        </Box>
+      {/* Right Panel: Manual Entry + AI Suggestions */}
+      <Paper sx={{ width: 440, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        <Tabs
+          value={rightTab}
+          onChange={(_, v) => { setRightTab(v); if (v === 'ai' && reviewTasks.length === 0) fetchReviewTasks(); }}
+          sx={{ borderBottom: 1, borderColor: 'divider', minHeight: 44 }}
+        >
+          <Tab value="manual" label="🔗 Manual Entry" sx={{ textTransform: 'none', flex: 1 }} />
+          <Tab
+            value="ai"
+            label={
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                <AutoFixHigh fontSize="small" />
+                AI Suggestions
+                {reviewTasks.length > 0 && (
+                  <Chip label={reviewTasks.length} size="small" color="warning" sx={{ height: 18, fontSize: 11 }} />
+                )}
+              </Box>
+            }
+            sx={{ textTransform: 'none', flex: 1 }}
+          />
+        </Tabs>
 
+        {/* ── AI SUGGESTIONS PANEL ─────────────────────────────────── */}
+        {rightTab === 'ai' && (
+          <Box sx={{ flex: 1, overflow: 'auto', p: 2 }}>
+            {error && <Alert severity="error" sx={{ mb: 1 }} onClose={() => setError(null)}>{error}</Alert>}
+            {success && <Alert severity="success" sx={{ mb: 1 }} onClose={() => setSuccess(null)}>{success}</Alert>}
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1.5 }}>
+              <Typography variant="subtitle2" color="text.secondary">
+                {reviewTasks.length === 0 ? 'No pending tasks' : `${reviewTasks.length} chunk${reviewTasks.length > 1 ? 's' : ''} awaiting review`}
+              </Typography>
+              <Button size="small" onClick={fetchReviewTasks} disabled={loadingTasks}>
+                {loadingTasks ? <CircularProgress size={14} /> : 'Refresh'}
+              </Button>
+            </Box>
+
+            {reviewTasks.length === 0 && !loadingTasks && (
+              <Box sx={{ textAlign: 'center', py: 4 }}>
+                <AutoFixHigh sx={{ fontSize: 48, color: 'text.disabled', mb: 1 }} />
+                <Typography variant="body2" color="text.secondary">
+                  Upload a document via the CHISG pipeline to generate AI-proposed links for review.
+                </Typography>
+              </Box>
+            )}
+
+            <Stack spacing={2}>
+              {reviewTasks.map(task => {
+                const links = editedLinks[task.id] || task.proposed_links;
+                const isExpanded = expandedTask === task.id;
+                const isApproving = approvingTask === task.id;
+
+                return (
+                  <Card key={task.id} variant="outlined" sx={{ borderColor: 'warning.light' }}>
+                    <CardContent sx={{ p: 1.5, '&:last-child': { pb: 1.5 } }}>
+                      {/* Source text header */}
+                      <Box
+                        sx={{ cursor: 'pointer', display: 'flex', alignItems: 'flex-start', gap: 1 }}
+                        onClick={() => setExpandedTask(isExpanded ? null : task.id)}
+                      >
+                        <Box sx={{ flex: 1 }}>
+                          {task.source_title && (
+                            <Typography variant="caption" color="text.secondary" sx={{ fontStyle: 'italic', display: 'block', mb: 0.5 }}>
+                              {task.source_title}
+                            </Typography>
+                          )}
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              fontSize: '0.78rem',
+                              color: 'text.secondary',
+                              overflow: 'hidden',
+                              display: '-webkit-box',
+                              WebkitLineClamp: isExpanded ? 'unset' : 2,
+                              WebkitBoxOrient: 'vertical',
+                              bgcolor: 'grey.50',
+                              borderLeft: '3px solid',
+                              borderColor: 'warning.main',
+                              px: 1,
+                              py: 0.5,
+                              borderRadius: '0 4px 4px 0',
+                            }}
+                          >
+                            {task.source_text}
+                          </Typography>
+                        </Box>
+                        <IconButton size="small" sx={{ mt: -0.5, flexShrink: 0 }}>
+                          {isExpanded ? <ExpandLess fontSize="small" /> : <ExpandMore fontSize="small" />}
+                        </IconButton>
+                      </Box>
+
+                      {/* Proposed links — editable rows */}
+                      <Stack spacing={1} sx={{ mt: 1.5 }}>
+                        {links.map((link, idx) => (
+                          <Box
+                            key={idx}
+                            sx={{ p: 1, bgcolor: 'action.hover', borderRadius: 1, border: '1px solid', borderColor: 'divider' }}
+                          >
+                            <Stack direction="row" spacing={0.5} alignItems="center" sx={{ mb: 0.5 }}>
+                              <TextField
+                                value={link.entity_a}
+                                onChange={e => handleUpdateLink(task.id, idx, 'entity_a', e.target.value)}
+                                size="small"
+                                placeholder="Entity A"
+                                sx={{ flex: 1, '& input': { fontSize: '0.78rem', py: 0.5 } }}
+                              />
+                              <TextField
+                                value={link.relation}
+                                onChange={e => handleUpdateLink(task.id, idx, 'relation', e.target.value)}
+                                size="small"
+                                placeholder="relation"
+                                sx={{ width: 100, '& input': { fontSize: '0.78rem', py: 0.5, textAlign: 'center' } }}
+                              />
+                              <TextField
+                                value={link.entity_b}
+                                onChange={e => handleUpdateLink(task.id, idx, 'entity_b', e.target.value)}
+                                size="small"
+                                placeholder="Entity B"
+                                sx={{ flex: 1, '& input': { fontSize: '0.78rem', py: 0.5 } }}
+                              />
+                            </Stack>
+                            {link.context && (
+                              <TextField
+                                value={link.context}
+                                onChange={e => handleUpdateLink(task.id, idx, 'context', e.target.value)}
+                                size="small"
+                                fullWidth
+                                placeholder="context"
+                                sx={{ '& input': { fontSize: '0.72rem', py: 0.4, color: 'text.secondary' } }}
+                              />
+                            )}
+                            {link.source_quote && (
+                              <Typography variant="caption" sx={{ display: 'block', mt: 0.5, color: 'text.disabled', fontStyle: 'italic', fontSize: '0.68rem' }}>
+                                &ldquo;{link.source_quote.length > 100 ? link.source_quote.slice(0, 100) + '…' : link.source_quote}&rdquo;
+                              </Typography>
+                            )}
+                          </Box>
+                        ))}
+                      </Stack>
+
+                      {/* Approve / Reject */}
+                      <Stack direction="row" spacing={1} sx={{ mt: 1.5 }}>
+                        <Button
+                          size="small"
+                          variant="contained"
+                          color="success"
+                          startIcon={isApproving ? <CircularProgress size={14} color="inherit" /> : <ThumbUp fontSize="small" />}
+                          onClick={() => handleApproveTask(task)}
+                          disabled={isApproving}
+                          sx={{ flex: 1, textTransform: 'none' }}
+                        >
+                          Approve & publish
+                        </Button>
+                        <Button
+                          size="small"
+                          variant="outlined"
+                          color="error"
+                          startIcon={<ThumbDown fontSize="small" />}
+                          onClick={() => handleRejectTask(task.id)}
+                          disabled={isApproving}
+                          sx={{ flex: 0, textTransform: 'none' }}
+                        >
+                          Reject
+                        </Button>
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </Stack>
+          </Box>
+        )}
+
+        {/* ── MANUAL ENTRY PANEL ──────────────────────────────────────── */}
+        {rightTab === 'manual' && (
         <Box sx={{ flex: 1, overflow: 'auto', p: 2 }}>
           {/* Alerts */}
           {error && (
@@ -842,7 +1095,10 @@ export default function LinkBuilder({ source, onBack }: LinkBuilderProps) {
           </Box>
         </Box>
 
-        {/* Save All Links Button */}
+        )}
+
+        {/* Save All Links Button — only in manual mode */}
+        {rightTab === 'manual' && (
         <Box sx={{ p: 2, borderTop: 1, borderColor: 'divider' }}>
           <Button
             variant="contained"
@@ -856,6 +1112,7 @@ export default function LinkBuilder({ source, onBack }: LinkBuilderProps) {
             Save All Links ({pendingLinks.length})
           </Button>
         </Box>
+        )}
       </Paper>
 
       {/* Add Link Type Dialog */}

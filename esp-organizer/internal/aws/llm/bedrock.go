@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"os"
 	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -88,4 +89,54 @@ func (c *BedrockLlamaClient) GenerateEmbedding(text string) ([]float32, error) {
 
 	log.Printf("Successfully generated embedding with %d dimensions", len(response.Embedding))
 	return response.Embedding, nil
+}
+
+// InvokeClaude sends a prompt to Claude via Bedrock and returns the text response.
+// Uses the Anthropic Messages API format.
+func (c *BedrockLlamaClient) InvokeClaude(systemPrompt, userMessage string) (string, error) {
+	modelID := os.Getenv("AWS_BEDROCK_CLAUDE_MODEL")
+	if modelID == "" {
+		modelID = "anthropic.claude-haiku-4-5-20251001-v1:0"
+	}
+
+	body := map[string]interface{}{
+		"anthropic_version": "bedrock-2023-05-31",
+		"max_tokens":        2048,
+		"system":            systemPrompt,
+		"messages": []map[string]interface{}{
+			{"role": "user", "content": userMessage},
+		},
+	}
+	bodyBytes, err := json.Marshal(body)
+	if err != nil {
+		return "", fmt.Errorf("failed to marshal Claude request: %w", err)
+	}
+
+	input := &bedrockruntime.InvokeModelInput{
+		ModelId:     aws.String(modelID),
+		ContentType: aws.String("application/json"),
+		Accept:      aws.String("application/json"),
+		Body:        bodyBytes,
+	}
+
+	output, err := c.bedrockClient.InvokeModel(context.Background(), input)
+	if err != nil {
+		return "", fmt.Errorf("Claude invocation error: %w", err)
+	}
+
+	var resp struct {
+		Content []struct {
+			Type string `json:"type"`
+			Text string `json:"text"`
+		} `json:"content"`
+	}
+	if err := json.Unmarshal(output.Body, &resp); err != nil {
+		return "", fmt.Errorf("failed to parse Claude response: %w", err)
+	}
+	for _, block := range resp.Content {
+		if block.Type == "text" {
+			return block.Text, nil
+		}
+	}
+	return "", fmt.Errorf("no text content in Claude response")
 }

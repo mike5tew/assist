@@ -176,6 +176,10 @@ func EnsureCoreSchema(ctx context.Context) error {
 	if err := CreateSemanticLinksClass(ctx); err != nil {
 		return err
 	}
+	// Add provenance properties to SemanticLinks (idempotent — safe on existing class).
+	if err := EnsureSemanticLinksProvenance(ctx); err != nil {
+		log.Printf("Warning: could not ensure SemanticLinks provenance properties: %v", err)
+	}
 	// Medical excerpts are a specific type of content chunk, also to be deprecated
 	// in favor of semantic link searching. For now, we keep it for legacy queries.
 	if err := CreateMedicalExcerptClass(ctx); err != nil {
@@ -432,6 +436,32 @@ func EnsureWeaviateClient(ctx context.Context) error {
 	return InitializeWeaviateFromEnv()
 }
 
+// EnsureSemanticLinksProvenance adds the three provenance properties to an already-existing
+// SemanticLinks class (e.g. created before this migration).  Safe to call on a class that
+// already has these properties — the "already exists" error is silently ignored.
+func EnsureSemanticLinksProvenance(ctx context.Context) error {
+	if err := EnsureWeaviateClient(ctx); err != nil {
+		return err
+	}
+
+	provenanceProps := []*wvmodels.Property{
+		{Name: "source_document_id", DataType: []string{"text"}, IndexFilterable: boolPtr(true)},
+		{Name: "source_title", DataType: []string{"text"}, IndexFilterable: boolPtr(true)},
+		{Name: "doi", DataType: []string{"text"}, IndexFilterable: boolPtr(true)},
+	}
+
+	for _, prop := range provenanceProps {
+		err := weaviateClient.Schema().PropertyCreator().
+			WithClassName("SemanticLinks").
+			WithProperty(prop).
+			Do(ctx)
+		if err != nil && !strings.Contains(err.Error(), "already exists") {
+			log.Printf("Warning: could not add property %q to SemanticLinks: %v", prop.Name, err)
+		}
+	}
+	return nil
+}
+
 // CreateSemanticLinksClass creates the class for semantic links in Weaviate.
 func CreateSemanticLinksClass(ctx context.Context) error {
 	className := "SemanticLinks"
@@ -493,6 +523,13 @@ func CreateSemanticLinksClass(ctx context.Context) error {
 			{Name: "domain", DataType: []string{"text"}, IndexFilterable: boolPtr(true)},
 			{Name: "created_at", DataType: []string{"date"}, IndexFilterable: boolPtr(true)},
 			{Name: "updated_at", DataType: []string{"date"}, IndexFilterable: boolPtr(true)},
+
+			// 📄 PROVENANCE — links back to the source paper
+			// source_document_id + doi allow filtering all links from one paper.
+			// source_title is denormalised for display without a join.
+			{Name: "source_document_id", DataType: []string{"text"}, IndexFilterable: boolPtr(true)},
+			{Name: "source_title", DataType: []string{"text"}, IndexFilterable: boolPtr(true)},
+			{Name: "doi", DataType: []string{"text"}, IndexFilterable: boolPtr(true)},
 		},
 	}
 

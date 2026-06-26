@@ -62,3 +62,44 @@ func CreateMisunderstandingIndexes(db *mongo.Database) error {
 	log.Println("✅ Misunderstanding map indexes created successfully")
 	return nil
 }
+
+// CreateSourceDocumentIndexes creates indexes for the source_documents collection.
+func CreateSourceDocumentIndexes(database *mongo.Database) error {
+	collection := database.Collection("source_documents")
+
+	indexes := []mongo.IndexModel{
+		// Unique index on DOI (sparse so documents without a DOI can coexist)
+		{
+			Keys:    bson.D{{Key: "doi", Value: 1}},
+			Options: options.Index().SetUnique(true).SetSparse(true).SetName("doi_unique"),
+		},
+		// Text search on title + authors
+		{
+			Keys: bson.D{
+				{Key: "title", Value: "text"},
+				{Key: "authors", Value: "text"},
+			},
+			Options: options.Index().SetName("title_authors_text"),
+		},
+		// Filter by year
+		{
+			Keys:    bson.D{{Key: "year", Value: -1}},
+			Options: options.Index().SetName("year_desc"),
+		},
+		// Sort by in-corpus citation count (for weighting)
+		{
+			Keys:    bson.D{{Key: "in_corpus_citation_count", Value: -1}},
+			Options: options.Index().SetName("citation_count_desc"),
+		},
+	}
+
+	opts := options.CreateIndexes().SetMaxTime(10 * time.Second)
+	_, err := collection.Indexes().CreateMany(context.Background(), indexes, opts)
+	if err != nil {
+		log.Printf("Error creating source_document indexes: %v", err)
+		return err
+	}
+
+	log.Println("✅ Source document indexes created successfully")
+	return nil
+}

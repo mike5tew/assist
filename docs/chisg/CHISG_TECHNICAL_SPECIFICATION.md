@@ -3,7 +3,7 @@
 **Contextualised Hierarchical Iterative Semantic Groupings**
 
 **Author**: Michael Stewart, PhD (Biophysics)  
-**Date**: February 2026  
+**Date**: February 2026 (updated June 2026)  
 **Contact**: michael.stewart@espthinking.co.uk  
 **Live System**: https://espthinking.co.uk
 
@@ -47,7 +47,7 @@ When an AI system generates a response, CHISG provides:
 
 The key insight is that **truth is computed from structure, not declared by authority**. A claim supported by multiple independent sources via multiple logical routes has high structural integrity. A claim supported by one source repeated many times has high popularity but low structural integrity. CHISG distinguishes between these.
 
-**Current Implementation**: 579 skills, 1,120 semantic links, 27 course definitions stored in Weaviate (vector database). The Go backend generates embeddings and queries via `nearVector` for semantic matching. GCSE Science content (AQA specification) is the initial domain.
+**Current Implementation**: 579 skills, 1,120 semantic links, 27 course definitions stored in Weaviate (vector database). The Go backend generates embeddings and queries via `nearVector` for semantic matching. GCSE Science content (AQA specification) is the initial domain. The live extraction pipeline (see §5) has extended the graph into the immunology domain via the McGrath mycobacteriology corpus.
 
 ---
 
@@ -246,7 +246,13 @@ Retroactively map published research onto validated nodes, completing the proven
 | Weaviate schema with CHISG classes | ✅ Production (Vultr) |
 | 579 skills + 1,120 links + 27 courses | ✅ Populated and queryable |
 | Semantic search via nearVector | ✅ Working (Go API + AWS Titan embeddings) |
-| Annotation tool (semantic link extraction) | 🔄 70% complete (React + Go) |
+| PDF upload → Textract → Claude extraction pipeline | ✅ Live (June 2026) |
+| Streaming review queue (MongoDB) | ✅ Live — chunks inserted immediately as extracted |
+| Human review + approve/edit interface | ✅ Live — `/api/chisg/review/tasks` |
+| Weaviate write-back on approval | ✅ Live — `AcademicLink` class populated on approve |
+| Extraction corrections log (training signal) | ✅ Live — `extraction_corrections` collection |
+| Papers & links query API | ✅ Live — `/api/chisg/papers`, `/api/chisg/links` |
+| Annotation tool (semantic link extraction) | ✅ Superseded by live pipeline above |
 | Trust scoring computation | ⬜ Designed, not implemented |
 | Structural analogy detection | ⬜ Designed, not implemented |
 | Gap analysis queries | ⬜ Designed, not implemented |
@@ -254,7 +260,98 @@ Retroactively map published research onto validated nodes, completing the proven
 
 ---
 
-## Next Phase: LLM-to-CHISG Extraction Pipeline
+## §5 Live Extraction Pipeline (Implemented June 2026)
+
+The extraction pipeline described in the original spec as a "next phase" is now live in production. This section documents the actual implementation.
+
+### 5.1 Architecture Overview
+
+```
+PDF / Text file
+      ↓
+  UploadCHISGDocumentHandler  (Go — esp-organizer)
+      ↓ (async background goroutine)
+  AWS Textract  (eu-west-2, bucket: esp-new-organizer-immunology)
+      ↓
+  cleanPDFText() + splitIntoParagraphs()  (~1200 chars/chunk at sentence boundary)
+      ↓
+  Reference section detector  (skips bibliography chunks)
+      ↓
+  Claude 3 (AWS Bedrock)  — structured extraction prompt
+      ↓
+  MongoDB  chisg_knowledge_base.review_tasks  (streaming — inserted per chunk)
+      ↓  (reviewer approves/edits via UI)
+  ApproveReviewTaskHandler
+      ↓
+  Weaviate  AcademicLink class  (approved links only)
+      ↓
+  MongoDB  extraction_corrections  (diff log: AI-proposed vs human-approved)
+```
+
+The upload endpoint returns immediately with a `job_id`. Chunks are inserted to MongoDB as they complete, so a reviewer can begin working on the first chunks of a long paper while the remainder is still being processed.
+
+### 5.2 Controlled Relation Vocabulary
+
+The 13-relation vocabulary enforced in the Claude extraction prompt:
+
+| Relation | Meaning |
+|----------|---------|
+| `causes` | A directly produces B |
+| `leads_to` | A sets conditions that result in B |
+| `part_of` | A is a structural component of B |
+| `contains` | A holds or includes B |
+| `develops_into` | A matures or transforms into B |
+| `regulates` | A controls the activity or expression of B |
+| `enables` | A makes B possible |
+| `inhibits` | A suppresses or prevents B |
+| `treats` | A is a therapeutic intervention for B |
+| `diagnoses` | A is used to identify B |
+| `manifests_as` | A presents clinically or phenotypically as B |
+| `is_a` | A is a subtype or instance of B |
+| `located_at` | A exists at or within B |
+
+### 5.3 Semantic Unit (Live Schema)
+
+Each extracted and approved link stored in Weaviate `AcademicLink`:
+
+```
+{
+  entity_a:           "CarD",
+  relation:           "regulates",
+  entity_b:           "rRNA transcription",
+  context:            "under starvation conditions in Mycobacterium tuberculosis",
+  statement:          "CarD directly contacts the β-subunit of RNAP...",  // verbatim source quote
+  attribution:        "Stallings et al., 2009",                           // omitted if original paper's own claim
+  paper_id:           "elife-73347-v2_1",
+  chunk_id:           "chunk_12",
+  source_document_id: "64a3f..."
+}
+```
+
+The `attribution` field is the key provenance distinction: it separates claims this paper's authors make directly (high structural integrity — original data) from claims they cite from prior literature (lower weight — may be echo-chamber repetition).
+
+### 5.4 Training Signal
+
+Every time a reviewer edits an AI-proposed link before approving it, the diff is stored in `extraction_corrections`. This collection is the ground-truth training set for Level 2 (algorithmic extraction), capturing:
+- Which entity names the model got wrong
+- Which relation types the model misclassified
+- Which context strings were too vague or too verbose
+
+### 5.5 Papers & Links Query API
+
+- `GET /api/chisg/papers` — lists all papers in Weaviate with link and entity counts
+- `GET /api/chisg/links?paper_id=xxx&limit=N` — returns semantic links for a paper
+- `GET /api/chisg/review/tasks` — returns up to 10 pending review tasks
+- `POST /api/chisg/review/tasks/{id}/approve` — submit approved/edited links
+- `DELETE /api/chisg/review/tasks` — clear the review queue
+
+### 5.6 First Domain: McGrath Immunology Corpus
+
+The live pipeline was validated on the McGrath mycobacteriology eLife paper corpus. The offline extraction (`extraction_elife_sonnet.json`, 6,415 links from 2,746 definitions) served as the initial test of extraction quality. The live pipeline supersedes this workflow — all future domain ingestion uses PDF upload → review → approve.
+
+---
+
+## §6 (Former §5): LLM-to-CHISG Extraction Pipeline — Design Notes
 
 ### The Goal
 

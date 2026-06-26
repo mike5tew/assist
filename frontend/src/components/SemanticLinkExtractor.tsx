@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Container,
@@ -12,6 +12,7 @@ import {
   Link as LinkIcon,
   List as ListIcon,
 } from '@mui/icons-material';
+import { useLocation } from 'react-router-dom';
 import SourceRegister, { Source } from './SemanticLinkExtractor/SourceRegister';
 import LinkBuilder from './SemanticLinkExtractor/LinkBuilder';
 import ExtractionResults from './SemanticLinkExtractor/ExtractionResults';
@@ -45,8 +46,18 @@ function TabPanel({ children, value, index, ...other }: TabPanelProps) {
  * 3. Results - View and manage extracted links
  */
 export default function SemanticLinkExtractor() {
+  const location = useLocation();
   const [currentTab, setCurrentTab] = useState(0);
   const [selectedSource, setSelectedSource] = useState<Source | null>(null);
+
+  // If navigated from CHISG links page, pre-select the paper and open Link Builder
+  useEffect(() => {
+    const chisgPaper = (location.state as any)?.chisgPaper as Source | undefined;
+    if (chisgPaper) {
+      setSelectedSource(chisgPaper);
+      setCurrentTab(1);
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
     setCurrentTab(newValue);

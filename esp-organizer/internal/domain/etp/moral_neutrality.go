@@ -53,14 +53,16 @@ type KineticAggressionProfile struct {
 }
 
 // KineticAggression defines the ETP profile during violent state
-// TODO(etp-9-migration): Redesign for 9-spectrum model.
+// TODO(etp-12-migration): Redesign for 12-spectrum model.
 // Old references that need domain decisions:
-//   - impulse_gap (-2.0)       → Now pilot_strength (global moderator, not a spectrum). What replaces it here?
+//   - impulse_gap (-2.0)       → Now executive_function (accelerator skill, not a spectrum). What replaces it here?
 //   - authority_response (+2.0) → Removed. Closest: threat_response? Or a skill under integrity_logic?
 //   - presence_sensitivity (+2.0) → Now a skill under mirror_neuron_tuning. Use mirror_neuron_tuning instead?
 //   - social_gravity and risk_tolerance still valid (IDs 1, 6)
+//   - New spectra: responsibility_threshold (10), loss_sensitivity (11), libido (12)
 //
 // Consider: Does orderliness play a role in aggression? (e.g., rigid routine disrupted → violence trigger)
+// Consider: Does loss_sensitivity play a role? (e.g., perceived loss of possession → territorial aggression)
 var KineticAggression = KineticAggressionProfile{
 	Description: "Violence is what happens when multiple ETP dials are turned to one extreme simultaneously",
 	Settings: map[string]float64{
@@ -82,7 +84,7 @@ type SliderDashboard struct {
 	OverallFluidity float64            `json:"overall_fluidity"` // 0-1, how fluid all sliders are
 	StuckSliders    []int              `json:"stuck_sliders"`    // Which sliders are stuck
 	HijackedSliders []int              `json:"hijacked_sliders"` // Which respond to triggers
-	PilotStrength   float64            `json:"pilot_strength"`   // Executive function capacity
+	PilotStrength   float64            `json:"pilot_strength"`   // Executive function capacity (legacy field; now an accelerator skill)
 }
 
 // CreateDashboard initializes a slider dashboard from ETP profile
@@ -193,15 +195,15 @@ type SystemLevelShift struct {
 }
 
 // SystemLevelShifts defines common multi-slider patterns
-// TODO(etp-9-migration): All 4 shifts below use old 17-spectrum IDs. Redesign needed:
+// TODO(etp-12-migration): All 4 shifts below use old 17-spectrum IDs. Redesign needed:
 //
-//	defensive_activation: IDs 8 (impulse_gap→pilot_strength), 10 (risk_tolerance→6), 12 (presence_sensitivity→skill)
+//	defensive_activation: IDs 8 (impulse_gap→executive_function accelerator), 10 (risk_tolerance→6), 12 (presence_sensitivity→skill)
 //	deep_focus:           IDs 1 (social_gravity✓), 4 (energy_directionality=2), 12 (presence_sensitivity→skill)
 //	social_engagement:    IDs 1 (social_gravity✓), 3 (emotional_transparency→skill), 5 (mirror_neuron_tuning=8)
 //	principled_stand:     IDs 14 (authority_response→removed), 17 (integrity_logic=7), 13 (agency_threshold→skill)
 //
 // Mapping: old→new IDs: 1→1, 4→2, 7→3(voltage_sensitivity), 10→6, 17→7, 5→8(mirror_neuron)
-// New question: Does orderliness (9) shift in any of these patterns?
+// New spectra: 10=responsibility_threshold, 11=loss_sensitivity, 12=libido
 var SystemLevelShifts = []SystemLevelShift{
 	{
 		Name:        "defensive_activation",
@@ -353,13 +355,13 @@ type RangeOfMotionExercise struct {
 }
 
 // RangeOfMotionExercises for developing fluidity
-// TODO(etp-9-migration): Update spectrum IDs and add orderliness exercise:
+// TODO(etp-12-migration): Update spectrum IDs and add exercises for new spectra:
 //
 //	Exercise 1: spectrum_id 14 (authority_response) → removed. Remap to threat_response (4)?
 //	Exercise 2: spectrum_id 1 (social_gravity) → still valid ✓
-//	Exercise 3: spectrum_id 8 (impulse_gap) → now pilot_strength moderator, not a spectrum. Replace with orderliness (9)?
+//	Exercise 3: spectrum_id 8 (impulse_gap) → now executive_function accelerator skill. Replace with orderliness (9)?
 //	Exercise 4: spectrum_id 10 (risk_tolerance) → renumbered to 6
-//	Also: Add new exercise for orderliness (9) — e.g., "tidy workspace then creative mess" switch
+//	Also: Add exercises for orderliness (9), responsibility_threshold (10), loss_sensitivity (11), libido (12)
 var RangeOfMotionExercises = []RangeOfMotionExercise{
 	{
 		Name:         "challenging_compliant_switch",

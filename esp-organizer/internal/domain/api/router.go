@@ -60,6 +60,9 @@ func RegisterRoutes(r *mux.Router, coachService coach.CoachServiceMVP) {
 	// Public contact endpoint (frontend submits a recaptcha token + message)
 	apiRouter.HandleFunc("/contact", ContactHandler).Methods("POST", "OPTIONS")
 
+	// Subscriber signup (email capture from /join landing page)
+	apiRouter.HandleFunc("/join", JoinHandler).Methods("POST", "OPTIONS")
+
 	// Analytics (visitor tracking — no cookies, no personal data)
 	apiRouter.HandleFunc("/analytics/pageview", AnalyticsPageViewHandler).Methods("POST", "OPTIONS")
 	apiRouter.HandleFunc("/analytics/event", AnalyticsEventHandler).Methods("POST", "OPTIONS")
@@ -72,6 +75,47 @@ func RegisterRoutes(r *mux.Router, coachService coach.CoachServiceMVP) {
 	apiRouter.HandleFunc("/semantic-links/validate", SemanticLinksValidateHandler).Methods("POST", "OPTIONS")
 	apiRouter.HandleFunc("/semantic-links/export", SemanticLinksExportHandler).Methods("GET", "OPTIONS")
 	log.Println("✅ Semantic-links endpoints registered (extract/search/validate/export)")
+
+	// CHISG Expert HITL Review API — protected
+	expertRouter := apiRouter.PathPrefix("/expert-review").Subrouter()
+	expertRouter.Use(RequireAuth)
+	expertRouter.HandleFunc("/upload", UploadCHISGDocumentHandler).Methods("POST", "OPTIONS")
+	expertRouter.HandleFunc("/pending", GetPendingReviewTasksHandler).Methods("GET", "OPTIONS")
+	expertRouter.HandleFunc("/tasks/{id}/approve", ApproveReviewTaskHandler).Methods("POST", "OPTIONS")
+	expertRouter.HandleFunc("/clear", ClearReviewTasksHandler).Methods("POST", "OPTIONS")
+	log.Println("✅ Expert Review endpoints registered (/api/expert-review)")
+
+	// Source Documents API (paper provenance for CHISG) — protected
+	sourceDocRouter := apiRouter.PathPrefix("/source-documents").Subrouter()
+	sourceDocRouter.Use(RequireAuth)
+	sourceDocRouter.HandleFunc("", ListSourceDocumentsHandler).Methods("GET", "OPTIONS")
+	sourceDocRouter.HandleFunc("", CreateSourceDocumentHandler).Methods("POST", "OPTIONS")
+	sourceDocRouter.HandleFunc("/{id}", GetSourceDocumentHandler).Methods("GET", "OPTIONS")
+	log.Println("✅ Source Documents endpoints registered (/api/source-documents)")
+
+	// Auth endpoints (public)
+	apiRouter.HandleFunc("/auth/login", CHISGLoginHandler).Methods("POST", "OPTIONS")
+	apiRouter.HandleFunc("/auth/demo-login", CHISGDemoLoginHandler).Methods("GET", "OPTIONS")
+	log.Println("✅ Auth endpoints registered (/api/auth/login, /api/auth/demo-login)")
+
+	// CHISG graph visualisation (public)
+	apiRouter.HandleFunc("/chisg/graph", ChisgGraphHandler).Methods("GET", "OPTIONS")
+	log.Println("✅ CHISG graph endpoint registered (/api/chisg/graph)")
+
+	// CHISG protected endpoints — require Bearer JWT
+	chisgRouter := apiRouter.PathPrefix("/chisg").Subrouter()
+	chisgRouter.Use(RequireAuth)
+	chisgRouter.HandleFunc("/papers", CHISGListPapersHandler).Methods("GET", "OPTIONS")
+	chisgRouter.HandleFunc("/links", CHISGListLinksHandler).Methods("GET", "OPTIONS")
+	log.Println("✅ CHISG protected endpoints registered (/api/chisg/papers, /api/chisg/links)")
+
+	// NTM (Non-Tuberculous Mycobacteria) academic research endpoints
+	apiRouter.HandleFunc("/ntm/upload", NTMUploadHandler).Methods("POST", "OPTIONS")
+	apiRouter.HandleFunc("/ntm/papers", NTMListPapersHandler).Methods("GET", "OPTIONS")
+	apiRouter.HandleFunc("/ntm/query", NTMQueryHandler).Methods("POST", "OPTIONS")
+	apiRouter.HandleFunc("/ntm/extract", NTMExtractHandler).Methods("POST", "OPTIONS")
+	apiRouter.HandleFunc("/ntm/status/{jobID}", NTMStatusHandler).Methods("GET", "OPTIONS")
+	log.Println("✅ NTM research endpoints registered (/api/ntm/upload, /api/ntm/query, /api/ntm/papers, /api/ntm/extract, /api/ntm/status)")
 
 	// Link Types API (vocabulary for relationships)
 	apiRouter.HandleFunc("/link-types", LinkTypesListHandler).Methods("GET", "OPTIONS")

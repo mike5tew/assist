@@ -150,6 +150,36 @@ const primarySpectra = [
     color: '#5d4037',
     classroom: 'Follows routines, adapts when plans change',
   },
+  {
+    name: 'Responsibility Threshold',
+    left: 'Deflecting',
+    right: 'Absorbing',
+    description: 'When something goes wrong, whose fault is it?',
+    skill: 'Ownership Calibration',
+    skillDescription: 'The ability to accurately assign responsibility — neither blaming everyone else nor taking all the blame yourself.',
+    color: '#37474f',
+    classroom: 'Can say "that was my part" and "that wasn\'t my fault" appropriately',
+  },
+  {
+    name: 'Loss Sensitivity',
+    left: 'Detached',
+    right: 'Territorial',
+    description: 'How do you react when something is taken away?',
+    skill: 'Transition Tolerance',
+    skillDescription: 'The ability to let go of possessions, activities, or status without crisis — while still caring about things that matter.',
+    color: '#4e342e',
+    classroom: 'Handles transitions and sharing resources without meltdowns',
+  },
+  {
+    name: 'Libido',
+    left: 'Restrained',
+    right: 'Expressive',
+    description: 'How much drive energy do you feel when you want something?',
+    skill: 'Drive Channelling',
+    skillDescription: 'The ability to recognise wanting energy and direct it productively — patience when needed, pursuit when appropriate.',
+    color: '#880e4f',
+    classroom: 'Can wait for something they want, and work toward goals with sustained energy',
+  },
 ];
 
 // ─── Foundational Skill Domains ────────────────────────────
@@ -245,7 +275,7 @@ const PrimaryOSLanding: React.FC = () => {
     <Box>
       <SEO
         title="PrimaryOS — The Operating System for Growing Learners"
-        description="PrimaryOS adapts the 9 ETP biological spectra for primary-age children. Neuron Navigators guide books, foundational skill domains, and teacher tools that replace shame with strategy."
+        description="PrimaryOS adapts the 12 ETP biological spectra for primary-age children. Neuron Navigators guide books, foundational skill domains, and teacher tools that replace shame with strategy."
         path="/primary-os"
       />
       {/* ── Hero Section ── */}
@@ -318,7 +348,7 @@ const PrimaryOSLanding: React.FC = () => {
                 </Typography>
 
                 <Stack direction="row" spacing={1.5} flexWrap="wrap" useFlexGap>
-                  <Chip label="9 ETP Spectra" sx={{ bgcolor: 'rgba(255,255,255,0.15)', color: 'white' }} />
+                  <Chip label="12 ETP Spectra" sx={{ bgcolor: 'rgba(255,255,255,0.15)', color: 'white' }} />
                   <Chip label="36+ Foundational Skills" sx={{ bgcolor: 'rgba(255,255,255,0.15)', color: 'white' }} />
                   <Chip label="Neuron Navigators Guide" sx={{ bgcolor: 'rgba(255,255,255,0.15)', color: 'white' }} />
                   <Chip label="CHISG-Aligned" sx={{ bgcolor: 'rgba(255,255,255,0.15)', color: 'white' }} />
@@ -530,7 +560,7 @@ const PrimaryOSLanding: React.FC = () => {
                   </Box>
 
                   <Typography variant="body1" paragraph>
-                    Each of the 9 ETP spectra has a corresponding <strong>spectrum skill</strong> — the ability 
+                    Each of the 12 ETP spectra has a corresponding <strong>spectrum skill</strong> — the ability 
                     to access different positions on that spectrum when the situation requires it.
                   </Typography>
                   
@@ -646,11 +676,11 @@ const PrimaryOSLanding: React.FC = () => {
         </Container>
       </Box>
 
-      {/* ── The 9 ETP Spectra with Skills ── */}
+      {/* ── The 12 ETP Spectra with Skills ── */}
       <Box sx={{ py: { xs: 6, md: 8 }, bgcolor: '#f5f7f9' }}>
         <Container maxWidth={false} sx={{ maxWidth: '1400px' }}>
           <Typography variant="h4" component="h2" textAlign="center" fontWeight="bold" gutterBottom>
-            The 9 Spectra — And the Skills to Navigate Them
+            The 12 Spectra — And the Skills to Navigate Them
           </Typography>
           <Typography
             variant="body1"
@@ -918,7 +948,7 @@ const PrimaryOSLanding: React.FC = () => {
         </Container>
       </Box>
 
-      {/* ── ParentOS Bridge ── */}
+      {/* ── ToddlerOS Bridge ── */}
       <Box sx={{ py: { xs: 6, md: 8 } }}>
         <Container maxWidth={false} sx={{ maxWidth: '1400px' }}>
           <Paper
@@ -942,7 +972,7 @@ const PrimaryOSLanding: React.FC = () => {
                   One Child. One Nervous System. One Framework.
                 </Typography>
                 <Typography variant="body1" paragraph>
-                  PrimaryOS and ParentOS speak the same language. The Social Switching skill a child practises 
+                  PrimaryOS and ToddlerOS speak the same language. The Social Switching skill a child practises 
                   in a Year 4 group project is the same Social Switching skill their parents see at the dinner table.
                 </Typography>
                 <Typography variant="body1">
@@ -956,15 +986,15 @@ const PrimaryOSLanding: React.FC = () => {
                   <Avatar sx={{ bgcolor: '#0f766e', width: 64, height: 64, mx: 'auto', mb: 2 }}>
                     <ParentIcon />
                   </Avatar>
-                  <Typography variant="subtitle1" fontWeight="bold">ParentOS</Typography>
+                  <Typography variant="subtitle1" fontWeight="bold">ToddlerOS</Typography>
                   <Typography variant="caption" display="block" color="text.secondary" sx={{ mb: 2 }}>
-                    The Foundational Code Your Family Runs On
+                    The Coding Lesson You Never Knew You Needed
                   </Typography>
                   <Button
                     variant="outlined"
                     size="small"
                     component={Link}
-                    to="/parent-os"
+                    to="/toddler-os"
                     sx={{ color: '#0f766e', borderColor: '#0f766e' }}
                   >
                     Learn More
@@ -991,8 +1021,8 @@ const PrimaryOSLanding: React.FC = () => {
               'Teacher shifts from judge to facilitator',
               'CHISG-aligned skill architecture prevents fragmentation',
               'Explicit foundational skills + curriculum-embedded practice',
-              '9 ETP spectra explain why learning feels different for different children',
-              'Home-school bridge through ParentOS alignment',
+              '12 ETP spectra explain why learning feels different for different children',
+              'Home-school bridge through ToddlerOS alignment',
               'Sticker book is a scientific journal, not a reward chart',
               'No child is "bad" — only mismatched or stuck',
               'Built on 12 years of classroom observation, not theory',
@@ -1060,7 +1090,7 @@ const PrimaryOSLanding: React.FC = () => {
           PrimaryOS — The Operating System for Growing Learners — Part of the ESP Thinking Portfolio
         </Typography>
         <Typography variant="caption" sx={{ display: 'block', mt: 0.5, opacity: 0.8 }}>
-          In partnership with Neuron Navigators Guide Book | Connected to ParentOS | Grounded in CHISG
+          In partnership with Neuron Navigators Guide Book | Connected to ToddlerOS | Grounded in CHISG
         </Typography>
       </Box>
     </Box>

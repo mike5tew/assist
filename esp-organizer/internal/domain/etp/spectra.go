@@ -23,31 +23,7 @@ type SpectrumSkill struct {
 	Exercises   string `json:"exercises"`
 }
 
-// GlobalModerator affects ALL spectra (the "Pilot" capacity)
-type GlobalModerator struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	LowEffect   string `json:"low_effect"`
-	HighEffect  string `json:"high_effect"`
-}
-
-// GlobalModerators - these affect capacity across ALL spectra
-var GlobalModerators = []GlobalModerator{
-	{
-		Name:        "pilot_strength",
-		Description: "Executive function capacity - the hand on ALL sliders",
-		LowEffect:   "Sliders move reactively; triggers control positioning",
-		HighEffect:  "Sliders move deliberately; conscious choice of positioning",
-	},
-	{
-		Name:        "current_load",
-		Description: "Stress/depletion level - narrows range of motion on all spectra",
-		LowEffect:   "Full range of motion available on all spectra",
-		HighEffect:  "Range contracts toward comfort zone; less flexibility",
-	},
-}
-
-// ETPSpectra defines the 8 CORE biological spectra
+// ETPSpectra defines the 12 CORE biological spectra
 // These are innate, morally neutral, and orthogonal to each other
 var ETPSpectra = []ETPSpectrum{
 	{
@@ -208,6 +184,57 @@ var ETPSpectra = []ETPSpectrum{
 			"flexible_planning",     // Creating structure that bends without breaking
 		},
 	},
+	{
+		ID:              10,
+		Name:            "responsibility_threshold",
+		NegativeLabel:   "Deflecting",
+		PositiveLabel:   "Absorbing",
+		NegativeEffect:  "Consequence feels EXTERNAL — not my problem",
+		PositiveEffect:  "Consequence feels INTERNAL — everything is my fault",
+		ConflictPattern: "Deflecting seems irresponsible, Absorbing seems codependent",
+		SolutionName:    "Responsibility Voltage Calibration",
+		Skills: []string{
+			"ownership_activation",    // Skill for deflecting to take responsibility
+			"responsibility_release",  // Skill for absorbing to let go of others' consequences
+			"consequence_prediction",  // Foreseeing outcomes of actions
+			"accountability_language", // Expressing ownership without shame
+			"delegation_comfort",      // Letting others own their part
+		},
+	},
+	{
+		ID:              11,
+		Name:            "loss_sensitivity",
+		NegativeLabel:   "Detached",
+		PositiveLabel:   "Territorial",
+		NegativeEffect:  "Removal creates MINIMAL voltage — lets things go easily",
+		PositiveEffect:  "Removal creates EXISTENTIAL voltage — feels like annihilation",
+		ConflictPattern: "Detached seems uncaring about possessions, Territorial seems obsessive",
+		SolutionName:    "Loss Voltage Gradients",
+		Skills: []string{
+			"secure_attachment",   // Skill for territorial to feel safe without possessions
+			"value_recognition",   // Skill for detached to appreciate what they have
+			"transition_rituals",  // Managing the process of things leaving
+			"abundance_awareness", // Recognising that loss is not permanent
+			"grief_processing",    // Healthy processing of genuine loss
+		},
+	},
+	{
+		ID:              12,
+		Name:            "libido",
+		NegativeLabel:   "Restrained",
+		PositiveLabel:   "Expressive",
+		NegativeEffect:  "Drive energy is CONTAINED — low outward expression of desire",
+		PositiveEffect:  "Drive energy is EXTERNALISED — high outward expression of desire",
+		ConflictPattern: "Restrained seems disengaged, Expressive seems overwhelming",
+		SolutionName:    "Drive Voltage Modulation",
+		Skills: []string{
+			"desire_articulation",   // Naming what you want without shame
+			"impulse_channeling",    // Directing drive energy into productive outlets
+			"boundary_awareness",    // Recognising others' comfort thresholds
+			"delayed_gratification", // Tolerating the gap between wanting and having
+			"consent_navigation",    // Understanding mutual agreement
+		},
+	},
 }
 
 // SpectrumSkills defines all trainable skills organized by spectrum
@@ -289,9 +316,33 @@ var SpectrumSkills = map[int][]SpectrumSkill{
 		{ID: "transition_handling", Name: "Transition Handling", SpectrumID: 9, Direction: "both", Description: "Moving between activities without dysregulation", Exercises: "Transition warnings, bridging rituals, closure practices"},
 		{ID: "flexible_planning", Name: "Flexible Planning", SpectrumID: 9, Direction: "negative", Description: "Creating structure that bends without breaking", Exercises: "Plan B thinking, loose scheduling, outcome vs process focus"},
 	},
+	// Responsibility Threshold Skills
+	10: {
+		{ID: "ownership_activation", Name: "Ownership Activation", SpectrumID: 10, Direction: "positive", Description: "Taking responsibility for outcomes", Exercises: "Post-mortem reflections, 'what was my part?' practice, ownership journaling"},
+		{ID: "responsibility_release", Name: "Responsibility Release", SpectrumID: 10, Direction: "negative", Description: "Letting go of others' consequences", Exercises: "Sorting cards: my problem vs not my problem, boundary statements"},
+		{ID: "consequence_prediction", Name: "Consequence Prediction", SpectrumID: 10, Direction: "both", Description: "Foreseeing outcomes of actions", Exercises: "If-then scenarios, consequence mapping, pre-mortem practice"},
+		{ID: "accountability_language", Name: "Accountability Language", SpectrumID: 10, Direction: "both", Description: "Expressing ownership without shame", Exercises: "'I did X and Y happened' scripts, repair conversations, no-blame reviews"},
+		{ID: "delegation_comfort", Name: "Delegation Comfort", SpectrumID: 10, Direction: "negative", Description: "Letting others own their part", Exercises: "Shared project roles, explicit ownership splitting, trust exercises"},
+	},
+	// Loss Sensitivity Skills
+	11: {
+		{ID: "secure_attachment", Name: "Secure Attachment", SpectrumID: 11, Direction: "negative", Description: "Feeling safe without possessions as anchors", Exercises: "Object rotation, gradual lending, 'things go home' rituals"},
+		{ID: "value_recognition", Name: "Value Recognition", SpectrumID: 11, Direction: "positive", Description: "Appreciating what you have while you have it", Exercises: "Gratitude naming, favourite-thing journal, appreciation rituals"},
+		{ID: "transition_rituals", Name: "Transition Rituals", SpectrumID: 11, Direction: "both", Description: "Managing the process of things leaving", Exercises: "Goodbye ceremonies, photo memories, 'things go home' language"},
+		{ID: "abundance_awareness", Name: "Abundance Awareness", SpectrumID: 11, Direction: "negative", Description: "Recognising that loss is not permanent", Exercises: "Seasonal cycles, sharing-and-return games, library visits"},
+		{ID: "grief_processing", Name: "Grief Processing", SpectrumID: 11, Direction: "both", Description: "Healthy processing of genuine loss", Exercises: "Memory boxes, feeling naming, 'it's OK to be sad' validation"},
+	},
+	// Libido Skills
+	12: {
+		{ID: "desire_articulation", Name: "Desire Articulation", SpectrumID: 12, Direction: "both", Description: "Naming what you want without shame", Exercises: "Want-lists, choice boards, 'I want' practice in safe contexts"},
+		{ID: "impulse_channeling", Name: "Impulse Channeling", SpectrumID: 12, Direction: "negative", Description: "Directing drive energy into productive outlets", Exercises: "Physical outlets, creative expression, structured challenge activities"},
+		{ID: "boundary_awareness", Name: "Boundary Awareness", SpectrumID: 12, Direction: "both", Description: "Recognising others' comfort thresholds", Exercises: "Personal space games, consent practice, stop-signal activities"},
+		{ID: "delayed_gratification", Name: "Delayed Gratification", SpectrumID: 12, Direction: "negative", Description: "Tolerating the gap between wanting and having", Exercises: "Waiting games, earn-then-receive sequences, marshmallow-style practice"},
+		{ID: "consent_navigation", Name: "Consent Navigation", SpectrumID: 12, Direction: "both", Description: "Understanding mutual agreement", Exercises: "Ask-before-touching games, 'may I?' practice, two-yes-one-no activities"},
+	},
 }
 
-// GetSpectrumByID returns the spectrum for a given ID (1-9)
+// GetSpectrumByID returns the spectrum for a given ID (1-12)
 func GetSpectrumByID(id int) *ETPSpectrum {
 	if id < 1 || id > len(ETPSpectra) {
 		return nil
@@ -330,16 +381,6 @@ func GetSkillByID(skillID string) *SpectrumSkill {
 			if skills[i].ID == skillID {
 				return &skills[i]
 			}
-		}
-	}
-	return nil
-}
-
-// GetGlobalModerator returns a global moderator by name
-func GetGlobalModerator(name string) *GlobalModerator {
-	for i := range GlobalModerators {
-		if GlobalModerators[i].Name == name {
-			return &GlobalModerators[i]
 		}
 	}
 	return nil

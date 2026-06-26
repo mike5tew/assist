@@ -50,7 +50,7 @@ import { Link } from 'react-router-dom';
 import ContactReveal from '../../components/ContactReveal';
 import SEO from '../../components/SEO';
 
-// ─── The 9 Spectra for Parents ──────────────────────────────
+// ─── The 12 Spectra for Parents ──────────────────────────────
 const parentSpectra = [
   {
     name: 'Social Gravity',
@@ -132,6 +132,33 @@ const parentSpectra = [
     color: '#5d4037',
     ageHint: 'Observable from ~2 years',
     question: 'Does your child adapt easily to schedule changes, or need predictability?',
+  },
+  {
+    name: 'Responsibility Threshold',
+    left: 'Deflecting',
+    right: 'Absorbing',
+    description: 'When something goes wrong, does your child blame others or take all the blame?',
+    color: '#37474f',
+    ageHint: 'Observable from ~3 years',
+    question: 'When a toy breaks, does your child say "it wasn\'t me" or "it\'s all my fault"?',
+  },
+  {
+    name: 'Loss Sensitivity',
+    left: 'Detached',
+    right: 'Territorial',
+    description: 'How does your child respond when something is taken away or transitions happen?',
+    color: '#4e342e',
+    ageHint: 'Observable from ~2 years',
+    question: 'When tidy-up time comes, does your child let go easily or treat it like theft?',
+  },
+  {
+    name: 'Libido',
+    left: 'Restrained',
+    right: 'Expressive',
+    description: 'How intensely does your child express wanting — from food to toys to attention?',
+    color: '#880e4f',
+    ageHint: 'Observable from ~2 years',
+    question: 'When your child wants something, can they wait or do they need it immediately?',
   },
 ];
 
@@ -222,7 +249,7 @@ const ParentOSLanding: React.FC = () => {
     <Box>
       <SEO
         title="ParentOS — Understanding Your Child's Learning Profile"
-        description="ParentOS helps parents understand and support their child across the 9 biological spectra. Interactive spectrum explorer and practical family guidance."
+        description="ParentOS helps parents understand and support their child across the 12 biological spectra. Interactive spectrum explorer and practical family guidance."
         path="/parent-os"
       />
       {/* ── Hero Section ── */}
@@ -290,7 +317,7 @@ const ParentOSLanding: React.FC = () => {
                 </Typography>
 
                 <Stack direction="row" spacing={1.5} flexWrap="wrap" useFlexGap>
-                  <Chip label="9 Biological Spectra" sx={{ bgcolor: 'rgba(255,255,255,0.15)', color: 'white' }} />
+                  <Chip label="12 Biological Spectra" sx={{ bgcolor: 'rgba(255,255,255,0.15)', color: 'white' }} />
                   <Chip label="Ages 3–16" sx={{ bgcolor: 'rgba(255,255,255,0.15)', color: 'white' }} />
                   <Chip label="Free Foundation" sx={{ bgcolor: 'rgba(255,255,255,0.15)', color: 'white' }} />
                   <Chip label="CHISG-Aligned" sx={{ bgcolor: 'rgba(255,255,255,0.15)', color: 'white' }} />
@@ -442,11 +469,11 @@ const ParentOSLanding: React.FC = () => {
         </Container>
       </Box>
 
-      {/* ── The 9 Spectra for Parents ── */}
+      {/* ── The 12 Spectra for Parents ── */}
       <Box sx={{ py: { xs: 6, md: 8 } }}>
         <Container maxWidth={false} sx={{ maxWidth: '1400px' }}>
           <Typography variant="h4" component="h2" textAlign="center" fontWeight="bold" gutterBottom>
-            The 9 Biological Spectra
+            The 12 Biological Spectra
           </Typography>
           <Typography
             variant="body1"
@@ -759,7 +786,7 @@ const ParentOSLanding: React.FC = () => {
                         📱 PrimaryOS (School)
                       </Typography>
                       <Typography variant="body2">
-                        Teachers log observations against the 9 spectra. Patterns emerge across 
+                        Teachers log observations against the 12 spectra. Patterns emerge across 
                         classroom contexts. The system suggests strategies that work for similar profiles.
                       </Typography>
                     </Paper>
@@ -812,12 +839,12 @@ const ParentOSLanding: React.FC = () => {
             </Typography>
             <Typography variant="body1" sx={{ mb: 3, maxWidth: 550, mx: 'auto' }}>
               Every parent deserves to understand their child's wiring. The core ParentOS framework — 
-              the 9 spectra, slider states, and age-stage guidance — will always be free.
+              the 12 spectra, slider states, and age-stage guidance — will always be free.
             </Typography>
             
             <Grid container spacing={2} sx={{ mb: 3 }}>
               {[
-                '9 Spectra Explorer',
+                '12 Spectra Explorer',
                 'Observation Question Bank',
                 'Age-Stage Roadmaps',
                 'Basic Compatibility Tools',
@@ -859,7 +886,7 @@ const ParentOSLanding: React.FC = () => {
                 wiring through their behaviour.
               </Typography>
               <Typography variant="body1" paragraph sx={{ fontSize: '1.1rem', lineHeight: 1.7 }}>
-                The 9 spectra emerged from asking, "Why do two children in the same environment 
+                The 12 spectra emerged from asking, "Why do two children in the same environment 
                 have completely opposite reactions?" The answer wasn't parenting, personality, or 
                 defiance. It was biology.
               </Typography>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Button, Card, CardActions, CardContent, Chip, Container, Grid, Paper, Stack, Typography, alpha, useTheme } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { Psychology as CHISGIcon, Storage as WeaviateIcon, Hub as GraphIcon, Verified as VerifiedIcon, TravelExplore as ExploreIcon } from '@mui/icons-material';
+import { Psychology as CHISGIcon, Storage as WeaviateIcon, Hub as GraphIcon, Verified as VerifiedIcon, TravelExplore as ExploreIcon, ListAlt as ListIcon } from '@mui/icons-material';
 import ContactReveal from '../../components/ContactReveal';
 import SEO from '../../components/SEO';
 
@@ -95,6 +95,9 @@ const CHISGLanding: React.FC = () => {
               <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mt: 4 }}>
                 <Button component={Link} to="/semantic-query" variant="contained" color="secondary" size="large">
                   Open CHISG Demo (Semantic Query)
+                </Button>
+                <Button component={Link} to="/chisg/graph" variant="outlined" size="large" sx={{ color: 'white', borderColor: 'rgba(255,255,255,0.35)' }}>
+                  Explore Knowledge Graph
                 </Button>
                 <Button component={Link} to="/ai-chat" variant="outlined" size="large" sx={{ color: 'white', borderColor: 'rgba(255,255,255,0.35)' }}>
                   Try Grounded Chat
@@ -316,7 +319,79 @@ const CHISGLanding: React.FC = () => {
                 </CardActions>
               </Card>
             </Grid>
+
+            <Grid item xs={12} md={4}>
+              <Card elevation={2} sx={{ height: '100%', borderTop: '4px solid #22d3ee' }}>
+                <CardContent>
+                  <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1 }}>
+                    <GraphIcon sx={{ color: '#22d3ee' }} />
+                    <Typography variant="h6">Knowledge Graph</Typography>
+                  </Stack>
+                  <Typography variant="body2" color="text.secondary">
+                    Explore the CHISG semantic graph — concepts as nodes, relations as edges, coloured by domain.
+                  </Typography>
+                </CardContent>
+                <CardActions sx={{ px: 2, pb: 2 }}>
+                  <Button component={Link} to="/chisg/graph" variant="contained" size="small" sx={{ bgcolor: '#22d3ee', color: '#0a0f1e', '&:hover': { bgcolor: '#06b6d4' } }}>
+                    Explore Graph
+                  </Button>
+                  <Button component={Link} to="/ntm" variant="outlined" size="small" sx={{ color: '#22d3ee', borderColor: 'rgba(34,211,238,0.4)', '&:hover': { borderColor: '#22d3ee' } }}>
+                    NTM Research
+                  </Button>
+                </CardActions>
+              </Card>
+            </Grid>
+
+            <Grid item xs={12} md={4}>
+              <Card elevation={2} sx={{ height: '100%', borderTop: '4px solid #16a34a' }}>
+                <CardContent>
+                  <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1 }}>
+                    <ListIcon sx={{ color: '#16a34a' }} />
+                    <Typography variant="h6">Knowledge Base</Typography>
+                  </Stack>
+                  <Typography variant="body2" color="text.secondary">
+                    Browse the extracted academic papers, view validated semantic triples, and explore the link builder.
+                  </Typography>
+                </CardContent>
+                <CardActions sx={{ px: 2, pb: 2 }}>
+                  <Button component={Link} to="/chisg/papers" variant="contained" size="small" sx={{ bgcolor: '#16a34a', '&:hover': { bgcolor: '#15803d' } }}>
+                    View Papers
+                  </Button>
+                </CardActions>
+              </Card>
+            </Grid>
           </Grid>
+        </Container>
+      </Box>
+
+      {/* ESP Research Pilot call-out */}
+      <Box sx={{ py: 5, bgcolor: '#0f172a' }}>
+        <Container maxWidth="md">
+          <Stack direction={{ xs: 'column', sm: 'row' }} alignItems={{ sm: 'center' }} spacing={3}
+            sx={{ p: 3, border: '1px solid rgba(99,102,241,0.35)', borderRadius: 2,
+              background: 'linear-gradient(135deg, rgba(99,102,241,0.08) 0%, rgba(49,46,129,0.2) 100%)' }}>
+            <Box sx={{ flex: 1 }}>
+              <Typography variant="overline" sx={{ color: '#818cf8', fontWeight: 700, letterSpacing: 2 }}>
+                Research Pilot
+              </Typography>
+              <Typography variant="h6" fontWeight={700} color="white" mt={0.5} mb={0.75}>
+                CHISG applied to academic research
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.55)', lineHeight: 1.7 }}>
+                ESP uses the CHISG methodology to extract causal relationships from scientific papers
+                and build a personal, queryable knowledge oracle for PhD researchers and academics.
+                We're looking for pilot participants.
+              </Typography>
+            </Box>
+            <Button
+              component={Link} to="/esp-pilot"
+              variant="contained"
+              sx={{ flexShrink: 0, bgcolor: '#6366f1', '&:hover': { bgcolor: '#4f46e5' },
+                fontWeight: 700, textTransform: 'none', borderRadius: 2 }}
+            >
+              Learn more →
+            </Button>
+          </Stack>
         </Container>
       </Box>
 

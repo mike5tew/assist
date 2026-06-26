@@ -23,6 +23,7 @@ import {
   ArrowDropDown as DropdownIcon,
   PhoneIphone as MobileIcon,
   Analytics as AnalyticsIcon,
+  Article as ArticleIcon,
 } from '@mui/icons-material';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -35,6 +36,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { label: 'Home', path: '/', icon: <HomeIcon /> },
+  { label: 'Blog', path: '/blog', icon: <ArticleIcon /> },
   {
     label: 'Demos',
     icon: <DashboardIcon />,
@@ -50,7 +52,7 @@ const navItems: NavItem[] = [
     children: [
       { label: 'MAT Strategic Dashboard', path: 'http://localhost/drb/', icon: <DashboardIcon /> },
       { label: 'LAO Adaptive Revision', path: '/lao', icon: <SchoolIcon /> },
-      { label: 'ParentOS', path: '/parent-os', icon: <SchoolIcon /> },
+      { label: 'ToddlerOS', path: '/toddler-os', icon: <SchoolIcon /> },
       { label: 'PrimaryOS (Neuron Navigators)', path: '/primary-os', icon: <MobileIcon /> },
       { label: 'CareerOS', path: '/careeros', icon: <DashboardIcon /> },
       { label: 'ESP World', path: '/esp-world', icon: <AnalyticsIcon /> },

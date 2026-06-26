@@ -61,7 +61,7 @@ var UnifiedLanguageShifts = []UnifiedLanguageShift{
 	{OldMoral: "Stop it", NewEngineering: "I notice you're in X setting — is that helping?"},
 }
 
-// PlayFirstPrinciple — the adult's job for PrimaryOS/ParentOS
+// PlayFirstPrinciple — the adult's job for PrimaryOS/ToddlerOS
 var PlayFirstPrinciple = []string{
 	"Observe the setting without judgment",
 	"Name it neutrally (\"You're in Independent mode right now\")",
@@ -432,6 +432,140 @@ var ResponseMatrix = []ResponseMatrixEntry{
 		PlayAvenues: []string{
 			"Practice \"change rituals\"",
 			"When something changes, we stop, name it, and rebuild the structure",
+		},
+	},
+
+	// ============================================================
+	// 10. RESPONSIBILITY THRESHOLD
+	// ============================================================
+	{
+		SpectrumID:         10,
+		SpectrumName:       "responsibility_threshold",
+		Setting:            "deflecting",
+		SettingEnd:         "negative",
+		BarrierType:        "persisting",
+		BarrierDescription: "Avoids ownership of outcomes — 'it wasn't me' becomes default response",
+		AvoidLanguage: []string{
+			"It IS your fault",
+			"Stop blaming everyone else",
+		},
+		RecommendedLanguage: []string{
+			"What happened? What was the bit you did? That's your bit — let's fix just that part.",
+			"Everyone has a part. Your part was small, but it's yours. Owning it makes it smaller.",
+		},
+		PlayAvenues: []string{
+			"Sorting games: 'My part / Your part / Nobody's part'",
+			"Post-mortem without blame — detectives find facts, not villains",
+		},
+	},
+	{
+		SpectrumID:         10,
+		SpectrumName:       "responsibility_threshold",
+		Setting:            "absorbing",
+		SettingEnd:         "positive",
+		BarrierType:        "verbalising",
+		BarrierDescription: "Takes on blame for everything — 'it's all my fault' even when it isn't",
+		AvoidLanguage: []string{
+			"Don't worry about it",
+			"It's fine, it wasn't you",
+		},
+		RecommendedLanguage: []string{
+			"You're carrying more than your share. Let's divide the responsibility fairly — which part is actually yours?",
+			"Your care is a strength. But if you carry everyone's load, you'll drop yours.",
+		},
+		PlayAvenues: []string{
+			"Weight-sorting: physical objects representing 'my bit' vs 'not my bit'",
+			"Responsibility pie chart — draw slices for each person's part",
+		},
+	},
+
+	// ============================================================
+	// 11. LOSS SENSITIVITY
+	// ============================================================
+	{
+		SpectrumID:         11,
+		SpectrumName:       "loss_sensitivity",
+		Setting:            "detached",
+		SettingEnd:         "negative",
+		BarrierType:        "starting",
+		BarrierDescription: "Doesn't engage with shared resources — lets go too easily, appears not to care",
+		AvoidLanguage: []string{
+			"Don't you care about anything?",
+			"Look after your things",
+		},
+		RecommendedLanguage: []string{
+			"This one matters to you even if you don't show it. Let's find one thing worth keeping safe today.",
+			"You're good at letting go. Sometimes holding on is the brave thing.",
+		},
+		PlayAvenues: []string{
+			"Favourite-thing journal — photograph and name one meaningful object per week",
+			"Lending library — practice lending AND asking for return",
+		},
+	},
+	{
+		SpectrumID:         11,
+		SpectrumName:       "loss_sensitivity",
+		Setting:            "territorial",
+		SettingEnd:         "positive",
+		BarrierType:        "sharing",
+		BarrierDescription: "Cannot tolerate removal of possessions or changes to 'their' space — tidy-up feels like theft",
+		AvoidLanguage: []string{
+			"It's just a toy",
+			"Stop being selfish",
+			"Tidy up now",
+		},
+		RecommendedLanguage: []string{
+			"Your things are going home, not away. They'll be here tomorrow.",
+			"You love this thing. That's not wrong. Let's find it a safe place for overnight.",
+		},
+		PlayAvenues: []string{
+			"'Things go home' ritual — named places where objects rest, not disappear",
+			"Security box — one item that never has to be shared, everything else rotates",
+		},
+	},
+
+	// ============================================================
+	// 12. LIBIDO
+	// ============================================================
+	{
+		SpectrumID:         12,
+		SpectrumName:       "libido",
+		Setting:            "restrained",
+		SettingEnd:         "negative",
+		BarrierType:        "starting",
+		BarrierDescription: "Low drive expression may mask needs — difficulty articulating desires or engaging in physical play",
+		AvoidLanguage: []string{
+			"Join in like everyone else",
+			"Don't be shy",
+		},
+		RecommendedLanguage: []string{
+			"You get to choose how much energy you put out. What feels right for you today?",
+			"Not everyone shows excitement the same way. Your quiet way counts.",
+		},
+		PlayAvenues: []string{
+			"Choice-board activities — 'I want' practice in low-pressure settings",
+			"Graduated physical play — from solo sensory to paired activities at their pace",
+		},
+	},
+	{
+		SpectrumID:         12,
+		SpectrumName:       "libido",
+		Setting:            "expressive",
+		SettingEnd:         "positive",
+		BarrierType:        "regulating",
+		BarrierDescription: "High drive expression may overwhelm peers — physical affection or desire expressed without calibration",
+		AvoidLanguage: []string{
+			"Stop touching people",
+			"That's inappropriate",
+			"Control yourself",
+		},
+		RecommendedLanguage: []string{
+			"Your energy is big and that's OK. Let's find where it fits best.",
+			"Before you touch, check: did they say yes? Asking first makes it better for everyone.",
+		},
+		PlayAvenues: []string{
+			"Consent-checkpoint games — ask-before-touching becomes automatic",
+			"High-energy channelling — structured physical outlets matched to drive level",
 		},
 	},
 }

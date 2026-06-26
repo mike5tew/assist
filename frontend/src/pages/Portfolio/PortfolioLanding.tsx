@@ -81,6 +81,14 @@ const PortfolioNav: React.FC = () => {
           <Stack direction="row" spacing={1} alignItems="center">
             <Button
               component={Link}
+              to="/blog"
+              size="small"
+              sx={{ color: 'white', textTransform: 'none' }}
+            >
+              Blog
+            </Button>
+            <Button
+              component={Link}
               to="/etp-profile"
               size="small"
               sx={{ color: 'white', textTransform: 'none' }}
@@ -117,10 +125,11 @@ const PortfolioNav: React.FC = () => {
               <Menu anchorEl={toolsAnchor} open={Boolean(toolsAnchor)} onClose={closeTools}>
                 <MenuItem component="a" href="/drb/" onClick={closeTools}>MAT Strategic Dashboard</MenuItem>
                 <MenuItem component={Link} to="/lao" onClick={closeTools}>LAO Adaptive Revision</MenuItem>
-                <MenuItem component={Link} to="/parent-os" onClick={closeTools}>ParentOS</MenuItem>
+                <MenuItem component={Link} to="/toddler-os" onClick={closeTools}>ToddlerOS</MenuItem>
                 <MenuItem component={Link} to="/primary-os" onClick={closeTools}>PrimaryOS (Neuron Navigators)</MenuItem>
                 <MenuItem component={Link} to="/careeros" onClick={closeTools}>CareerOS</MenuItem>
                 <MenuItem component={Link} to="/esp-world" onClick={closeTools}>ESP World</MenuItem>
+                <MenuItem component={Link} to="/classifier-demo" onClick={closeTools}>CHISG Classifier</MenuItem>
               </Menu>
             </>
 
@@ -691,7 +700,7 @@ const InnovationStackSection: React.FC = () => {
                 Emotional Trigger Points
               </Typography>
               <Typography variant="body2" paragraph>
-                9 biological spectrums that describe learner tendencies. Enables personalization based on individual cognitive and emotional patterns.
+                12 biological spectra that describe learner tendencies. Enables personalization based on individual cognitive and emotional patterns.
               </Typography>
               <Chip label="Solves: Algorithmic Polarization" size="small" sx={{ bgcolor: alpha('#059669', 0.1), color: '#059669' }} />
             <CardActions sx={{ px: 2, pb: 2 }}>
@@ -889,15 +898,15 @@ const projects: ProjectCardProps[] = [
     brandColor: '#1a237e',
   },
   {
-    title: 'ParentOS',
-    subtitle: 'The Foundational Code Your Family Runs On.',
+    title: 'ToddlerOS',
+    subtitle: 'The Coding Lesson You Never Knew You Needed.',
     description:
-      'A parent-facing portal that demystifies educational data. Translates complex ETP and CHISG data into human narratives, providing personalized guidance for home support.',
+      'A parent-facing framework that helps you read your toddler\'s biological source code. Translates 12 years of classroom observation into a practical lens for the early years.',
     tech: ['React', 'Weaviate', 'Go API', 'MySQL'],
-    status: 'Planned',
+    status: 'In Development',
     statusColor: 'info',
     icon: <SchoolIcon fontSize="large" />,
-    demoLink: '/parent-os',
+    demoLink: '/toddler-os',
     isExternal: false,
     relevance: 'Data democratization and multi-audience semantic explanation.',
     impact: 'Bridges the gap between school and home by making "Black Box" educational data transparent.',
@@ -947,6 +956,21 @@ const projects: ProjectCardProps[] = [
     relevance: 'Architecting the full data lifecycle: moving from raw capture to high-fidelity strategic reporting.',
     impact: 'Consolidates fragmented school data into a unified, actionable knowledge base.',
     brandColor: '#4527a0',
+  },
+  {
+    title: 'CHISG Classifier',
+    subtitle: 'Load Balanced Classification Pipeline',
+    description:
+      'A horizontally-scaled Go microservice that classifies child observations across 12 ETP spectra in real time. Three replicas behind Nginx with Redis caching, safeguarding-first short-circuiting, and concurrent goroutine fan-out.',
+    tech: ['Go 1.24', 'Nginx', 'Redis 7', 'Docker Compose', 'Goroutines'],
+    status: 'Live',
+    statusColor: 'success',
+    icon: <DialecticIcon fontSize="large" />,
+    demoLink: '/classifier-demo',
+    isExternal: false,
+    relevance: 'Production load balancing, concurrent data processing, and resilient multi-instance architecture.',
+    impact: 'Demonstrates how to build trust-wide data pipelines with zero single points of failure.',
+    brandColor: '#6366f1',
   },
 ];
 
@@ -1131,10 +1155,10 @@ const CurrentFocusSection: React.FC = () => {
       color: '#059669',
     },
     {
-      area: 'ParentOS Beta',
-      description: 'Recruiting 50 parent testers from pilot schools',
-      milestone: 'June 2024',
-      progress: 30,
+      area: 'ToddlerOS Assessment',
+      description: 'Building guided spectrum assessment for parents of toddlers',
+      milestone: 'Q1 2026',
+      progress: 15,
       color: '#0f766e',
     },
   ];
@@ -1196,7 +1220,7 @@ const ImpactSection: React.FC = () => {
     { value: '579', label: 'CHISG-mapped skills with semantic validation', icon: <VerifiedIcon /> },
     { value: '1,120+', label: 'Semantic relationships preventing "slop"', icon: <SkillsIcon /> },
     { value: '30%', label: 'Reduction in teacher admin load (projected)', icon: <SchoolIcon /> },
-    { value: '9', label: 'Biological learning dimensions (ETP spectra)', icon: <ScienceIcon /> },
+    { value: '12', label: 'Biological learning dimensions (ETP spectra)', icon: <ScienceIcon /> },
     { value: '12+', label: 'Years of classroom experience informing design', icon: <InsightIcon /> },
   ];
 

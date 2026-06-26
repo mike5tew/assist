@@ -324,9 +324,9 @@ const projects: ProjectCardProps[] = [
     brandColor: '#1a237e',
   },
   {
-    title: 'ParentOS',
-    subtitle: 'The Foundational Code Your Family Runs On.',
-    description: 'A parent-facing portal that demystifies educational data. Translates complex ETP and CHISG data into human narratives, providing personalized guidance for home support.',
+    title: 'ToddlerOS',
+    subtitle: 'The Coding Lesson You Never Knew You Needed.',
+    description: 'A parent-facing framework that helps you read your toddler\'s biological source code. Translates 12 years of classroom observation into a practical lens for the early years.',
     tech: ['React', 'Weaviate', 'Go API', 'MySQL'],
     status: 'Planned',
     statusColor: 'info',
@@ -392,7 +392,7 @@ const InnovationsSection: React.FC = () => {
     {
       title: 'ETP',
       subtitle: 'Emergent Tendency Profiles',
-      description: '9 biological spectrums that describe learner tendencies (social gravity, energy directionality, voltage sensitivity, etc.). Enables personalised learning approaches based on individual cognitive and emotional patterns.',
+      description: '12 biological spectra that describe learner tendencies (social gravity, energy directionality, voltage sensitivity, etc.). Enables personalised learning approaches based on individual cognitive and emotional patterns.',
       icon: <GrowthIcon fontSize="large" />,
     },
     {

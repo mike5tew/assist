@@ -17,7 +17,7 @@ import (
 // rather than having triggers move them involuntarily.
 
 // CreateETPProfileClass creates the ETPProfile collection
-// Stores a student's 9-slider dashboard configuration + 2 global moderators
+// Stores a student's 12-slider dashboard configuration
 func CreateETPProfileClass(ctx context.Context) error {
 	if err := EnsureWeaviateClient(ctx); err != nil {
 		return fmt.Errorf("failed to ensure weaviate client: %w", err)
@@ -35,7 +35,7 @@ func CreateETPProfileClass(ctx context.Context) error {
 
 	class := &wvmodels.Class{
 		Class:       className,
-		Description: "Student ETP profile with 9 core spectrum slider positions + global moderators",
+		Description: "Student ETP profile with 12 core spectrum slider positions",
 		Vectorizer:  "none", // No vectorization needed for structured data
 		Properties: []*wvmodels.Property{
 			{
@@ -94,16 +94,20 @@ func CreateETPProfileClass(ctx context.Context) error {
 				DataType:    []string{"number"},
 				Description: "Flexible (-2) to Ordered (+2) - preference for structure vs spontaneity",
 			},
-			// Global Moderators
 			{
-				Name:        "pilot_strength",
+				Name:        "responsibility_threshold",
 				DataType:    []string{"number"},
-				Description: "0-1 score of executive function capacity to move sliders deliberately",
+				Description: "Deflecting (-2) to Absorbing (+2) - responsibility attribution direction",
 			},
 			{
-				Name:        "current_load",
+				Name:        "loss_sensitivity",
 				DataType:    []string{"number"},
-				Description: "0-1 score of stress/depletion (higher = less range of motion)",
+				Description: "Detached (-2) to Territorial (+2) - response to loss/removal",
+			},
+			{
+				Name:        "libido",
+				DataType:    []string{"number"},
+				Description: "Restrained (-2) to Expressive (+2) - drive energy expression",
 			},
 			// Meta fields
 			{
@@ -158,7 +162,7 @@ func CreateSliderStateClass(ctx context.Context) error {
 			{
 				Name:        "spectrum_id",
 				DataType:    []string{"int"},
-				Description: "ETP spectrum ID (1-17)",
+				Description: "ETP spectrum ID (1-12)",
 			},
 			{
 				Name:        "spectrum_name",
@@ -341,7 +345,7 @@ func CreateRangeOfMotionAssessmentClass(ctx context.Context) error {
 			{
 				Name:        "spectrum_id",
 				DataType:    []string{"int"},
-				Description: "ETP spectrum ID (1-17)",
+				Description: "ETP spectrum ID (1-12)",
 			},
 			{
 				Name:        "spectrum_name",

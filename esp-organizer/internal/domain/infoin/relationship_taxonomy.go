@@ -180,6 +180,8 @@ func NewRelationshipTaxonomy() *RelationshipTaxonomy {
 	synonymMappings := map[string]string{
 		// Causal synonyms
 		"results_in":    "causes",
+		"synthesizes":   "causes",
+
 		"produces":      "causes",
 		"induces":       "causes",
 		"triggers":      "causes",

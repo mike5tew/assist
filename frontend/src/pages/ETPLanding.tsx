@@ -136,6 +136,33 @@ const spectra: Spectrum[] = [
     icon: <StraightenIcon />,
     color: '#5d4037',
   },
+  {
+    id: 'responsibility_threshold',
+    label: 'Responsibility Threshold',
+    leftLabel: 'Deflecting',
+    rightLabel: 'Absorbing',
+    description: 'How you distribute blame and ownership. Deflectors protect the self; absorbers take everything on. Neither is inherently healthier.',
+    icon: <BalanceIcon />,
+    color: '#37474f',
+  },
+  {
+    id: 'loss_sensitivity',
+    label: 'Loss Sensitivity',
+    leftLabel: 'Detached',
+    rightLabel: 'Territorial',
+    description: 'How you respond to losing possessions, status, or relationships. Detachment enables letting go; territoriality enables protecting what matters.',
+    icon: <SecurityIcon />,
+    color: '#4e342e',
+  },
+  {
+    id: 'libido',
+    label: 'Libido',
+    leftLabel: 'Restrained',
+    rightLabel: 'Expressive',
+    description: 'The intensity of drive energy — not just sexual, but the raw wanting force behind ambition, appetite, and desire. Restraint enables patience; expression enables pursuit.',
+    icon: <FireIcon />,
+    color: '#880e4f',
+  },
 ];
 
 // ─── Slider State Data ──────────────────────────────────────
@@ -174,7 +201,7 @@ const ETPLanding: React.FC = () => {
     <Box>
       <SEO
         title="ETP — Emergent Tendency Profiles"
-        description="Understand learners through 9 biological spectra. ETP maps social gravity, voltage sensitivity, threat response, and more to create actionable development profiles."
+        description="Understand learners through 12 biological spectra. ETP maps social gravity, voltage sensitivity, threat response, and more to create actionable development profiles."
         path="/etp-landing"
       />
       {/* ── Hero Section ── */}
@@ -236,7 +263,7 @@ const ETPLanding: React.FC = () => {
                 </Typography>
 
                 <Stack direction="row" spacing={1.5} flexWrap="wrap" useFlexGap>
-                  <Chip label="9 Core Spectra" sx={{ bgcolor: 'rgba(255,255,255,0.15)', color: 'white' }} />
+                  <Chip label="12 Core Spectra" sx={{ bgcolor: 'rgba(255,255,255,0.15)', color: 'white' }} />
                   <Chip label="Morally Neutral" sx={{ bgcolor: 'rgba(255,255,255,0.15)', color: 'white' }} />
                   <Chip label="Trainable Skills" sx={{ bgcolor: 'rgba(255,255,255,0.15)', color: 'white' }} />
                   <Chip label="Classroom-Tested" sx={{ bgcolor: 'rgba(255,255,255,0.15)', color: 'white' }} />
@@ -275,7 +302,7 @@ const ETPLanding: React.FC = () => {
                   The Animal–Pilot Model
                 </Typography>
                 <Typography variant="body2" color="text.secondary" paragraph>
-                  Every person has two systems: the <strong>Animal</strong> (the biological hardware — respresented by 9 Emotional Trigger Points (ETP's) sliders
+                  Every person has two systems: the <strong>Animal</strong> (the biological hardware — represented by 12 Emotional Trigger Points (ETP's) sliders
                   that respond automatically to stimuli) and the <strong>Pilot</strong> (executive function — the capacity
                   to <em>choose</em> where to position each slider).
                 </Typography>
@@ -317,7 +344,7 @@ const ETPLanding: React.FC = () => {
           {[
             "1. **Event occurs** → Sensory input enters the limbic system",
             "2. **Emotional valuation** → Evolutionary instincts, societal norms, and personal history compete to assign 'pain' or 'pleasure' values",
-            "3. **Spectra positioning** → We have distilled these inputs into 9 emotional trigger points (ETPs).  These sliders represent the comfort zome of an individual.",
+            "3. **Spectra positioning** → We have distilled these inputs into 12 emotional trigger points (ETPs).  These sliders represent the comfort zome of an individual.",
             "4. **Behavior emerges** → The collective slider positions determine what action 'feels right' in that moment",
             "5. **Conscious modulation** → The Pilot (executive function) can override, but requires significant energy"
           ].map((step, i) => (
@@ -466,11 +493,11 @@ const ETPLanding: React.FC = () => {
         </Container>
       </Box>
 
-      {/* ── The 9 Spectra Section ── */}
+      {/* ── The 12 Spectra Section ── */}
       <Box sx={{ py: { xs: 6, md: 8 } }}>
         <Container maxWidth={false} sx={{ maxWidth: '1400px' }}>
           <Typography variant="h4" component="h2" textAlign="center" fontWeight="bold" gutterBottom>
-            The 9 Core Spectra
+            The 12 Core Spectra
           </Typography>
           <Typography
             variant="body1"
@@ -593,11 +620,11 @@ const ETPLanding: React.FC = () => {
         </Container>
       </Box>
 
-      {/* ── Global Moderators Section ── */}
+      {/* ── Accelerator Skills Section ── */}
       <Box sx={{ py: { xs: 6, md: 8 } }}>
         <Container maxWidth={false} sx={{ maxWidth: '1400px' }}>
           <Typography variant="h4" component="h2" textAlign="center" fontWeight="bold" gutterBottom>
-            Global Moderators
+            Accelerator Skills
           </Typography>
           <Typography
             variant="body1"
@@ -605,8 +632,8 @@ const ETPLanding: React.FC = () => {
             textAlign="center"
             sx={{ mb: 5, maxWidth: 700, mx: 'auto' }}
           >
-            Two meta-controls that affect <em>all</em> 9 spectra simultaneously. They are the "master volume"
-            and "power supply" of the entire system.
+            The spectra describe <em>where</em> your sliders sit. Accelerator skills determine whether you can <em>move</em> them deliberately.
+            These are trainable executive-function capacities — not personality traits.
           </Typography>
 
           <Grid container spacing={4} justifyContent="center">
@@ -614,12 +641,12 @@ const ETPLanding: React.FC = () => {
               <Paper elevation={3} sx={{ p: 4, borderRadius: 2, height: '100%' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                   <PsychologyIcon sx={{ fontSize: 40, color: '#1565c0' }} />
-                  <Typography variant="h5" fontWeight="bold">Pilot Strength</Typography>
+                  <Typography variant="h5" fontWeight="bold">Executive Function</Typography>
                 </Box>
                 <Typography variant="body2" color="text.secondary" paragraph sx={{ lineHeight: 1.7 }}>
-                  Executive function capacity — the hand on ALL sliders. When pilot strength is <strong>high</strong>,
-                  you move sliders deliberately through conscious choice. When <strong>low</strong>, triggers
-                  control your positioning and the sliders move reactively.
+                  The ability to deliberately reposition your sliders rather than having triggers move them.
+                  When executive function is <strong>high</strong>, you choose your setting consciously.
+                  When <strong>low</strong>, external stimuli control the positioning.
                 </Typography>
                 <Divider sx={{ my: 2 }} />
                 <Typography variant="body2" sx={{ fontStyle: 'italic', color: 'text.secondary' }}>
@@ -632,18 +659,18 @@ const ETPLanding: React.FC = () => {
             <Grid item xs={12} md={5}>
               <Paper elevation={3} sx={{ p: 4, borderRadius: 2, height: '100%' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                  <FireIcon sx={{ fontSize: 40, color: '#c62828' }} />
-                  <Typography variant="h5" fontWeight="bold">Current Load</Typography>
+                  <SelfImprovementIcon sx={{ fontSize: 40, color: '#2e7d32' }} />
+                  <Typography variant="h5" fontWeight="bold">Self-Regulation</Typography>
                 </Box>
                 <Typography variant="body2" color="text.secondary" paragraph sx={{ lineHeight: 1.7 }}>
-                  Stress and depletion level — narrows range of motion on <em>all</em> spectra. When load is 
-                  <strong> low</strong>, the full range of motion is available. When <strong>high</strong>,
-                  range contracts toward your comfort zone and flexibility drops.
+                  The ability to tolerate discomfort without dysregulation — holding a position on a spectrum
+                  even when the "electric fence" voltage is high. This is what turns range-of-motion into
+                  genuine flexibility.
                 </Typography>
                 <Divider sx={{ my: 2 }} />
                 <Typography variant="body2" sx={{ fontStyle: 'italic', color: 'text.secondary' }}>
-                  A well-rested person can handle more social interaction, take more risks, and tolerate 
-                  more ambiguity. A depleted person retreats to default settings.
+                  A well-rested person with strong self-regulation can handle more social interaction, take more risks, and tolerate 
+                  more ambiguity. These are muscles, not fixed traits — they grow with practice.
                 </Typography>
               </Paper>
             </Grid>
@@ -685,6 +712,9 @@ const ETPLanding: React.FC = () => {
               { spectrum: 'Integrity Logic', solution: 'Integrity Framing', bridge: '"These 3 things are absolute, the rest is relative"', color: '#4527a0' },
               { spectrum: 'Mirror Neurons', solution: 'Empathy Filters', bridge: '"I\'m resonating with your X" / "I see you\'re feeling X"', color: '#00838f' },
               { spectrum: 'Orderliness', solution: 'Structure Gradients', bridge: '"Here\'s the framework, you choose the order within it"', color: '#5d4037' },
+              { spectrum: 'Responsibility', solution: 'Ownership Calibration', bridge: '"Let\'s work out whose part this actually is"', color: '#37474f' },
+              { spectrum: 'Loss Sensitivity', solution: 'Transition Protocols', bridge: '"We\'re changing this, not losing it — here\'s what stays"', color: '#4e342e' },
+              { spectrum: 'Libido', solution: 'Drive Channelling', bridge: '"That wanting energy is fuel — let\'s aim it somewhere useful"', color: '#880e4f' },
             ].map((item) => (
               <Grid item xs={12} sm={6} md={4} key={item.spectrum}>
                 <Box
@@ -827,7 +857,7 @@ const ETPLanding: React.FC = () => {
             Explore the ETP Framework
           </Typography>
           <Typography variant="body1" color="text.secondary" sx={{ mb: 4, maxWidth: 600, mx: 'auto' }}>
-            The interactive demo lets you position yourself on all 9 spectra and 2 global moderators. 
+            The interactive demo lets you position yourself on all 12 spectra. 
             See how the sliders interact to create your unique behavioural profile.
           </Typography>
           <Button

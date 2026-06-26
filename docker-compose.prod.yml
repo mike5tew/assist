@@ -45,12 +45,17 @@ services:
     environment:
       API_PORT: "8080"
       MONGODB_URI: mongodb://${MONGO_ROOT_USER}:${MONGO_ROOT_PASSWORD}@mongodb:27017/esp_organizer?authSource=admin
+      CHISG_USER: ${CHISG_USER}
+      CHISG_PASS: ${CHISG_PASS}
+    volumes:
+      - /opt/ntm-papers:/opt/ntm-papers
     expose:
       - "8080"
     depends_on:
       - mongodb
     networks:
       - shared-network
+      - esp_shared-network
 
   # --- SKILLS MAP PLATFORM ---
   skills-frontend:
@@ -95,6 +100,30 @@ services:
       - "8082"
     environment:
       - MONGO_URI=mongodb://${MONGO_ROOT_USER}:${MONGO_ROOT_PASSWORD}@mongodb:27017/drb_monitor?authSource=admin
+    depends_on:
+      - mongodb
+    networks:
+      - shared-network
+
+  # --- SAMPLETRACK (NHS Blood Science Sample Tracker) ---
+  sampletrack-web:
+    image: mike5tew/sampletrack-web:latest
+    container_name: sampletrack-web
+    restart: always
+    networks:
+      - shared-network
+
+  sampletrack-api:
+    image: mike5tew/sampletrack-api:latest
+    container_name: sampletrack-api
+    restart: always
+    expose:
+      - "8085"
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/sampletrack
+      - DB_NAME=sampletrack
+      - JWT_SECRET=${JWT_SECRET}
+      - PORT=8085
     depends_on:
       - mongodb
     networks:
@@ -162,3 +191,5 @@ volumes:
 networks:
   shared-network:
     driver: bridge
+  esp_shared-network:
+    external: true

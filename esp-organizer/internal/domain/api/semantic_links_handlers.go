@@ -12,6 +12,7 @@ import (
 	"esp-organizer/internal/domain/infoin"
 	"esp-organizer/internal/domain/skills"
 	"esp-organizer/internal/models"
+	"esp-organizer/internal/store/db"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -522,4 +523,166 @@ CREATE INDEX IF NOT EXISTS idx_domain ON semantic_links(domain);
 // escapeSQLite escapes single quotes for SQLite
 func escapeSQLite(s string) string {
 	return strings.ReplaceAll(s, "'", "''")
+}
+
+// ── CHISG Graph Endpoint ────────────────────────────────────────────────────
+
+// GraphNode is a node in the CHISG knowledge graph for visualisation
+type GraphNode struct {
+	ID     string `json:"id"`
+	Label  string `json:"label"`
+	Domain string `json:"domain"`
+	Val    int    `json:"val"` // degree (number of connections) — drives node size
+}
+
+// GraphEdge is a directed edge between two nodes in the CHISG knowledge graph
+type GraphEdge struct {
+	Source          string  `json:"source"`
+	Target          string  `json:"target"`
+	Relation        string  `json:"relation"`
+	InverseRelation string  `json:"inverse_relation,omitempty"`
+	Domain          string  `json:"domain,omitempty"`
+	SourceTitle     string  `json:"source_title,omitempty"`
+	EvidenceContext string  `json:"evidence_context,omitempty"` // conditions of supporting evidence
+	Confidence      float64 `json:"confidence"`
+}
+
+// ChisgGraphResponse is the full graph payload consumed by the frontend
+type ChisgGraphResponse struct {
+	Nodes []GraphNode `json:"nodes"`
+	Edges []GraphEdge `json:"edges"`
+	Meta  struct {
+		NodeCount int `json:"node_count"`
+		EdgeCount int `json:"edge_count"`
+	} `json:"meta"`
+}
+
+// ChisgGraphHandler returns graph-structured CHISG semantic links for visualisation.
+// GET /api/chisg/graph?domain=...&limit=500&status=...
+func ChisgGraphHandler(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	domain := r.URL.Query().Get("domain")
+	status := r.URL.Query().Get("status")
+	limit := 500
+	if s := r.URL.Query().Get("limit"); s != "" {
+		if v, err := strconv.Atoi(s); err == nil && v > 0 && v <= 5000 {
+			limit = v
+		}
+	}
+
+	mongoDB, err := db.NewFromEnv()
+	if err != nil {
+		log.Printf("[chisg/graph] mongodb connect error: %v", err)
+		http.Error(w, "server error", http.StatusInternalServerError)
+		return
+	}
+
+	filter := bson.M{}
+	if domain != "" {
+		filter["domain"] = domain
+	}
+	if status != "" {
+		filter["status"] = status
+	}
+
+	collection := mongoDB.Database.Collection("semantic_links")
+	cursor, err := collection.Find(ctx, filter)
+	if err != nil {
+		log.Printf("[chisg/graph] query error: %v", err)
+		http.Error(w, "query failed", http.StatusInternalServerError)
+		return
+	}
+	defer cursor.Close(ctx)
+
+	var links []models.SemanticLink
+	if err := cursor.All(ctx, &links); err != nil {
+		log.Printf("[chisg/graph] decode error: %v", err)
+		http.Error(w, "decode failed", http.StatusInternalServerError)
+		return
+	}
+	if len(links) > limit {
+		links = links[:limit]
+	}
+
+	// Build unique node map and degree counter
+	nodeDomains := make(map[string]string) // id → domain
+	degree := make(map[string]int)         // id → degree
+
+	for _, lnk := range links {
+		src := lnk.SourceTerm
+		tgt := lnk.TargetTerm
+		if src == "" || tgt == "" {
+			continue
+		}
+		if _, ok := nodeDomains[src]; !ok {
+			nodeDomains[src] = lnk.Domain
+		}
+		if _, ok := nodeDomains[tgt]; !ok {
+			nodeDomains[tgt] = lnk.Domain
+		}
+		degree[src]++
+		degree[tgt]++
+	}
+
+	nodes := make([]GraphNode, 0, len(nodeDomains))
+	for id, dom := range nodeDomains {
+		nodes = append(nodes, GraphNode{
+			ID:     id,
+			Label:  id,
+			Domain: dom,
+			Val:    degree[id],
+		})
+	}
+
+	edges := make([]GraphEdge, 0, len(links))
+	for _, lnk := range links {
+		if lnk.SourceTerm == "" || lnk.TargetTerm == "" {
+			continue
+		}
+		// Collect evidence context from conditions
+		evidenceCtx := ""
+		for _, c := range lnk.Conditions {
+			if c.Term != "" {
+				if evidenceCtx != "" {
+					evidenceCtx += "; "
+				}
+				evidenceCtx += c.Term
+			}
+		}
+		// Fall back to temporal/spatial qualifiers if conditions absent
+		if evidenceCtx == "" {
+			parts := []string{}
+			if lnk.TemporalQualifier != "" {
+				parts = append(parts, lnk.TemporalQualifier)
+			}
+			if lnk.SpatialQualifier != "" {
+				parts = append(parts, lnk.SpatialQualifier)
+			}
+			if len(parts) > 0 {
+				evidenceCtx = strings.Join(parts, "; ")
+			}
+		}
+
+		edges = append(edges, GraphEdge{
+			Source:          lnk.SourceTerm,
+			Target:          lnk.TargetTerm,
+			Relation:        lnk.ForwardRelation,
+			InverseRelation: lnk.InverseRelation,
+			Domain:          lnk.Domain,
+			SourceTitle:     lnk.SourceTitle,
+			EvidenceContext: evidenceCtx,
+			Confidence:      lnk.Confidence,
+		})
+	}
+
+	resp := ChisgGraphResponse{
+		Nodes: nodes,
+		Edges: edges,
+	}
+	resp.Meta.NodeCount = len(nodes)
+	resp.Meta.EdgeCount = len(edges)
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(resp)
 }

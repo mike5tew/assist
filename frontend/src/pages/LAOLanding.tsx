@@ -10,28 +10,20 @@ import {
   Stack,
   Paper,
   alpha,
-  useTheme,
-  Divider,
-  Chip,
+  Link as MuiLink,
 } from '@mui/material';
 import {
   Speed as SpeedIcon,
   Headphones as AudioIcon,
   TextSnippet as TextIcon,
   VpnKey as KeyIcon, // Keywords
-  Timer as TimerIcon,
   Repeat as RepeatIcon,
   TrendingUp as TrendingUpIcon, // Improvement
-  School as SchoolIcon,
-  MobileFriendly as MobileIcon,
   Bolt as BoltIcon,
   AccessTime as AccessTimeIcon,
-  ArrowForward as ArrowForwardIcon,
-  MenuBook as BookIcon,
 } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import NavHeader from '../components/NavHeader';
-import ContactReveal from '../components/ContactReveal';
 import SEO from '../components/SEO';
 
 
@@ -85,10 +77,10 @@ const methodologySteps = [
   },
 ];
 
+const appStoreUrl = 'https://apps.apple.com/us/app/little-and-often-lao/id6758043113';
+
 
 const LAOLanding: React.FC = () => {
-  const theme = useTheme();
-
   return (
     <Box>
       <SEO
@@ -135,9 +127,18 @@ const LAOLanding: React.FC = () => {
               </Typography>
               
               <Stack direction="row" spacing={2} alignItems="center">
-                <ContactReveal email="world@espthinking.co.uk" label="Request TestFlight Access" />
+                <Button
+                  component="a"
+                  href={appStoreUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  variant="contained"
+                  color="secondary"
+                >
+                  Download on the App Store
+                </Button>
                 <Typography variant="caption" sx={{ opacity: 0.7 }}>
-                  Mobile app currently in TestFlight
+                  Live now on the App Store.
                 </Typography>
               </Stack>
             </Grid>
@@ -282,12 +283,16 @@ const LAOLanding: React.FC = () => {
                         "dead time" into retrieval practice, bringing facts and stories to the surface through sheer frequency.
                     </Typography>
                     <Button 
+                      component="a"
+                      href={appStoreUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
                         variant="outlined" 
                         color="inherit" 
                         size="large"
                         sx={{ borderColor: 'rgba(255,255,255,0.5)' }}
                     >
-                        Coming soon to the app store
+                      View on the App Store
                     </Button>
                 </Grid>
                 <Grid item xs={12} md={7}>
@@ -316,6 +321,14 @@ const LAOLanding: React.FC = () => {
         <Typography variant="body2" color="text.secondary">
           Part of the ESP Thinking Portfolio — Little and Often (LAO)
         </Typography>
+        <Stack direction="row" spacing={2} justifyContent="center" sx={{ mt: 1 }}>
+          <MuiLink component={Link} to="/lao/privacy" variant="body2" color="text.secondary">
+            Privacy Policy
+          </MuiLink>
+          <MuiLink component={Link} to="/lao/terms" variant="body2" color="text.secondary">
+            Terms of Use
+          </MuiLink>
+        </Stack>
       </Box>
     </Box>
   );

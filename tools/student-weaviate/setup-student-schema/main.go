@@ -95,9 +95,9 @@ func setupETPProfileClass(client *weaviate.Client) {
 			{Name: "integrityLogic", DataType: []string{"int"}, Description: "Relativistic (-100) to Absolutist (+100) - moral flexibility vs rigidity"},
 			{Name: "mirrorNeuronTuning", DataType: []string{"int"}, Description: "Selective (-100) to Absorbent (+100) - others' emotions distinct vs shared"},
 			{Name: "orderliness", DataType: []string{"int"}, Description: "Flexible (-100) to Ordered (+100) - preference for structure vs spontaneity"},
-			// 2 Global Moderators (affect ALL spectra)
-			{Name: "pilotStrength", DataType: []string{"int"}, Description: "Executive function capacity (0-100) - hand on all sliders"},
-			{Name: "currentLoad", DataType: []string{"int"}, Description: "Stress/depletion level (0-100) - narrows range on all spectra"},
+			{Name: "responsibilityThreshold", DataType: []string{"int"}, Description: "Deflecting (-100) to Absorbing (+100) - responsibility attribution direction"},
+			{Name: "lossSensitivity", DataType: []string{"int"}, Description: "Detached (-100) to Territorial (+100) - response to loss/removal"},
+			{Name: "libido", DataType: []string{"int"}, Description: "Restrained (-100) to Expressive (+100) - drive energy expression"},
 			// Metadata
 			{Name: "createdAt", DataType: []string{"date"}, Description: "Profile creation timestamp"},
 			{Name: "updatedAt", DataType: []string{"date"}, Description: "Last update timestamp"},

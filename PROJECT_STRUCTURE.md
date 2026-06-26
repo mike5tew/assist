@@ -35,14 +35,17 @@ must not confuse files inside `assist/skills-map-platform/` with the real projec
 
 ### 2. Weaviate Architecture (Updated Feb 2026)
 
-The ecosystem uses **two Weaviate instances** with distinct roles:
+The ecosystem uses **three Weaviate instances** with distinct roles:
 
 | Weaviate | Container | Port | Location | What It Holds | Status |
 |----------|-----------|------|----------|---------------|--------|
-| **humanOS Weaviate** | humanos-weaviate-1 | 8081 | Vultr (humanOS stack) | CHISGElement (579 skills) + SkillLink (1,120 links) + CourseSkillSuggestions (27 courses) | **Production — CHISG semantic search** |
+| **humanOS Weaviate** | humanos-weaviate-1 | 8081 | Vultr (humanOS stack) | CHISGElement (579 skills) + SkillLink (1,120 links) + CourseSkillSuggestions (27 courses) | **Production — CHISG semantic search (humanOS)** |
+| **skills-map Weaviate** | weaviate | 8088 (host) → 8080 (internal) | Vultr (skills-map stack) | CHISGElement (459 skills) + SkillLink (827 links) + CourseSkillSuggestions (0) | **Production — Skills Tree visualization** |
 | **assist Weaviate** | weaviate | 8088 (host) | Local only | Documentation, project docs, local development | **Local dev only — NOT on Vultr** |
 
-**Key architectural decision (Feb 2026)**: assist-api on Vultr no longer depends on Weaviate. ETP profiles are stored in MongoDB (`etp_profiles` collection in `esp_organizer` database). The in-memory response matrix (`response_matrix.go`) has zero database dependency. The `docker-compose.prod.yml` was updated to remove `WEAVIATE_URL` from assist-api and remove Weaviate from its `depends_on`.
+**Key architectural decisions (Feb 2026)**:
+- assist-api on Vultr no longer depends on Weaviate. ETP profiles are stored in MongoDB (`etp_profiles` collection in `esp_organizer` database). The in-memory response matrix (`response_matrix.go`) has zero database dependency. The `docker-compose.prod.yml` was updated to remove `WEAVIATE_URL` from assist-api and remove Weaviate from its `depends_on`.
+- skills-map Weaviate was brought online on Vultr (Feb 2026) to serve the Skills Tree at `espthinking.co.uk/skillstree`. Data was seeded from `skills-map-platform/data/chisg_elements.json` using a clean reseed script. Schemas: CHISGElement, SkillLink, CourseSkillSuggestions (all `vectorizer: none`).
 
 **Weaviate on Vultr** serves skills-api for CHISG semantic search (CHISGElement, SkillLink). The coach handler in assist-api can still query humanOS Weaviate via `db.GetWeaviateClient()` for CHISG skill matching.
 
@@ -73,7 +76,7 @@ Each object = one course, containing:
 | **drb-frontend** | DRB Dashboard | 80 | Static React |
 | **mongodb** | MongoDB | 27017 | `esp_organizer`, `esp_analytics`, `drb_monitor` databases |
 | **skills-db** | MySQL | 3306 | `dare2lead` database |
-| **weaviate** | Weaviate | 8080 (internal) | CHISG data — used by skills-api |
+| **weaviate** | Weaviate | 8080 (internal) / 8088 (host) | CHISGElement (459) + SkillLink (827) — used by skills-api |
 
 **Local Development Only**:
 
@@ -111,12 +114,17 @@ to the specific project directory.
 | init.sql | — | espdata/api/internal/database/ | init.sql | — |
 | weaviate/ | esp-organizer/internal/store/db/ | — | api/weaviate/ | — |
 
-### 6. Utility Scripts (assist/tools/skills/)
+### 6. Utility Scripts (assist/tools/skills/ and assist/scripts/)
 
 | Script | Purpose |
 |--------|---------|
-| `check_weaviate_skills.py` | Verify skill names exist in Weaviate CHISGElement |
-| `add_reception_course_weaviate.py` | Add a course to Weaviate CourseSkillSuggestions |
+| `tools/skills/check_weaviate_skills.py` | Verify skill names exist in Weaviate CHISGElement |
+| `tools/skills/add_reception_course_weaviate.py` | Add a course to Weaviate CourseSkillSuggestions |
+| `scripts/extract_chisg_links.py` | **CHISG extraction pipeline** — LLM-based link extraction (bedrock + ollama) |
+| `scripts/analyze_extraction.py` | Quick stats analyzer for extraction JSON output |
+| `scripts/test_bedrock.py` | AWS Bedrock connectivity test |
+| `scripts/backup-weaviate-to-s3.sh` | Backup Weaviate data to S3 |
+| `scripts/migrate-to-vultr.sh` | Migration helper for Vultr deployment |
 
 ---
 
@@ -167,7 +175,7 @@ Mutation --results_in--> Antibody synthesis deficiency
 **Relationship types** (10 supported):
 - `causes`, `treats`, `is_a`, `part_of`, `requires_for`, `results_in`, `contrasts_with`, `similar_to`, `during_this`, `leads_to`
 
-### Semantic Link Extraction (COMPLETE)
+### Semantic Link Extraction — Manual Tool (COMPLETE)
 
 **Frontend**: `/assist/frontend/src/components/SemanticLinkExtractor.tsx`
 - 3-click workflow: Upload PDF → Select terms → Define relationships
@@ -184,6 +192,68 @@ Mutation --results_in--> Antibody synthesis deficiency
 **Documentation**:
 - `/assist/docs/semantic_links/FRONTEND_IMPLEMENTATION.md`
 - `/assist/docs/semantic_links/SETUP_AND_TROUBLESHOOTING.md`
+
+### CHISG Automated Extraction Pipeline (COMPLETE — Feb 2026)
+
+**Purpose**: Automated LLM-based extraction of semantic relationships from the 2,746 LAO definitions (physics, biology, chemistry) in the LAOMobile SQLite database.
+
+**Full Extraction Results** (`data/chisg/extraction_full_sonnet.json`):
+- **2,746 / 2,746 definitions processed** (100% complete, zero errors)
+- **6,415 total links** extracted across 13 controlled relation types
+- **94.1% valid** (6,037 links using controlled vocabulary)
+- **5.9% invalid** (378 links with non-standard relation types)
+- **38 zero-link definitions** (no relationships extracted)
+- Model: `anthropic.claude-3-sonnet-20240229-v1:0` via AWS Bedrock (eu-west-2)
+- Batch size: 10 definitions per API call
+- Run time: ~3.5 hours (2026-02-21, 18:14–21:39)
+- Estimated cost: ~$12
+
+**Relation Distribution** (13 controlled types):
+| Relation | Count | % |
+|----------|-------|---|
+| has property | 1,293 | 20.2% |
+| enables | 782 | 12.2% |
+| is a type of | 718 | 11.2% |
+| is composed of | 630 | 9.8% |
+| is used for | 575 | 9.0% |
+| causes | 559 | 8.7% |
+| represents | 358 | 5.6% |
+| is found in | 349 | 5.4% |
+| is an example of | 338 | 5.3% |
+| has value | 237 | 3.7% |
+| determines | 80 | 1.2% |
+| inhibits | 70 | 1.1% |
+| contradicts | 48 | 0.7% |
+
+**Extraction Rules (v0.2)**: 8 rules (R1–R8) governing how relationships are extracted from definitions. Key principles:
+- Definitions are input, not knowledge (no "is defined as" relation)
+- Use controlled 13-relation vocabulary only
+- Active voice only (no passive reversals like "is caused by")
+- 20 synonym mappings catch common LLM paraphrases (e.g., "produces" → "causes")
+
+**Provider Comparison** (tested on 20-definition sample):
+| Provider | Model | Valid % | Notes |
+|----------|-------|---------|-------|
+| Bedrock | claude-3-sonnet | **94.1%** | Used for full run |
+| Bedrock | claude-3-haiku | ~50% | Too aggressive, invented relations |
+| Ollama | llama3.2 (3B) | ~60% | Too small for structured extraction |
+
+**Scripts**:
+| Script | Purpose |
+|--------|---------|
+| `scripts/extract_chisg_links.py` | Main extraction pipeline (bedrock + ollama providers, --limit, --batch-size, --no-resume) |
+| `scripts/analyze_extraction.py` | Quick stats analyzer for extraction output files |
+| `scripts/test_bedrock.py` | AWS Bedrock connectivity test |
+
+**Data Files** (`data/chisg/`):
+| File | Description |
+|------|-------------|
+| `extraction_full_sonnet.json` | **Full run**: 2,746 defs, 6,415 links (PRODUCTION) |
+| `extraction_sample.json` | Initial 20-def sample (v1 rules) |
+| `extraction_sample_v2.json` | Refined 20-def sample (v2 rules + synonyms) |
+| `extraction_test_sonnet.json` | Sonnet test runs |
+| `extraction_test_llama.json` | Llama3.2 comparison runs |
+| `extraction_test_synonyms.json` | Synonym mapping test |
 
 ### How Semantic Links Enrich CHISG
 
@@ -220,33 +290,32 @@ To enrich CHISG with relationships from new domain (motor development, early chi
 
 ## 🔴 Known Issues & Debugging
 
-### Orphaned Skills Bug (14 skills appear disconnected each render)
+### Orphaned Skills Bug ✅ RESOLVED (Feb 2026)
 
-**Symptom**: Skills like "Emotional Labelling", "Social Cooperation", "Digital Literacy" appear with no parent/child links.
+**Original Symptom**: Skills like "Emotional Labelling", "Social Cooperation", "Digital Literacy" appear with no parent/child links.
 
-**Root Cause**: `skills-api` cannot reliably reach **weaviate-ETPs-HumanOS-skillsmapinCHISG** (port 8081) due to network isolation and reliance on `host.docker.internal`.
-- `/api/chisg/skillsandlinks` returns 0 links
-- Frontend loads 579 skills but 0 links → layout algorithm marks any unlinked node as orphan
-- 14 specific skills happen to be unlinked in the response
+**Root Cause**: Weaviate container was not running on Vultr. `skills-api` had no Weaviate to connect to — `/api/chisg/skillsandlinks` returned 500 errors.
+
+**Resolution (Feb 2026)**:
+1. Started Weaviate container on Vultr via `docker compose -f docker-compose.prod.yml up -d weaviate`
+2. Created CHISGElement, SkillLink, CourseSkillSuggestions schemas via REST API
+3. Seeded data from `skills-map-platform/data/chisg_elements.json`
+4. Initial seed ran twice → 918 elements + 1,654 links (duplicates) → 200+ orphans
+5. Clean reseed: deleted schemas, recreated, seeded once → 459 elements + 827 links
+6. Only **2 genuine orphans** remain (Paraphrasing, Estimation — duplicated in source data `chisg_elements.json`)
+
+**Current Status**: Both endpoints return 200:
+- `/api/chisg/skillsandlinks` → 459 skills, 827 links
+- `/api/courses/subjects` → working
 
 **Verification**:
 ```bash
-# Master CHISG Weaviate HAS the data (port 8081):
-curl http://localhost:8081/v1/graphql -H "Content-Type: application/json" \
-  -d '{"query": "{ Get { SkillLink(limit: 1) { source_skill target_skill } } }"}' | jq '.data.Get.SkillLink | length'
-# Returns: 1+ (has data)
-
-# Legacy/empty Weaviate has nothing (port 8088):
-curl http://localhost:8088/v1/graphql -H "Content-Type: application/json" \
-  -d '{"query": "{ Get { SkillLink(limit: 1) { source_skill target_skill } } }"}' | jq '.data.Get.SkillLink | length'
-# Returns: 0 (no data)
-
-# API returns empty (cannot reach master CHISG Weaviate):
-curl http://localhost:8088/api/chisg/skillsandlinks | jq '.links | length'
-# Returns: 0
+# Vultr Weaviate has data:
+curl http://192.248.151.185:8088/v1/objects?class=CHISGElement&limit=1 | jq '.totalResults'
+# Returns: 459
+curl http://192.248.151.185:8088/v1/objects?class=SkillLink&limit=1 | jq '.totalResults'
+# Returns: 827
 ```
-
-**Fix**: Update docker-compose to properly connect `skills-api` to **weaviate-ETPs-HumanOS-skillsmapinCHISG** instead of relying on `host.docker.internal`.
 
 ---
 

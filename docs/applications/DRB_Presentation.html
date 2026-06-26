@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data & Insight: A Discussion — DRB Ignite</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css">
+<style>
+  :root {
+    --r-background-color: #1a1a2e;
+    --r-main-color: #e0e0e0;
+    --r-heading-color: #ffffff;
+    --r-link-color: #64b5f6;
+  }
+  .reveal { font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; }
+  .reveal h1 { font-size: 2.2em; font-weight: 300; letter-spacing: 0.02em; }
+  .reveal h2 { font-size: 1.6em; font-weight: 400; color: #64b5f6; margin-bottom: 0.6em; }
+  .reveal h3 { font-size: 1.1em; font-weight: 400; color: #90caf9; }
+  .reveal p, .reveal li { font-size: 0.75em; line-height: 1.6; }
+  .reveal blockquote { 
+    background: rgba(100, 181, 246, 0.08); 
+    border-left: 4px solid #64b5f6; 
+    padding: 0.8em 1.2em; 
+    font-style: italic; 
+    font-size: 0.8em;
+    width: 85%;
+    margin: 0.5em auto;
+  }
+  .reveal table { font-size: 0.65em; margin: 0.5em auto; border-collapse: collapse; }
+  .reveal table th { 
+    background: rgba(100, 181, 246, 0.2); 
+    color: #64b5f6; 
+    padding: 0.5em 0.8em; 
+    text-align: left;
+    font-weight: 600;
+  }
+  .reveal table td { 
+    padding: 0.4em 0.8em; 
+    border-bottom: 1px solid rgba(255,255,255,0.08); 
+  }
+  .reveal .subtitle { 
+    font-size: 0.6em; 
+    color: #90caf9; 
+    font-style: italic; 
+    margin-top: 0.3em; 
+  }
+  .reveal .quote-line { 
+    font-style: italic; 
+    color: #ffcc80; 
+    font-size: 0.7em; 
+    margin-top: 1em; 
+  }
+  .reveal .phase-label {
+    font-size: 0.5em;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #64b5f6;
+    opacity: 0.7;
+    margin-bottom: 0.3em;
+  }
+  .reveal code, .reveal pre {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.85em;
+  }
+  .reveal pre {
+    background: rgba(0,0,0,0.3);
+    padding: 0.8em 1em;
+    border-radius: 6px;
+    box-shadow: none;
+    width: 85%;
+    margin: 0.5em auto;
+  }
+  .reveal .comparison-table td:first-child {
+    color: #ef9a9a;
+    font-weight: 500;
+  }
+  .reveal .comparison-table td:last-child {
+    color: #a5d6a7;
+    font-weight: 500;
+  }
+  .reveal ul { list-style: none; padding-left: 0; }
+  .reveal ul li::before { content: "— "; color: #64b5f6; }
+  .reveal .pipeline-table th { text-align: center; font-size: 1.1em; }
+  .reveal .pipeline-table td { text-align: center; }
+  .reveal .section-divider h2 {
+    font-size: 2em;
+    color: #ffffff;
+    font-weight: 300;
+  }
+  .reveal .diagram {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.7em;
+    color: #a5d6a7;
+    line-height: 1.8;
+  }
+  .reveal .tier-table td:nth-child(1) { font-weight: 600; color: #64b5f6; }
+  .reveal .tier-table td:nth-child(2) { color: #ffcc80; }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ============ SLIDE 1 — TITLE ============ -->
+<section>
+  <h1>Data &amp; Insight</h1>
+  <h3>A Discussion</h3>
+  <br>
+  <p style="font-size:0.9em; color:#e0e0e0;">Michael Stewart</p>
+  <p class="quote-line">"I don't just file the story. I help write the next chapter."</p>
+</section>
+
+<!-- ============ SLIDE 2 — THE PROBLEM STATEMENT ============ -->
+<section>
+  <p class="phase-label">Framing</p>
+  <h2>Most data answers "what happened?"</h2>
+  <h3>Almost none answers "why?" or "what will happen next?"</h3>
+  <br>
+  <pre><code>Dependent variable   →  the OUTCOME  →  what we measure
+Independent variable  →  the CAUSE    →  what we should manage</code></pre>
+</section>
+
+<!-- ============ SLIDE 3 — THE FOUR-STAGE PIPELINE ============ -->
+<section>
+  <p class="phase-label">Framework</p>
+  <h2>The Four-Stage Pipeline</h2>
+  <table class="pipeline-table">
+    <tr>
+      <th>PLAN</th><th>COLLECT</th><th>DISPLAY</th><th>ACT</th>
+    </tr>
+    <tr>
+      <td>Understand<br>the causes</td>
+      <td>Capture<br>without burden</td>
+      <td>Surface<br>patterns</td>
+      <td>Deploy with<br>evidence</td>
+    </tr>
+  </table>
+  <p class="quote-line">Every department. Same pipeline. One infrastructure.</p>
+</section>
+
+<!-- ============ SECTION DIVIDER — SCHOOL IMPROVEMENT ============ -->
+<section class="section-divider">
+  <p class="phase-label">Phase 2</p>
+  <h2>School Improvement</h2>
+</section>
+
+<!-- ============ SLIDE 4 — SCHOOL IMPROVEMENT: CURRENT REALITY ============ -->
+<section>
+  <p class="phase-label">School Improvement</p>
+  <h2>The Current Reality</h2>
+  <ul>
+    <li>Data arrives termly. By the time you see a dip, it's a gap</li>
+    <li>13 schools, 13 definitions of "Pupil Premium progress"</li>
+    <li>SEFs are narrative-heavy, evidence-light</li>
+    <li>ASP and IDSR tell you <em>where you are</em>. Not <em>why</em> or <em>what next</em></li>
+  </ul>
+</section>
+
+<!-- ============ SLIDE 5 — SCHOOL IMPROVEMENT: PLAN & COLLECT ============ -->
+<section>
+  <p class="phase-label">School Improvement</p>
+  <h2>Plan &amp; Collect</h2>
+  <h3>PLAN: Standardise what we measure</h3>
+  <ul>
+    <li>Cohort definitions (PP, SEND, EAL, mobility) consistent across 13 schools</li>
+    <li>Map the <em>predictors</em>: attendance patterns, engagement signals, transition friction</li>
+  </ul>
+  <br>
+  <h3>COLLECT: Make the data entry the work itself</h3>
+  <ul>
+    <li>Arbor feeds automated — no re-keying</li>
+    <li>Skills observations logged as they happen — live, not termly</li>
+    <li>"Tone signals" captured in 10 seconds, not written up in 10 minutes</li>
+  </ul>
+</section>
+
+<!-- ============ SLIDE 6 — SCHOOL IMPROVEMENT: DISPLAY & ACT ============ -->
+<section>
+  <p class="phase-label">School Improvement</p>
+  <h2>Display &amp; Act</h2>
+  <h3>DISPLAY: Early warning, not post-mortem</h3>
+  <ul>
+    <li>Attendance dip + engagement signal = intervention trigger</li>
+    <li>Benchmarking: your schools vs national, and vs <em>each other</em></li>
+    <li>Power BI dashboards — real-time, role-appropriate</li>
+  </ul>
+  <br>
+  <h3>ACT: Targeted, evidence-based, cross-school</h3>
+  <ul>
+    <li>"12 students across 4 schools show the same pattern — group intervention vs individual?"</li>
+    <li>Cross-school best practice: "School X produced 3.2× better outcomes — here's what they did"</li>
+  </ul>
+</section>
+
+<!-- ============ SLIDE 7 — SCHOOL IMPROVEMENT: WHAT CHANGES ============ -->
+<section>
+  <p class="phase-label">School Improvement</p>
+  <h2>What Changes</h2>
+  <table class="comparison-table">
+    <tr><th>Today</th><th>With This Role</th></tr>
+    <tr>
+      <td>See outcomes at end of term</td>
+      <td>See warning signals as they emerge</td>
+    </tr>
+    <tr>
+      <td>Rely on school self-evaluation</td>
+      <td>Validate with standardised Trust-wide data</td>
+    </tr>
+    <tr>
+      <td>Share good practice anecdotally</td>
+      <td>Identify and share evidence-based best practice systematically</td>
+    </tr>
+    <tr>
+      <td>Intervention decisions based on experience</td>
+      <td>Intervention decisions matched to specific causes</td>
+    </tr>
+  </table>
+</section>
+
+<!-- ============ SECTION DIVIDER — FINANCE ============ -->
+<section class="section-divider">
+  <p class="phase-label">Phase 3</p>
+  <h2>Finance</h2>
+</section>
+
+<!-- ============ SLIDE 8 — FINANCE: THE PROBLEM ============ -->
+<section>
+  <p class="phase-label">Finance</p>
+  <h2>The Problem</h2>
+  <ul>
+    <li>Budget monitoring in silos. 13 schools, 13 spreadsheets</li>
+    <li>Weak link between spend and impact</li>
+    <li>"Value for money" claimed but rarely proved</li>
+    <li>Committee reports answer "how much?" but not "so what?"</li>
+  </ul>
+</section>
+
+<!-- ============ SLIDE 9 — FINANCE: PIPELINE ============ -->
+<section>
+  <p class="phase-label">Finance</p>
+  <h2>Plan → Collect → Display → Act</h2>
+  <table>
+    <tr>
+      <th>PLAN</th><td>Map every variable cost to an outcome metric</td>
+    </tr>
+    <tr>
+      <th>COLLECT</th><td>Tag intervention spend to student cohorts (not just budget lines)</td>
+    </tr>
+    <tr>
+      <th>DISPLAY</th><td>Cost-per-outcome dashboards. Variance analysis across Trust</td>
+    </tr>
+    <tr>
+      <th>ACT</th><td>"Intervention X returns £4 per £1 spent" — evidence the board can act on</td>
+    </tr>
+  </table>
+  <p class="quote-line">"Cost per outcome, not cost per head"</p>
+</section>
+
+<!-- ============ SLIDE 10 — FINANCE: WHAT CHANGES ============ -->
+<section>
+  <p class="phase-label">Finance</p>
+  <h2>What Changes</h2>
+  <table class="comparison-table">
+    <tr><th>Today</th><th>With This Role</th></tr>
+    <tr>
+      <td>Know what was spent</td>
+      <td>Know what the spending <em>achieved</em></td>
+    </tr>
+    <tr>
+      <td>Budget variance by school</td>
+      <td>Cost-per-outcome variance by intervention type</td>
+    </tr>
+    <tr>
+      <td>VFM claimed in narrative</td>
+      <td>VFM proved with data</td>
+    </tr>
+    <tr>
+      <td>Reactive deficit management</td>
+      <td>Proactive investment based on evidence</td>
+    </tr>
+  </table>
+</section>
+
+<!-- ============ SECTION DIVIDER — ESTATES ============ -->
+<section class="section-divider">
+  <p class="phase-label">Phase 4</p>
+  <h2>Estates</h2>
+</section>
+
+<!-- ============ SLIDE 11 — ESTATES: THE PROBLEM ============ -->
+<section>
+  <p class="phase-label">Estates</p>
+  <h2>The Problem</h2>
+  <ul>
+    <li>Compliance data scattered across systems and spreadsheets</li>
+    <li>Condition data doesn't translate into risk language the board understands</li>
+    <li>Reactive maintenance culture — fix it when it breaks</li>
+    <li>CIF/SCA bids lack data backbone</li>
+  </ul>
+</section>
+
+<!-- ============ SLIDE 12 — ESTATES: PIPELINE ============ -->
+<section>
+  <p class="phase-label">Estates</p>
+  <h2>The Pipeline</h2>
+  <table>
+    <tr>
+      <th>PLAN</th><td>Map assets — condition, age, usage, maintenance history</td>
+    </tr>
+    <tr>
+      <th>COLLECT</th><td>Digital condition surveys → single database. Compliance alerts on expiry</td>
+    </tr>
+    <tr>
+      <th>DISPLAY</th><td>Traffic-light risk dashboard by school × asset category</td>
+    </tr>
+    <tr>
+      <th>ACT</th><td>Prioritised capital programme. "Cost of inaction" modelling</td>
+    </tr>
+  </table>
+  <p class="quote-line">"Predict the failure. Don't react to the flood."</p>
+</section>
+
+<!-- ============ SLIDE 13 — ESTATES: WHAT CHANGES ============ -->
+<section>
+  <p class="phase-label">Estates</p>
+  <h2>What Changes</h2>
+  <table class="comparison-table">
+    <tr><th>Today</th><th>With This Role</th></tr>
+    <tr>
+      <td>React to failures</td>
+      <td>Predict and prevent them</td>
+    </tr>
+    <tr>
+      <td>Condition ratings in isolation</td>
+      <td>Risk scores incorporating age, usage, history, correlation</td>
+    </tr>
+    <tr>
+      <td>CIF bids based on narrative</td>
+      <td>CIF bids backed by trend data and "cost of inaction" modelling</td>
+    </tr>
+    <tr>
+      <td>Board sees condition grades</td>
+      <td>Board sees <em>risk</em> — financial, safety, compliance</td>
+    </tr>
+  </table>
+</section>
+
+<!-- ============ SECTION DIVIDER — STRUCTURAL METHOD ============ -->
+<section class="section-divider">
+  <p class="phase-label">Phase 5</p>
+  <h2>The Structural Method</h2>
+</section>
+
+<!-- ============ SLIDE 14 — WHY FLAT DATA FAILS ============ -->
+<section>
+  <p class="phase-label">Method</p>
+  <h2>Why Flat Data Fails</h2>
+  <h3>What most school data looks like:</h3>
+  <table>
+    <tr><th>Student</th><th>Subject</th><th>Score</th></tr>
+    <tr><td>Emma</td><td>Maths</td><td>72%</td></tr>
+  </table>
+  <br>
+  <h3>What it can't tell you:</h3>
+  <ul>
+    <li><em>Why</em> 72%?</li>
+    <li>What's blocking progress?</li>
+    <li>What should happen next?</li>
+    <li>Will it get better or worse?</li>
+  </ul>
+</section>
+
+<!-- ============ SLIDE 15 — FROM FLAT TO STRUCTURED ============ -->
+<section>
+  <p class="phase-label">Method</p>
+  <h2>From Flat Data to Structured Graph</h2>
+  <p style="font-size:0.7em; color:#90caf9;">459 skills. Each has 5 observable criteria, parent skills (prerequisites), offspring skills (what it unlocks)</p>
+  <pre class="diagram"><code> Number Bonds ──→ Place Value ──→ Column Addition
+                                        ↑
+                         Working Memory (prerequisite)</code></pre>
+  <blockquote>"Emma hasn't failed maths. She hasn't consolidated working memory — which means column addition is impossible regardless of how many times she practises it."</blockquote>
+</section>
+
+<!-- ============ SLIDE 16 — SAME STRUCTURE, EVERY DOMAIN ============ -->
+<section>
+  <p class="phase-label">Method</p>
+  <h2>Same Structure, Every Domain</h2>
+  <table>
+    <tr><th>Domain</th><th>Flat Data</th><th>Structured Graph</th></tr>
+    <tr>
+      <td><strong>Students</strong></td>
+      <td>"72% in maths"</td>
+      <td>"Stuck at column addition because working memory isn't consolidated"</td>
+    </tr>
+    <tr>
+      <td><strong>Estates</strong></td>
+      <td>"Condition C roof"</td>
+      <td>"Age + usage + drainage decline → predicted failure in 18 months"</td>
+    </tr>
+    <tr>
+      <td><strong>Staff CPD</strong></td>
+      <td>"Attended safeguarding"</td>
+      <td>"Has cert but lacks de-escalation → needs Therapeutic Thinking"</td>
+    </tr>
+    <tr>
+      <td><strong>Finance</strong></td>
+      <td>"£15k on SEN"</td>
+      <td>"3 of 8 progressed. 5 share a common barrier → different intervention needed"</td>
+    </tr>
+  </table>
+</section>
+
+<!-- ============ SLIDE 17 — THE WORKLOAD QUESTION ============ -->
+<section>
+  <p class="phase-label">Method</p>
+  <h2>"Won't this add more work for teachers?"</h2>
+  <br>
+  <h3 style="color:#a5d6a7;">The data entry IS the assessment</h3>
+  <table class="comparison-table">
+    <tr><th>Traditional</th><th>Skills Markbook</th></tr>
+    <tr>
+      <td>Mark books (10 min/child)</td>
+      <td>Tap skill observation (5 seconds)</td>
+    </tr>
+    <tr>
+      <td>Write termly reports (hours)</td>
+      <td>Reports auto-generated from live data</td>
+    </tr>
+    <tr>
+      <td>File the marking</td>
+      <td>Data enters the graph automatically</td>
+    </tr>
+  </table>
+  <p class="quote-line">Every failed school data initiative died because it ADDED burden. This one DISPLACES it.</p>
+</section>
+
+<!-- ============ SECTION DIVIDER — AI ============ -->
+<section class="section-divider">
+  <p class="phase-label">Phase 6</p>
+  <h2>AI &amp; Collective Intelligence</h2>
+</section>
+
+<!-- ============ SLIDE 18 — FILING CABINET TO BRAIN ============ -->
+<section>
+  <p class="phase-label">AI</p>
+  <h2>From Filing Cabinet to Brain</h2>
+  <br>
+  <p style="font-size:0.85em;">A spreadsheet stores <strong>numbers</strong></p>
+  <p style="font-size:0.85em;">A structured graph stores <strong>relationships</strong></p>
+  <p style="font-size:0.85em;">A vector database stores <strong><em>meaning</em></strong></p>
+  <br>
+  <p style="font-size:0.75em; color:#90caf9;">Once data is structured as entities, relationships, and criteria —<br>an AI can actually reason about it.</p>
+  <p class="quote-line">That's the difference between a filing cabinet and a brain</p>
+</section>
+
+<!-- ============ SLIDE 19 — HOW IT WORKS ============ -->
+<section>
+  <p class="phase-label">AI</p>
+  <h2>How It Works</h2>
+  <table style="font-size:0.6em;">
+    <tr>
+      <th style="color:#ef9a9a;">Today</th>
+      <th style="color:#a5d6a7;">With Structured Data + AI</th>
+    </tr>
+    <tr>
+      <td>Teacher writes report<br>→ saved in folder<br>→ read months later<br>→ maybe acted on</td>
+      <td>
+        Teacher taps 3 observations (10 seconds)<br>
+        → System logs skills + engagement signals<br>
+        → AI detects: "This pattern matches 47 other cases"<br>
+        → System suggests: "Intervention X resolved this in 83% of cases"<br>
+        → Teacher decides → outcome tracked → model improves
+      </td>
+    </tr>
+  </table>
+  <p class="quote-line">Teachers get the collective experience of every teacher in the Trust — without reading anyone else's reports</p>
+</section>
+
+<!-- ============ SLIDE 20 — PRIVACY BY ARCHITECTURE ============ -->
+<section>
+  <p class="phase-label">AI</p>
+  <h2>Privacy by Architecture</h2>
+  <h3>The Federated Approach: Collective Intelligence, Complete Privacy</h3>
+  <ol style="font-size:0.7em; text-align:left; max-width:80%; margin:0.5em auto;">
+    <li>Each school runs its own AI instance — self-contained</li>
+    <li>AI builds local patterns from student interactions</li>
+    <li><strong>No personally identifiable information ever leaves the school</strong></li>
+    <li>Only <em>anonymised patterns</em> are shared centrally</li>
+    <li>Improved models pushed back to all schools</li>
+  </ol>
+  <p class="quote-line">Same architecture Google uses for keyboard prediction on your phone.<br>Your typing never leaves the device. The model still improves.</p>
+</section>
+
+<!-- ============ SLIDE 21 — WHAT THE TRUST LEARNS ============ -->
+<section>
+  <p class="phase-label">AI</p>
+  <h2>What the Trust Learns</h2>
+  <table>
+    <tr>
+      <th>Year 1 (Pilot)</th>
+      <td>One school's data → local patterns → initial insights</td>
+    </tr>
+    <tr>
+      <th>Year 2 (Rollout)</th>
+      <td>13 schools' anonymised patterns → cross-school intelligence<br>
+      <em>"4 schools show identical Year 2→3 transition dip — it's systemic"</em></td>
+    </tr>
+    <tr>
+      <th>Year 3+</th>
+      <td>Predictive: flag students in September who fit patterns that lead to spring disengagement<br>
+      <em>"Trust-wide ROI: £14 saved per £1 spent"</em></td>
+    </tr>
+  </table>
+  <p class="quote-line">Every school that contributes makes every other school smarter</p>
+</section>
+
+<!-- ============ SLIDE 22 — THREE TIERS ============ -->
+<section>
+  <p class="phase-label">AI</p>
+  <h2>Three Tiers of Insight</h2>
+  <table class="tier-table">
+    <tr><th>Tier</th><th>Who</th><th>What They See</th><th>When</th></tr>
+    <tr>
+      <td>Classroom</td><td>Teacher</td>
+      <td>"Emma demonstrated Problem Solving" / "Consider Strategy X"</td>
+      <td>Daily</td>
+    </tr>
+    <tr>
+      <td>School</td><td>Head</td>
+      <td>School vs Trust trends / equity dashboard / resource recommendations</td>
+      <td>Weekly</td>
+    </tr>
+    <tr>
+      <td>Trust</td><td>Board</td>
+      <td>Anonymised cross-school patterns / investment evidence / strategic risks</td>
+      <td>Termly</td>
+    </tr>
+  </table>
+  <p class="quote-line">Role-based access. Everyone sees what they need. Nobody sees what they shouldn't.</p>
+</section>
+
+<!-- ============ SECTION DIVIDER — CLOSE ============ -->
+<section class="section-divider">
+  <p class="phase-label">Phase 7</p>
+  <h2>Close &amp; Next Steps</h2>
+</section>
+
+<!-- ============ SLIDE 23 — THE PILOT ============ -->
+<section>
+  <p class="phase-label">Implementation</p>
+  <h2>The Pilot</h2>
+  <table>
+    <tr>
+      <th>Phase 1</th>
+      <td><strong>One School, Months 1–4</strong><br>
+      Governance workshop → Schema design → GDPR audit → Deploy → Refine</td>
+    </tr>
+    <tr>
+      <th>Phase 2</th>
+      <td><strong>Rollout, Months 5–12</strong><br>
+      2–3 schools/month. Training materials from pilot school</td>
+    </tr>
+    <tr>
+      <th>Phase 3</th>
+      <td><strong>Trust-wide Intelligence, Month 13+</strong><br>
+      Cross-school patterns activate. Predictive capability begins</td>
+    </tr>
+  </table>
+  <br>
+  <p style="font-size:0.6em; color:#90caf9;">Success: 80%+ teacher adoption in 4 weeks · 3+ actionable insights per term · Zero data breaches</p>
+</section>
+
+<!-- ============ SLIDE 24 — THE CLOSE ============ -->
+<section>
+  <p class="phase-label">The Offer</p>
+  <h2>What I'm Offering</h2>
+  <br>
+  <table>
+    <tr>
+      <th style="color:#a5d6a7;">Level 1</th>
+      <td><strong>Safe Hands</strong><br>MIS integrity, Census, GDPR, statutory returns. Flawless operations</td>
+    </tr>
+    <tr>
+      <th style="color:#64b5f6;">Level 2</th>
+      <td><strong>Strategic Insight</strong><br>Live skills tracking, early warning, cross-school patterns. Evidence-based decisions</td>
+    </tr>
+    <tr>
+      <th style="color:#ffcc80;">Level 3</th>
+      <td><strong>Collective Intelligence</strong><br>AI-powered pattern detection, federated learning, predictive diagnostics</td>
+    </tr>
+  </table>
+  <br>
+  <p class="quote-line">"Every MAT has data. Most have dashboards.<br>None have a system that learns from its own schools."</p>
+</section>
+
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>
+Reveal.initialize({
+  hash: true,
+  slideNumber: 'c/t',
+  showSlideNumber: 'speaker',
+  transition: 'fade',
+  transitionSpeed: 'default',
+  backgroundTransition: 'fade',
+  center: true,
+  width: 1280,
+  height: 720,
+  margin: 0.08,
+  controls: true,
+  progress: true,
+  keyboard: true,
+  overview: true
+});
+</script>
+</body>
+</html>

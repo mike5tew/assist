@@ -457,7 +457,134 @@
         "pages": "233-242",
         "authors": "Susan Jones, Michael Stewart, Alex Michie, Mark B. Swindells, Chirstine Orengo, Janet M. Thornton"
       }
-    ]
+    ],
+    "skills": [
+      {
+        "name": "AI Solutions Architecture",
+        "category": "Artificial Intelligence",
+        "proficiency": "advanced",
+        "evidenceURL": "https://espthinking.co.uk",
+        "selfDeclared": true,
+        "verifiedBySkillsMap": false,
+        "skillsMapSkillID": ""
+      },
+      {
+        "name": "Full-stack web development (Go, React, TypeScript)",
+        "category": "Software Engineering",
+        "proficiency": "advanced",
+        "evidenceURL": "https://github.com/espthinking",
+        "selfDeclared": true,
+        "verifiedBySkillsMap": false,
+        "skillsMapSkillID": ""
+      },
+      {
+        "name": "Science Teaching (KS3-5)",
+        "category": "Education",
+        "proficiency": "proven",
+        "evidenceURL": "",
+        "selfDeclared": false,
+        "verifiedBySkillsMap": false,
+        "skillsMapSkillID": ""
+      },
+      {
+        "name": "Electrical Labouring",
+        "category": "Skilled Trades",
+        "proficiency": "practised",
+        "evidenceURL": "",
+        "selfDeclared": true,
+        "verifiedBySkillsMap": false,
+        "skillsMapSkillID": ""
+      },
+      {
+        "name": "Protein Bioinformatics",
+        "category": "Biochemistry / Life Science",
+        "proficiency": "academic",
+        "evidenceURL": "",
+        "selfDeclared": false,
+        "verifiedBySkillsMap": false,
+        "skillsMapSkillID": ""
+      }
+    ],
+    "links": [
+      {
+        "label": "ESP Thinking",
+        "url": "https://espthinking.co.uk",
+        "type": "portfolio"
+      },
+      {
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/in/michael-stewart-espthinking/",
+        "type": "social"
+      },
+      {
+        "label": "Facebook (ESP Thinking)",
+        "url": "https://www.facebook.com/ESPThinking",
+        "type": "social"
+      },
+      {
+        "label": "Protein Science Publication",
+        "url": "https://doi.org/10.1002/pro.5560070203",
+        "type": "publication"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Qualified Teacher Status (QTS)",
+        "issuer": "Titan Partnership / GTP",
+        "date": "2012",
+        "credentialID": "",
+        "expiryDate": ""
+      },
+      {
+        "name": "AI Solutions Architect Certificate",
+        "issuer": "Elvtr",
+        "date": "Feb 2025",
+        "credentialID": "",
+        "expiryDate": ""
+      }
+    ],
+    "targetRoles": [
+      {
+        "title": "AI / EdTech Product Lead",
+        "sector": "Education Technology",
+        "priority": "high",
+        "notes": "Prefer mission-aligned orgs with evidence-based focus — Century Tech, Eedi, Sparx etc."
+      },
+      {
+        "title": "Curriculum / Skills Framework Designer",
+        "sector": "Education",
+        "priority": "high",
+        "notes": "Particularly CHISG-adjacent or competency-framework roles — Ofsted, EEF, Nesta"
+      },
+      {
+        "title": "AI Solutions Architect",
+        "sector": "Technology",
+        "priority": "medium",
+        "notes": ""
+      }
+    ],
+    "competencies": {
+      "_note": "Populated from skills-map-platform. Each entry mirrors the Competence struct: attempts array, raw average, and assessor-weighted average. Schema version 2 — awaiting AssessorIndividualsID column addition to skillsmarkbook.",
+      "_schema": {
+        "skillID": "FK to Skills_keyID in skills-map DB",
+        "skillName": "Human-readable skill name",
+        "chisgCategory": "CHISG knowledge graph category",
+        "attempts": "Total attempt count",
+        "attemptsDetail": [
+          {
+            "attemptDate": "ISO date",
+            "score": "1-5",
+            "assignmentID": "FK to workassignment",
+            "assessorID": "FK to individuals (not yet recorded in DB — pending schema migration)",
+            "assessorWeight": "0.0-1.0 — computed from assessor's own competency in this skill. 1.0 = fully verified assessor, 0.5 = cold-start default, 0.25 = self-signed"
+          }
+        ],
+        "averageScore": "Simple AVG(Mark) — current implementation",
+        "weightedScore": "SUM(score × assessorWeight) / SUM(assessorWeight) — pending assessorID migration",
+        "verificationStatus": "self-declared | peer-verified | professionally-verified | institutionally-verified"
+      },
+      "entries": []
+    }
   }
 }
 

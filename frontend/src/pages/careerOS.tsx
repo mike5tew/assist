@@ -782,7 +782,7 @@ const CareerOSLanding: React.FC = () => {
                   The Same Language, From Classroom to Boardroom
                 </Typography>
                 <Typography variant="body1" paragraph>
-                  CareerOS uses the same CHISG skill architecture as PrimaryOS and ParentOS. 
+                  CareerOS uses the same CHISG skill architecture as PrimaryOS and ToddlerOS. 
                   A skill a child develops in Year 5 is the same skill an employer searches for 
                   20 years later. No translation. No loss. No starting over.
                 </Typography>
@@ -808,7 +808,7 @@ const CareerOSLanding: React.FC = () => {
                       <BadgeIcon />
                     </Avatar>
                     <Box>
-                      <Typography variant="subtitle2">ParentOS</Typography>
+                      <Typography variant="subtitle2">ToddlerOS</Typography>
                       <Typography variant="caption" color="text.secondary">Skill observation</Typography>
                     </Box>
                   </Box>
@@ -896,7 +896,7 @@ const CareerOSLanding: React.FC = () => {
           CareerOS — Your Skills, Verified. Your Future, Mapped. — Part of the ESP Thinking Portfolio
         </Typography>
         <Typography variant="caption" sx={{ display: 'block', mt: 0.5, opacity: 0.8 }}>
-          Powered by CHISG | Connected to PrimaryOS & ParentOS | The Verified Alternative to the CV
+          Powered by CHISG | Connected to PrimaryOS & ToddlerOS | The Verified Alternative to the CV
         </Typography>
       </Box>
     </Box>

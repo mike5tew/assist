@@ -22,8 +22,8 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o /app/server ./cmd/server
 # Runtime stage
 FROM alpine:latest
 
-# Install runtime dependencies
-RUN apk --no-cache add ca-certificates
+# Install runtime dependencies (including poppler-utils for pdftotext)
+RUN apk --no-cache add ca-certificates poppler-utils
 
 WORKDIR /app
 

@@ -313,3 +313,94 @@ func abs32(x float32) float32 {
 	}
 	return x
 }
+
+// ExtractRawText uploads a PDF to S3, runs Textract text detection, and returns the
+// plain extracted text. It is optimised for the CHISG review pipeline where only
+// clean paragraph text (not layout / table structure) is needed.
+func (tp *TextractProcessor) ExtractRawText(ctx context.Context, fileBytes []byte, jobID string) (string, error) {
+	// 1. Upload PDF to S3
+	s3Key := fmt.Sprintf("chisg-review/%s.pdf", jobID)
+	_, err := tp.s3Client.PutObject(ctx, &s3.PutObjectInput{
+		Bucket:      aws.String(tp.bucketName),
+		Key:         aws.String(s3Key),
+		Body:        bytes.NewReader(fileBytes),
+		ContentType: aws.String("application/pdf"),
+	})
+	if err != nil {
+		return "", fmt.Errorf("S3 upload failed: %w", err)
+	}
+	defer func() {
+		// Best-effort cleanup — don't block on error
+		tp.s3Client.DeleteObject(ctx, &s3.DeleteObjectInput{
+			Bucket: aws.String(tp.bucketName),
+			Key:    aws.String(s3Key),
+		})
+	}()
+
+	// 2. Start async text detection job (cheaper + faster than StartDocumentAnalysis)
+	startResult, err := tp.textractClient.StartDocumentTextDetection(ctx, &textract.StartDocumentTextDetectionInput{
+		DocumentLocation: &types.DocumentLocation{
+			S3Object: &types.S3Object{
+				Bucket: aws.String(tp.bucketName),
+				Name:   aws.String(s3Key),
+			},
+		},
+		JobTag: aws.String(fmt.Sprintf("chisg-review-%s", jobID)),
+	})
+	if err != nil {
+		return "", fmt.Errorf("Textract StartDocumentTextDetection failed: %w", err)
+	}
+	textractJobID := *startResult.JobId
+	log.Printf("⏳ Textract text detection job started: %s", textractJobID)
+
+	// 3. Poll for completion (max 8 minutes)
+	maxWait := 8 * time.Minute
+	poll := 10 * time.Second
+	start := time.Now()
+	var allBlocks []types.Block
+
+	for {
+		if time.Since(start) > maxWait {
+			return "", fmt.Errorf("Textract job timed out after %v", maxWait)
+		}
+
+		statusResult, err := tp.textractClient.GetDocumentTextDetection(ctx, &textract.GetDocumentTextDetectionInput{
+			JobId: aws.String(textractJobID),
+		})
+		if err != nil {
+			log.Printf("Textract status poll error: %v — retrying", err)
+			time.Sleep(poll)
+			continue
+		}
+
+		switch statusResult.JobStatus {
+		case types.JobStatusSucceeded:
+			allBlocks = append(allBlocks, statusResult.Blocks...)
+			nextToken := statusResult.NextToken
+			for nextToken != nil {
+				page, err := tp.textractClient.GetDocumentTextDetection(ctx, &textract.GetDocumentTextDetectionInput{
+					JobId:     aws.String(textractJobID),
+					NextToken: nextToken,
+				})
+				if err != nil {
+					log.Printf("Textract pagination error: %v", err)
+					break
+				}
+				allBlocks = append(allBlocks, page.Blocks...)
+				nextToken = page.NextToken
+			}
+			log.Printf("✅ Textract complete — %d blocks extracted", len(allBlocks))
+			return extractOCRText(allBlocks), nil
+
+		case types.JobStatusFailed:
+			msg := "unknown"
+			if statusResult.StatusMessage != nil {
+				msg = *statusResult.StatusMessage
+			}
+			return "", fmt.Errorf("Textract job failed: %s", msg)
+		}
+
+		log.Printf("📊 Textract status: %s (elapsed %v)", statusResult.JobStatus, time.Since(start))
+		time.Sleep(poll)
+	}
+}

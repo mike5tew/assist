@@ -90,7 +90,7 @@
 | Project | Status | Key Value | Consolidation Notes |
 |---------|--------|-----------|---------------------|
 | **assist** | Active monorepo | Documentation, orchestration | Primary development target |
-| **LAOMobile** | TestFlight | GCSE revision, heatmaps | Keep separate (App Store target) |
+| **LAOMobile** | App Store approved | GCSE revision, heatmaps | Keep separate; next step is live release/public distribution alignment |
 | **ESPProj** | Legacy migration | Full MIS features | Migrate to assist |
 | **SkillsMarkbookMobile** | Partial | Primary skills + stickers | Consider merge with LAOMobile or standalone |
 | **humanOS** | Research/Docs | Emotional models, teaching | Integrate into Weaviate + assist docs |

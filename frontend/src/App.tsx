@@ -9,6 +9,8 @@ import PortfolioLanding from './pages/Portfolio/PortfolioLanding';
 import ETPProfilePage from './pages/ETPProfilePage';
 import ETPLanding from './pages/ETPLanding';
 import LAOLanding from './pages/LAOLanding';
+import LAOPrivacyPolicy from './pages/LAOPrivacyPolicy';
+import LAOTerms from './pages/LAOTerms';
 import ESPWorldLanding from './pages/ESPWorld/ESPWorldLanding';
 import Home from './components/Home';
 import CoachMVPDemo from './components/CoachMVPDemo';
@@ -20,16 +22,41 @@ import DiagnosticViewer from './components/DiagnosticViewer';
 import ImmunologyUpload from './components/ImmunologyUpload';
 import SemanticLinkExtractor from './components/SemanticLinkExtractor';
 import ErrorPage from './components/ErrorPage';
-import ParentOSLanding from './pages/ESPWorld/ParentOSLanding';
-import ParentOSExplorer from './pages/ESPWorld/ParentOSExplorer';
-import ParentOSGuide from './pages/ESPWorld/ParentOSGuide';
+import ToddlerOSLanding from './pages/ESPWorld/ToddlerOSLanding';
+import ToddlerOSExplorer from './pages/ESPWorld/ToddlerOSExplorer';
+import ToddlerOSGuide from './pages/ESPWorld/ToddlerOSGuide';
 import ESPWorldDemo from './pages/ESPWorld/ESPWorldDemo';
 import LessonPlanningDemo from './pages/ESPWorld/LessonPlanningDemo';
 import PrimaryOSLanding from './pages/PrimaryOS';
 import CHISGLanding from './pages/CHISG/CHISGLanding';
+import ESPPilotLanding from './pages/ESPPilotLanding';
+import GraphExplorer from './pages/CHISG/GraphExplorer';
+import NTMResearch from './pages/CHISG/NTMResearch';
+import CHISGLogin from './pages/CHISG/CHISGLogin';
+import CHISGPapers from './pages/CHISG/CHISGPapers';
+import CHISGLinks from './pages/CHISG/CHISGLinks';
+import { AuthProvider } from './context/AuthContext';
+import PrivateRoute from './components/PrivateRoute';
+import ClassifierLanding from './pages/Classifier/ClassifierLanding';
 import CareerOSLanding from './pages/careerOS';
+import JoinLanding from './pages/JoinLanding';
+import BlogIndex from './pages/Blog/BlogIndex';
+import SocialGravity from './pages/Blog/SocialGravity';
+import EnergyDirectionality from './pages/Blog/EnergyDirectionality';
+import VoltageSensitivity from './pages/Blog/VoltageSensitivity';
+import ThreatResponse from './pages/Blog/ThreatResponse';
+import CareResponse from './pages/Blog/CareResponse';
+import RiskTolerance from './pages/Blog/RiskTolerance';
+import IntegrityLogic from './pages/Blog/IntegrityLogic';
+import MirrorNeuronTuning from './pages/Blog/MirrorNeuronTuning';
+import Orderliness from './pages/Blog/Orderliness';
+import PilotStrength from './pages/Blog/PilotStrength';
+import CurrentLoad from './pages/Blog/CurrentLoad';
+import Libido from './pages/Blog/Libido';
+import TheGovernor from './pages/Blog/TheGovernor';
 import useAnalytics from './hooks/useAnalytics';
 import AnalyticsDashboard from './pages/AnalyticsDashboard';
+import APhysicsRevision from './pages/APhysicsRevision';
 
 const theme = createTheme({
   palette: {
@@ -101,6 +128,7 @@ export default function App() {
   
   return (
     <HelmetProvider>
+    <AuthProvider>
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Router basename={routerBasename}>
@@ -115,16 +143,52 @@ export default function App() {
           
           {/* LAO landing - no header (has its own hero) */}
           <Route path="/lao" element={<LAOLanding />} />
+          <Route path="/lao/privacy" element={<LAOPrivacyPolicy />} />
+          <Route path="/lao/terms" element={<LAOTerms />} />
+          {/* A-Level Physics Revision - no header (full screen) */}
+          <Route path="/aphy" element={<APhysicsRevision />} />
           {/* ESP World - consolidated skills + weaviate + assistants */}
           <Route path="/esp-world" element={<ESPWorldLanding />} />
           {/* CHISG - information quality landing */}
           <Route path="/chisg" element={<CHISGLanding />} />
-          {/* Parent OS - ETP profile + skills + weaviate */}
-          <Route path="/parent-os" element={<ParentOSLanding />} />
+          {/* ESP Pilot - research pilot study landing */}
+          <Route path="/esp-pilot" element={<ESPPilotLanding />} />
+          <Route path="/chisg/graph" element={<GraphExplorer />} />
+          {/* CHISG auth + protected admin pages */}
+          <Route path="/chisg/login" element={<CHISGLogin />} />
+          <Route path="/chisg/papers" element={<PrivateRoute><CHISGPapers /></PrivateRoute>} />
+          <Route path="/chisg/links" element={<PrivateRoute><CHISGLinks /></PrivateRoute>} />
+          {/* NTM Research - academic knowledge graph for mycobacteria */}
+          <Route path="/ntm" element={<PrivateRoute><NTMResearch /></PrivateRoute>} />
+          {/* Classifier - load balanced pipeline demo */}
+          <Route path="/classifier-demo" element={<ClassifierLanding />} />
+          {/* ToddlerOS - ETP for parents of young children */}
+          <Route path="/toddler-os" element={<ToddlerOSLanding />} />
+          {/* Legacy redirect */}
+          <Route path="/parent-os" element={<ToddlerOSLanding />} />
 
           {/* CareerOS - verified skills passport landing */}
           <Route path="/careeros/*" element={<CareerOSLanding />} />
+
+          {/* Join - email capture landing for LinkedIn posts */}
+          <Route path="/join" element={<JoinLanding />} />
           
+          {/* Blog - ETP deep-dive series */}
+          <Route path="/blog" element={<BlogIndex />} />
+          <Route path="/blog/social-gravity" element={<SocialGravity />} />
+          <Route path="/blog/energy-directionality" element={<EnergyDirectionality />} />
+          <Route path="/blog/voltage-sensitivity" element={<VoltageSensitivity />} />
+          <Route path="/blog/threat-response" element={<ThreatResponse />} />
+          <Route path="/blog/care-response" element={<CareResponse />} />
+          <Route path="/blog/risk-tolerance" element={<RiskTolerance />} />
+          <Route path="/blog/integrity-logic" element={<IntegrityLogic />} />
+          <Route path="/blog/mirror-neuron-tuning" element={<MirrorNeuronTuning />} />
+          <Route path="/blog/orderliness" element={<Orderliness />} />
+          <Route path="/blog/pilot-strength" element={<PilotStrength />} />
+          <Route path="/blog/current-load" element={<CurrentLoad />} />
+          <Route path="/blog/libido" element={<Libido />} />
+          <Route path="/blog/the-governor" element={<TheGovernor />} />
+
           {/* Skills Tree redirect - no header wrapper */}
           <Route path="/skillstree" element={<SkillsTreeRedirect />} />
           
@@ -135,8 +199,11 @@ export default function App() {
             <Route path="/coach-mvp-demo" element={<CoachMVPDemo />} />
             <Route path="/esp-world/demo" element={<ESPWorldDemo />} />
             <Route path="/esp-world/lesson-demo" element={<LessonPlanningDemo />} />
-            <Route path="/parent-os/explorer" element={<ParentOSExplorer />} />
-            <Route path="/parent-os/guide" element={<ParentOSGuide />} />
+            <Route path="/toddler-os/explorer" element={<ToddlerOSExplorer />} />
+            <Route path="/toddler-os/guide" element={<ToddlerOSGuide />} />
+            {/* Legacy redirects */}
+            <Route path="/parent-os/explorer" element={<ToddlerOSExplorer />} />
+            <Route path="/parent-os/guide" element={<ToddlerOSGuide />} />
             
             {/* Tools */}
             <Route path="/tools" element={<Home />} />
@@ -148,7 +215,7 @@ export default function App() {
             {/* Utilities */}
             <Route path="/diagnostics" element={<DiagnosticViewer />} />
             <Route path="/upload/immunology" element={<ImmunologyUpload />} />
-            <Route path="/semantic-links/extract" element={<SemanticLinkExtractor />} />
+            <Route path="/semantic-links/extract" element={<PrivateRoute><SemanticLinkExtractor /></PrivateRoute>} />
             <Route path="/analytics" element={<AnalyticsDashboard />} />
             
             {/* Fallback */}
@@ -157,6 +224,7 @@ export default function App() {
         </Routes>
       </Router>
     </ThemeProvider>
+    </AuthProvider>
     </HelmetProvider>
   );
 }

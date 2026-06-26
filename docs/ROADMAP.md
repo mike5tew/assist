@@ -114,6 +114,28 @@
 - Curator throughput: 50+ links/hour for experienced users
 - Data quality: < 5% vague relationships in final dataset
 
+### Priority 2b: Academic Paper CHISG Pipeline (McGrath Review Workflow)
+**Context**: Michael Stewart (PhD Biophysics) is working through microbiology papers to build CHISG training data and knowledge graph content. Volume constraint means a fully manual approach is not sustainable across 50+ papers.
+
+**Agreed Workflow**:
+1. **Few-shot prompt development** — Work through a small number of papers collaboratively (MS + Copilot) to produce high-quality human-curated reduced semantic cores (as JSON). These serve as few-shot examples.
+2. **Pipeline extraction** — `extract_chisg_papers.py` processes PDFs via Bedrock, producing CHISG elements using the few-shot examples in the prompt. Output includes `evidence_context` (conditions under which the supporting evidence was gathered — not a limiter on the claim, but provenance of the evidence) and conformant controlled vocabulary.
+3. **Human-readable review artefact** — After pipeline runs on a paper, auto-generate a clean human-readable summary (Markdown or tabular) of extracted links, organised by figure/section, suitable for a non-programmer reviewer.
+4. **McGrath review** — Michael McGrath reads the paper and marks up the review artefact: flagging missing links, incorrect relation types, wrong evidence_context, or vocabulary violations.
+5. **Correction loop** — Corrections feed back as additional few-shot examples, improving subsequent pipeline runs.
+
+**Key design decisions recorded here**:
+- `evidence_context` field stores the experimental conditions of the supporting evidence (organism, method, timepoint, treatment). This is provenance — *where we got the evidence* — not a claim that the relationship only holds in those conditions.
+- Human JSON extractions are the reduced semantic core only (entity_a, relation, entity_b, evidence_context). Pipeline expands to full CHISG element (backward relation, full context array, trust metadata stubs).
+- Controlled vocabulary reference: `extract_chisg_papers.py` lines 60–70 (20 relations, microbiology domain).
+
+**Immediate next actions**:
+- [ ] Update `extract_chisg_papers.py` system prompt: add `evidence_context` to output schema, rename `context` to `text_quote`, add `inverse_relation` field
+- [ ] Add le_chen_eLife_2022 human JSON as first few-shot example in prompt
+- [ ] Work through 2–3 more papers with MS to build the few-shot set to ~5 examples
+- [ ] Build human-readable review artefact generator (script or pipeline step)
+- [ ] Define McGrath review workflow and handoff format
+
 ### Priority 3: Integrated Insight Markbook (Skills Map + ETP Profile Builder)
 **Strategic Context**: Sprung from the drb Ignite business case (Jan 2026). A tool that combines "Safe Hands" (attainment data) with "Smart Minds" (pedagogical logic) using the AISA methodology.
 

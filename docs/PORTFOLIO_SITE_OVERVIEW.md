@@ -1,6 +1,6 @@
 # ESP Thinking Portfolio Site — Current Overview (assist/frontend)
 
-_Last updated: 2026-02-15_
+_Last updated: 2026-02-27_
 
 This document describes the current **ESP Thinking portfolio site** implemented in `assist/frontend`. It is written so that Weaviate-assist can index an accurate, up-to-date view of the portfolio, its routes, and how it connects to the wider ecosystem.
 
@@ -10,7 +10,7 @@ This document describes the current **ESP Thinking portfolio site** implemented 
 
 The portfolio frontend is a **marketing and demo hub** for the ESP ecosystem. It:
 
-- Presents product-specific landing pages (PrimaryOS, LAO, ParentOS, CareerOS, ETP, CHISG, ESP World)
+- Presents product-specific landing pages (PrimaryOS, LAO, ToddlerOS, CareerOS, ETP, CHISG, ESP World)
 - Provides deep dives into core ideas (CHISG, ETP, HumanOS framing)
 - Exposes live demos and tools backed by the assist API and Weaviate
 - Bridges out to other apps (Skills Map / skillstree, DRB, etc.) via Nginx routing
@@ -48,8 +48,9 @@ These routes render full-bleed marketing/landing experiences:
   - Umbrella view of ESP World tools and pathways.
 - `/chisg` → CHISGLanding
   - Information quality / CHISG knowledge-graph framing.
-- `/parent-os` → ParentOSLanding
-  - ParentOS framing and connection to PrimaryOS.
+- `/toddler-os` → ToddlerOSLanding
+  - ToddlerOS framing — ETP spectra for parents of young children. Tagline: "The Coding Lesson You Never Knew You Needed".
+  - Legacy `/parent-os` route redirects here.
 - `/careeros/*` → CareerOSLanding (internal nested routes)
   - CareerOS/skills passport experience; CTA and sub-routes managed internally.
 - `/skillstree` → SkillsTreeRedirect
@@ -67,8 +68,8 @@ Key demo/tool routes:
   - Demonstrates a cross-product ESP World flow.
 - `/esp-world/lesson-demo` → LessonPlanningDemo
   - Lesson-planning demo connected to CHISG/ETP ideas.
-- `/parent-os/explorer` → ParentOSExplorer
-- `/parent-os/guide` → ParentOSGuide
+- `/toddler-os/explorer` → ToddlerOSExplorer
+- `/toddler-os/guide` → ToddlerOSGuide
 - `/coach-mvp-demo` → CoachMVPDemo
 
 Core tools backed by assist API + Weaviate:
@@ -121,11 +122,11 @@ Each landing page is opinionated about its audience and call-to-action, but patt
   - 9 ETP spectra cards (with classroom examples).
   - Neuron Navigators Guide Book stages (Reception → Year 6+).
   - Teacher role shift: judge → guide.
-  - ParentOS bridge section linking to `/parent-os`.
+  - ToddlerOS bridge section linking to `/toddler-os`.
   - Final CTA section.
 - CTAs:
   - Bottom CTA uses `ContactReveal` to open a protected email form to `world@espthinking.co.uk` with label **"Request School Demo"**.
-  - ParentOS bridge CTA links to `/parent-os`.
+  - ToddlerOS bridge CTA links to `/toddler-os`.
   - Hero CTAs (Teacher Dashboard, Neuron Navigators) are correctly commented out — routes don't exist yet.
 - **Implementation status**: Landing page only. No backend, no teacher dashboard, no sticker book. Components described here would be reusable across the ecosystem if built.
 
@@ -133,7 +134,7 @@ Each landing page is opinionated about its audience and call-to-action, but patt
 
 - Focus: LAO GCSE revision experience.
 - Hero: marketing copy and visuals tailored to revision resistance and low-friction engagement.
-- CTA: `ContactReveal` labelled **"Request TestFlight Access"** with `world@espthinking.co.uk`. Caption notes "Mobile app currently in TestFlight".
+- CTA: primary buttons link directly to the public App Store listing for Little and Often LAO.
 
 ### 4.3 ETPLanding (`/etp-landing`)
 
@@ -141,29 +142,37 @@ Each landing page is opinionated about its audience and call-to-action, but patt
 - Explains core spectra and moderators.
 - CTA: uses `ContactReveal` with a label appropriate for ETP-focused enquiries.
 
-### 4.4 ParentOSLanding (`/parent-os`)
+### 4.4 ToddlerOSLanding (`/toddler-os`)
 
-- Focus: parent-facing framing of the same CHISG/ETP language used in school.
+- Focus: parent-facing ETP framework and activity book for early years. "The Coding Lesson You Never Knew You Needed."
+- Rebranded from ParentOS (Feb 2026). Legacy `/parent-os` routes redirect.
+- **Product vision (Feb 2026)**: Weekly activity book (physical + PDF) with two modes per theme:
+  - "With You" (3-5 min parent interaction — builds foundational capacities)
+  - "While You..." (5-15 min independent activity — colouring, stickers, audio via QR)
+  - Observation prompts build ETP profile as byproduct of play (not questionnaire)
+  - Free PDF download → email capture. Printed subscription → revenue.
+  - See `PROJECT_STATUS.md` for full product design.
 - Links:
-  - `/parent-os/explorer` — "Coming Soon" page with description and ContactReveal ("Register Interest").
-  - `/parent-os/guide` — "Coming Soon" page with description and ContactReveal ("Register Interest").
+  - `/toddler-os/explorer` — "Coming Soon" page with description and ContactReveal ("Register Interest").
+  - `/toddler-os/guide` — "Coming Soon" page with description and ContactReveal ("Register Interest").
 - CTA: includes `ContactReveal` for parent/partner contact.
-- **Implementation status**: Landing page only. Explorer and Guide are Coming Soon shells — no backend.
+- **Implementation status**: Landing page only. Product design complete (activity book model, foundational skills, microdosing pedagogy). No activity book generator, no parent app, no PDF pipeline yet.
 
 ### 4.5 CareerOSLanding (`/careeros/*`)
 
 - Focus: verified skills passport / CareerOS view.
 - Implemented as a nested router inside `CareerOSLanding`.
 - Exposes internal routes under `/careeros/...` (e.g. demo, enterprise, passport), all fronted by the main portfolio router at `/careeros/*`.
-- **Implementation status**: Landing page only (948 lines of rich concept content with static example data). No backend, no data model, no interactive features.
+- **Product vision (Feb 2026)**: Gap analysis powered by pathfinder engine. "Distance to competency" metric: not "do you qualify?" but "how far, and what's the fastest path?" Decision matrix for skills direction using Passion × Aptitude × Demand × Longevity × ETP Fit. See `PROJECT_STATUS.md` for details.
+- **Implementation status**: Landing page only (948 lines of rich concept content with static example data). No backend. Requires pathfinder engine + job-requirement dataset (both designed, neither built).
 
 ### 4.6 ESPWorldLanding (`/esp-world`)
 
-- Focus: integrated ESP World experience spanning LAO, PrimaryOS, ParentOS, and Skills Map.
+- Focus: integrated ESP World experience spanning LAO, PrimaryOS, ToddlerOS, and Skills Map.
 - Provides entry points into:
   - `ETPProfilePage` (`/etp-profile`)
   - lesson/ESP World demos
-  - ParentOS explorer/guide
+  - ToddlerOS explorer/guide
 
 ### 4.7 CHISGLanding (`/chisg`)
 
@@ -179,7 +188,7 @@ All major landings share the same pattern: storytelling + visuals + concrete cla
 `NavHeader` defines the primary navigation menu items exposed in the top bar when `AppLayout` is active, including (but not limited to):
 
 - Portfolio home
-- Product landings (PrimaryOS, LAO, ParentOS, CareerOS, ESP World, CHISG)
+- Product landings (PrimaryOS, LAO, ToddlerOS, CareerOS, ESP World, CHISG)
 - Tools (semantic query, AI chat, content loader, semantic link extractor)
 - Skills Map (via `/skillstree` → redirect)
 
@@ -205,7 +214,7 @@ The portfolio frontend is primarily a **read-only + demo** layer. Implementation
 
 ### Concept-only (landing pages with no backend):
 - PrimaryOS (`/primary-os`): No backend, no teacher dashboard, no sticker book implementation.
-- ParentOS (`/parent-os`, `/parent-os/explorer`, `/parent-os/guide`): Coming Soon pages with ContactReveal.
+- ToddlerOS (`/toddler-os`, `/toddler-os/explorer`, `/toddler-os/guide`): Coming Soon pages with ContactReveal.
 - CareerOS (`/careeros/*`): Static concept content with hardcoded example data. No Skills Passport, Role Architect, or Matching backend.
 
 ### Foundational tools (applied across products, not standalone):

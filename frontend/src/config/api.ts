@@ -15,6 +15,14 @@ export const API_ENDPOINTS = {
   },
   chisg: {
     query: '/api/chisg/query',
+    graph: '/api/chisg/graph',
+  },
+  ntm: {
+    query: '/api/ntm/query',
+    upload: '/api/ntm/upload',
+    papers: '/api/ntm/papers',
+    extract: '/api/ntm/extract',
+    status: '/api/ntm/status',
   },
   studyAreas: {
     immunology: {

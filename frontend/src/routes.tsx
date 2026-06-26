@@ -17,6 +17,7 @@ import StudyAreaCivilEngineeringPage from './components/StudyAreas/StudyAreaCivi
 import AdminPanel from './components/AdminPanel';
 import CoachMVPDemo from './components/CoachMVPDemo';
 import LAOLanding from './pages/LAOLanding';
+import APhysicsRevision from './pages/APhysicsRevision';
 
 const AppRoutes = () => {
   return (
@@ -34,6 +35,9 @@ const AppRoutes = () => {
         
         {/* LAO Landing Page */}
         <Route path="lao" element={<LAOLanding />} />
+
+        {/* A-Level Physics Revision */}
+        <Route path="aphy" element={<APhysicsRevision />} />
 
         {/* Skills Map - external link handled in nav, but provide route for direct access */}
         <Route path="skillstree" element={<SkillsTreeRedirect />} />
