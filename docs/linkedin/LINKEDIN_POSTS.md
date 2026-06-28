@@ -4,6 +4,10 @@ Log of LinkedIn posts with drafts, revisions, and publication dates.
 
 Reverse chronological order. Newest first.
 
+Mandatory opening hook for new LinkedIn posts:
+
+Normal is just a label. Everyone is running an evolutionary setting they didn't choose and can't see.
+
 ---
 
 ## Post (Draft): Libido — ETP Post 12 of 12
