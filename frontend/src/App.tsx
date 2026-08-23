@@ -57,6 +57,7 @@ import TheGovernor from './pages/Blog/TheGovernor';
 import useAnalytics from './hooks/useAnalytics';
 import AnalyticsDashboard from './pages/AnalyticsDashboard';
 import APhysicsRevision from './pages/APhysicsRevision';
+import ACLIRevision from './pages/ACLIRevision';
 
 const theme = createTheme({
   palette: {
@@ -147,6 +148,8 @@ export default function App() {
           <Route path="/lao/terms" element={<LAOTerms />} />
           {/* A-Level Physics Revision - no header (full screen) */}
           <Route path="/aphy" element={<APhysicsRevision />} />
+          {/* ACLI immunology module - no header (full screen) */}
+          <Route path="/acli/vdj" element={<ACLIRevision />} />
           {/* ESP World - consolidated skills + weaviate + assistants */}
           <Route path="/esp-world" element={<ESPWorldLanding />} />
           {/* CHISG - information quality landing */}

@@ -38,6 +38,13 @@ const immunologyConfig: StudyAreaConfig = {
   uploadComponent: <ImmunologyUpload />,
   // Add help text for users
   helpText: "Search for immunology topics, cases, or specific immune disorders. Try queries like 'What is XLA?' or 'Explain B-cell development'.",
+  quickLinks: [
+    {
+      label: 'Open ACLI V(D)J Module',
+      path: '/acli/vdj',
+      description: 'FRCPath-style module with speedread, audio, flashcards, and exam mode.',
+    },
+  ],
 };
 
 const ImmunologyPage: React.FC = () => {

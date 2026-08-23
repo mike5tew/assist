@@ -52,6 +52,7 @@ const navItems: NavItem[] = [
     children: [
       { label: 'MAT Strategic Dashboard', path: 'http://localhost/drb/', icon: <DashboardIcon /> },
       { label: 'LAO Adaptive Revision', path: '/lao', icon: <SchoolIcon /> },
+      { label: 'ACLI V(D)J Module', path: '/acli/vdj', icon: <SchoolIcon /> },
       { label: 'ToddlerOS', path: '/toddler-os', icon: <SchoolIcon /> },
       { label: 'PrimaryOS (Neuron Navigators)', path: '/primary-os', icon: <MobileIcon /> },
       { label: 'CareerOS', path: '/careeros', icon: <DashboardIcon /> },

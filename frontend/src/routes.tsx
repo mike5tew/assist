@@ -18,6 +18,7 @@ import AdminPanel from './components/AdminPanel';
 import CoachMVPDemo from './components/CoachMVPDemo';
 import LAOLanding from './pages/LAOLanding';
 import APhysicsRevision from './pages/APhysicsRevision';
+import ACLIRevision from './pages/ACLIRevision';
 
 const AppRoutes = () => {
   return (
@@ -38,6 +39,9 @@ const AppRoutes = () => {
 
         {/* A-Level Physics Revision */}
         <Route path="aphy" element={<APhysicsRevision />} />
+
+        {/* ACLI V(D)J module */}
+        <Route path="acli/vdj" element={<ACLIRevision />} />
 
         {/* Skills Map - external link handled in nav, but provide route for direct access */}
         <Route path="skillstree" element={<SkillsTreeRedirect />} />

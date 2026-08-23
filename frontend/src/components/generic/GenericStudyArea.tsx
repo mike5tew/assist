@@ -60,6 +60,11 @@ export interface StudyAreaConfig {
   color: string;
   searchPlaceholder: string;
   helpText?: string; // Optional help text for users
+  quickLinks?: Array<{
+    label: string;
+    path: string;
+    description?: string;
+  }>;
   apiEndpoints: {
     search: string;
     contentLibrary?: string;
@@ -405,6 +410,30 @@ const GenericStudyArea: React.FC<{ config: StudyAreaConfig }> = ({ config }) => 
               <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
                 Search through {config.domain} content and get intelligent responses
               </Typography>
+
+              {(config.helpText || (config.quickLinks && config.quickLinks.length > 0)) && (
+                <Alert severity="info" sx={{ mb: 2 }}>
+                  {config.helpText && (
+                    <Typography variant="body2" sx={{ mb: config.quickLinks?.length ? 1 : 0 }}>
+                      {config.helpText}
+                    </Typography>
+                  )}
+                  {config.quickLinks && config.quickLinks.length > 0 && (
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                      {config.quickLinks.map((link, idx) => (
+                        <Button
+                          key={`${link.path}-${idx}`}
+                          size="small"
+                          variant="outlined"
+                          onClick={() => navigate(link.path)}
+                        >
+                          {link.label}
+                        </Button>
+                      ))}
+                    </Box>
+                  )}
+                </Alert>
+              )}
               
               <TextField
                 fullWidth
